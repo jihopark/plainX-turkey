@@ -5,11 +5,13 @@ var {
   AppRegistry,
   PushNotificationIOS,
   AlertIOS,
+  Navigator,
 } = React;
 
 var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
 
-var OffersList = require('./components/OffersList.js')
+//var OffersList = require('./components/OffersList.js')
+
 var body = React.createClass({
   _onCheckPermission: function(permission) {
     console.log("Permission alert:" + permission.alert + " badge:" + permission.badge + " sound:" + permission.sound)
@@ -39,8 +41,10 @@ var body = React.createClass({
     PushNotificationIOS.removeEventListener('notification', this._onNotification);
   },
   render: function() {
+    var PlainNavigator = require('./components/PlainNavigator.js');
     return (
-      <OffersList API_DOMAIN={API_DOMAIN}/>
+      <PlainNavigator
+        api_domain={API_DOMAIN}/>
     );
   }
 });

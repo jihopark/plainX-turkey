@@ -27,7 +27,7 @@ var OffersList = React.createClass({
   },
 
   fetchData: function() {
-    fetch(this.props.API_DOMAIN + this.APIRoute)
+    fetch(this.props.api_domain + this.APIRoute)
       .then((response) => response.json())
       .then((responseData) => {
         this.setState({
