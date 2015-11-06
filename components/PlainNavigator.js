@@ -13,11 +13,19 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      initialRoute: {uri: 'main', id:'main'}
+      uri: 'main/offers/offers/offers/offers'
     };
   },
-  _onBackPress: () => {
-    console.log("On Back Press");
+  //To Load all necessary screens from the uri
+  getInitialRouteStack: (uri) => {
+    var initialRoutesStack = [];
+    var routes = new Routes(uri.split("/"));
+    var length = routes.getDepth();
+    for (var i=0;i<length;i++) {
+      initialRoutesStack.push({uri: routes.getUri()});
+      routes = routes.getPreviousRoutes();
+    }
+    return initialRoutesStack.reverse();
   },
   _navBarRouter: {
     Title: (route, navigator, index, navState) => {
@@ -30,19 +38,26 @@ var PlainNavigator = React.createClass({
     },
     LeftButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri.split("/"));
-      if (routes.hasBack()) {
-        return (
-          <TouchableOpacity onPress={this._onBackPress}>
-            <Text>Back</Text>
-          </TouchableOpacity>
-        );
+      if (routes.getCurrentRoute().hasCustomLeftButton) {
+
       }
       else {
-        return null;
+        if (routes.hasBack()) {
+          return (
+            <TouchableOpacity onPress={() => navigator.pop()}>
+              <Text>Back</Text>
+            </TouchableOpacity>
+          );
+        }
       }
+      return null;
     },
     RightButton: (route, navigator, index, navState) => {
+      var routes = new Routes(route.uri.split("/"));
+      if (routes.getCurrentRoute().hasCustomRightButton) {
 
+      }
+      return null;
     }
   },
   _renderScene: function(route, navigator) {
@@ -51,6 +66,7 @@ var PlainNavigator = React.createClass({
       var Screen = routes.getCurrentRoute().getComponent();
       return (
         <Screen
+          routes={routes}
           navigator={navigator}
           api_domain={this.props.api_domain} />
       );
@@ -60,7 +76,7 @@ var PlainNavigator = React.createClass({
   render: function() {
     return (
       <Navigator
-        initialRoute={this.props.initialRoute}
+        initialRouteStack={this.getInitialRouteStack(this.props.uri)}
         renderScene={this._renderScene}
         navigationBar={
           <Navigator.NavigationBar
