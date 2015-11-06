@@ -8,6 +8,8 @@ var {
 } = React;
 
 var Routes = require('../screens/Routes.js');
+var NavigationTextButton = require('./NavigationTextButton.js');
+
 var routesMap;
 
 var PlainNavigator = React.createClass({
@@ -39,15 +41,14 @@ var PlainNavigator = React.createClass({
     LeftButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri.split("/"));
       if (routes.getCurrentRoute().hasCustomLeftButton) {
-
+        if (routes.getCurrentRoute().leftButtonText) {
+          return (<NavigationTextButton
+                    buttonText={routes.getCurrentRoute().leftButtonText}/>);
+        }
       }
       else {
         if (routes.hasBack()) {
-          return (
-            <TouchableOpacity onPress={() => navigator.pop()}>
-              <Text>Back</Text>
-            </TouchableOpacity>
-          );
+          return (<NavigationTextButton onPress={() => navigator.pop()} />);
         }
       }
       return null;
@@ -55,7 +56,10 @@ var PlainNavigator = React.createClass({
     RightButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri.split("/"));
       if (routes.getCurrentRoute().hasCustomRightButton) {
-
+        if (routes.getCurrentRoute().rightButtonText) {
+          return (<NavigationTextButton
+                    buttonText={routes.getCurrentRoute().rightButtonText}/>);
+        }
       }
       return null;
     }

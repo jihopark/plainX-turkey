@@ -9,7 +9,9 @@ class Routes {
         getComponent: () => require("../screens/MainScreen.js"),
         title: "Helloworld",
         hasCustomLeftButton: true,
-        hasCustomRightButton: true
+        hasCustomRightButton: true,
+        rightButtonText: "Messages",
+        leftButtonText: "Setting",
       },
       {
         name: "offers",
