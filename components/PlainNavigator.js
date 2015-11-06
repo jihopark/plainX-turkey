@@ -8,6 +8,7 @@ var {
 } = React;
 
 var Routes = require('../screens/Routes.js');
+var Rx = require('rx')
 var NavigationTextButton = require('./NavigationTextButton.js');
 
 var routesMap;
@@ -15,7 +16,7 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main/offers/offers/offers/offers'
+      uri: 'main'
     };
   },
   //To Load all necessary screens from the uri
@@ -43,7 +44,8 @@ var PlainNavigator = React.createClass({
       if (routes.getCurrentRoute().hasCustomLeftButton) {
         if (routes.getCurrentRoute().leftButtonText) {
           return (<NavigationTextButton
-                    buttonText={routes.getCurrentRoute().leftButtonText}/>);
+                    buttonText={routes.getCurrentRoute().leftButtonText}
+                    onPress={() => navigator.props.leftButtonSubject.onNext(routes)} />);
         }
       }
       else {
@@ -58,7 +60,8 @@ var PlainNavigator = React.createClass({
       if (routes.getCurrentRoute().hasCustomRightButton) {
         if (routes.getCurrentRoute().rightButtonText) {
           return (<NavigationTextButton
-                    buttonText={routes.getCurrentRoute().rightButtonText}/>);
+                    buttonText={routes.getCurrentRoute().rightButtonText}
+                    onPress={() => navigator.props.rightButtonSubject.onNext(routes)}/>);
         }
       }
       return null;
@@ -70,6 +73,9 @@ var PlainNavigator = React.createClass({
       var Screen = routes.getCurrentRoute().getComponent();
       return (
         <Screen
+          //subscribe to these subjects if need to receive left,right button events
+          leftButtonSubject={this._leftButtonSubject}
+          rightButtonSubject={this._rightButtonSubject}
           routes={routes}
           navigator={navigator}
           api_domain={this.props.api_domain} />
@@ -77,9 +83,13 @@ var PlainNavigator = React.createClass({
     }
     return null;
   },
+  _leftButtonSubject: new Rx.Subject(),
+  _rightButtonSubject: new Rx.Subject(),
   render: function() {
     return (
       <Navigator
+        leftButtonSubject={this._leftButtonSubject}
+        rightButtonSubject={this._rightButtonSubject}
         initialRouteStack={this.getInitialRouteStack(this.props.uri)}
         renderScene={this._renderScene}
         navigationBar={

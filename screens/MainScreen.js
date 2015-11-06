@@ -11,7 +11,12 @@ var OffersList = require('../components/OffersList.js');
 var Routes = require('../screens/Routes.js');
 
 var MainScreen = React.createClass({
+  subscribeToSubject: (left, right) => {
+    left.subscribe((x) => console.log(x));
+    right.subscribe((x) => console.log(x));
+  },
   render: function() {
+    this.subscribeToSubject(this.props.leftButtonSubject, this.props.rightButtonSubject);
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this.props.navigator.push({uri:this.props.routes.addRoute("offers")})}>
