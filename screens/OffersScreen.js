@@ -2,12 +2,31 @@
 
 var React = require('react-native');
 
-var OffersList = require('../components/OffersList.js');
+var PlainListView = require('../components/PlainListView.js');
 
 var OffersScreen = React.createClass({
+  displayName: "OffersScreen",
+  getInitialState: function() {
+    return {
+      data: {
+        cards: [
+          {
+            name: "Offer"
+          },
+          {
+            name: "CurrencySelect"
+          },
+          {
+            name: "Explanation"
+          }
+        ]
+      }
+    };
+  },
   render: function() {
     return (
-      <OffersList api_domain={this.props.api_domain} />
+      <PlainListView
+        cards={this.state.data.cards}/>
     );
   }
 });
