@@ -10,6 +10,7 @@ var {
 var Routes = require('../screens/Routes.js');
 var Rx = require('rx')
 var NavigationTextButton = require('./NavigationTextButton.js');
+var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
 
 var routesMap;
 
@@ -57,11 +58,11 @@ var PlainNavigator = React.createClass({
     },
     RightButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri.split("/"));
-      if (routes.getCurrentRoute().hasCustomRightButton) {
+      if (routes.getCurrentRoute().hasCustomrRightButton) {
         if (routes.getCurrentRoute().rightButtonText) {
           return (<NavigationTextButton
-                    buttonText={routes.getCurrentRoute().rightButtonText}
-                    onPress={() => navigator.props.rightButtonSubject.onNext(routes)}/>);
+                    buttonText={routes.getCurrentRoute().rightNavBarButtonText}
+                    onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}/>);
         }
       }
       return null;
@@ -74,22 +75,22 @@ var PlainNavigator = React.createClass({
       return (
         <Screen
           //subscribe to these subjects if need to receive left,right button events
-          leftButtonSubject={this._leftButtonSubject}
-          rightButtonSubject={this._rightButtonSubject}
+          leftNavBarButtonSubject={this._leftNavBarButtonSubject}
+          rightNavBarButtonSubject={this._rightNavBarButtonSubject}
           routes={routes}
-          navigator={navigator}
-          api_domain={this.props.api_domain} />
+          pushScreen={navigator.push}
+          api_domain={API_DOMAIN} />
       );
     }
     return null;
   },
-  _leftButtonSubject: new Rx.Subject(),
-  _rightButtonSubject: new Rx.Subject(),
+  _leftNavBarButtonSubject: new Rx.Subject(),
+  _rightNavBarButtonSubject: new Rx.Subject(),
   render: function() {
     return (
       <Navigator
-        leftButtonSubject={this._leftButtonSubject}
-        rightButtonSubject={this._rightButtonSubject}
+        leftNavBarButtonSubject={this._leftNavBarButtonSubject}
+        rightNavBarButtonSubject={this._rightNavBarButtonSubject}
         initialRouteStack={this.getInitialRouteStack(this.props.uri)}
         renderScene={this._renderScene}
         navigationBar={

@@ -8,7 +8,6 @@ var {
   Navigator,
 } = React;
 
-var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
 
 //var OffersList = require('./components/OffersList.js')
 
@@ -43,8 +42,7 @@ var body = React.createClass({
   render: function() {
     var PlainNavigator = require('./components/PlainNavigator.js');
     return (
-      <PlainNavigator
-        api_domain={API_DOMAIN}/>
+      <PlainNavigator />
     );
   }
 });
