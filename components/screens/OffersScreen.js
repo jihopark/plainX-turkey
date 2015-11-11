@@ -7,7 +7,7 @@ var {
   StyleSheet,
 } = React;
 
-var PlainListView = require('../components/PlainListView.js');
+var PlainListView = require('../PlainListView.js');
 
 var OffersScreen = React.createClass({
   displayName: "OffersScreen",

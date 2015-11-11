@@ -8,7 +8,7 @@ var {
   TouchableOpacity,
 } = React;
 
-var OffersList = require('../components/OffersList.js');
+var OffersList = require('../OffersList.js');
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./ScreenMixin.js');
 

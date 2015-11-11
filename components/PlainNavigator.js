@@ -7,7 +7,7 @@ var {
   TouchableOpacity,
 } = React;
 
-var Routes = require('../screens/Routes.js');
+var Routes = require('./screens/Routes.js');
 var Rx = require('rx')
 var NavigationTextButton = require('./NavigationTextButton.js');
 var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
