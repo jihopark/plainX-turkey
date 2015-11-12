@@ -32,10 +32,10 @@ var PlainListView = React.createClass({
       dataSource: ds.cloneWithRows(this.props.cards), //cardData should be in state of the Screen
     };
   },
-  _onEndReached: function() {
+  onEndReached: function() {
 
   },
-  _renderCards: function(card) {
+  renderCards: function(card) {
     var observer;
     //find if there is cardObserver to pass
     if (this.needsTobeObserved(card.name)) {
@@ -54,8 +54,8 @@ var PlainListView = React.createClass({
     return (
       <ListView
         dataSource={this.state.dataSource}
-        renderRow={this._renderCards}
-        onEndReached={this._onEndReached}
+        renderRow={this.renderCards}
+        onEndReached={this.onEndReached}
       />
     );
   }

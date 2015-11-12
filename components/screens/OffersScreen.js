@@ -11,7 +11,7 @@ var PlainListView = require('../PlainListView.js');
 
 var OffersScreen = React.createClass({
   displayName: "OffersScreen",
-  _cardObservers: {
+  cardObservers: {
     "Offer": (input) => console.log("Clicked Offer Card with id of "+input)
   },
   getInitialState: function() {
@@ -50,7 +50,7 @@ var OffersScreen = React.createClass({
     return (
       <View style={styles.container}>
         <PlainListView
-          cardObservers={this._cardObservers}
+          cardObservers={this.cardObservers}
           cards={this.state.data.cards}/>
       </View>
     );

@@ -31,7 +31,7 @@ var PlainNavigator = React.createClass({
     }
     return initialRoutesStack.reverse();
   },
-  _navBarRouter: {
+  navBarRouter: {
     Title: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri.split("/"));
       return (
@@ -68,15 +68,15 @@ var PlainNavigator = React.createClass({
       return null;
     }
   },
-  _renderScene: function(route, navigator) {
+  renderScene: function(route, navigator) {
     var routes = new Routes(route.uri.split("/"));
     if (routes!= null) {
       var Screen = routes.getCurrentRoute().getComponent();
       return (
         <Screen
           //subscribe to these subjects if need to receive left,right button events
-          leftNavBarButtonSubject={this._leftNavBarButtonSubject}
-          rightNavBarButtonSubject={this._rightNavBarButtonSubject}
+          leftNavBarButtonSubject={this.leftNavBarButtonSubject}
+          rightNavBarButtonSubject={this.rightNavBarButtonSubject}
           routes={routes}
           pushScreen={navigator.push}
           api_domain={API_DOMAIN} />
@@ -84,18 +84,18 @@ var PlainNavigator = React.createClass({
     }
     return null;
   },
-  _leftNavBarButtonSubject: new Rx.Subject(),
-  _rightNavBarButtonSubject: new Rx.Subject(),
+  leftNavBarButtonSubject: new Rx.Subject(),
+  rightNavBarButtonSubject: new Rx.Subject(),
   render: function() {
     return (
       <Navigator
-        leftNavBarButtonSubject={this._leftNavBarButtonSubject}
-        rightNavBarButtonSubject={this._rightNavBarButtonSubject}
+        leftNavBarButtonSubject={this.leftNavBarButtonSubject}
+        rightNavBarButtonSubject={this.rightNavBarButtonSubject}
         initialRouteStack={this.getInitialRouteStack(this.props.uri)}
-        renderScene={this._renderScene}
+        renderScene={this.renderScene}
         navigationBar={
           <Navigator.NavigationBar
-            routeMapper={this._navBarRouter}/>
+            routeMapper={this.navBarRouter}/>
         }
       />
     );

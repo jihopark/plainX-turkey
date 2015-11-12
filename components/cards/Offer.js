@@ -10,7 +10,7 @@ var {
 
 var Offer = React.createClass({
   displayName: "OfferCard",
-  _onPress: function(subject) {
+  onPress: function(subject) {
     return () => subject.onNext(this.props.data.id)
   },
   render: function() {
@@ -20,7 +20,7 @@ var Offer = React.createClass({
       subject.subscribe(this.props.observer);
     }
     return (
-      <TouchableOpacity onPress={this._onPress(subject)}>
+      <TouchableOpacity onPress={this.onPress(subject)}>
         <Text>OfferCard</Text>
       </TouchableOpacity>
     );
