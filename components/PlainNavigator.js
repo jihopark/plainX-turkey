@@ -46,7 +46,7 @@ var PlainNavigator = React.createClass({
         if (routes.getCurrentRoute().leftButtonText) {
           return (<NavigationTextButton
                     buttonText={routes.getCurrentRoute().leftButtonText}
-                    onPress={() => navigator.props.leftButtonSubject.onNext(routes)} />);
+                    onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes)} />);
         }
       }
       else {
