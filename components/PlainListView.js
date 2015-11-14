@@ -18,19 +18,15 @@ var PlainListView = React.createClass({
   },
   nameOfCardsTobeObserved: [],
   needsTobeObserved: function(cardName) {
-    if (this.nameOfCardsTobeObserved.length == 0 && this.props.cardObservers.length!=0)
+    if (this.nameOfCardsTobeObserved.length == 0 &&
+      this.props.cardObservers &&
+       this.props.cardObservers.length!=0)
       this.nameOfCardsTobeObserved = Object.keys(this.props.cardObservers);
 
     for (var i=0; i<this.nameOfCardsTobeObserved.length; i++) {
       if (this.nameOfCardsTobeObserved[i] == cardName) return true;
     }
     return false;
-  },
-  getInitialState: function() {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    return {
-      dataSource: ds.cloneWithRows(this.props.cards), //cardData should be in state of the Screen
-    };
   },
   onEndReached: function() {
 
@@ -53,7 +49,7 @@ var PlainListView = React.createClass({
   render: function() {
     return (
       <ListView
-        dataSource={this.state.dataSource}
+        dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
         renderRow={this.renderCards}
         onEndReached={this.onEndReached}
       />

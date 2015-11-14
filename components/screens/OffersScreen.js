@@ -10,6 +10,7 @@ var {
 var PlainListView = require('../PlainListView.js');
 
 var OffersScreen = React.createClass({
+  mixins: [ScreenMixin],
   displayName: "OffersScreen",
   cardObservers: {
     "Offer": (input) => console.log("Clicked Offer Card with id of "+input)
