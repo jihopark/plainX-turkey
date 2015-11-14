@@ -16,7 +16,7 @@ var CurrencySelect = React.createClass({
     if (this.props.observer) {
       subject.subscribe(this.props.observer);
     }
-    var id = this.props.data.id;
+    var id = this.props.data["UUID"];
 
     return (
       <View>
@@ -25,19 +25,19 @@ var CurrencySelect = React.createClass({
           style={{width: 50, height: 30, borderColor: 'gray'}}
           onChangeText={
             function(text) {
-              subject.onNext({"id": id, "currencyA": text});
+              subject.onNext({"UUID": id, "CurrencyA": text});
             }}
-          value={this.props.data.currencyA}
+          value={this.props.data["CurrencyA"]}
         />
         <Text>TO</Text>
         <TextInput
           style={{width: 50, height: 30, borderColor: 'gray'}}
           onChangeText={
             function(text) {
-              subject.onNext({"id": id, "currencyB": text});
+              subject.onNext({"UUID": id, "CurrencyB": text});
             }
           }
-          value={this.props.data.currencyB}
+          value={this.props.data["CurrencyB"]}
         />
       </View>
     );

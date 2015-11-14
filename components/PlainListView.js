@@ -34,16 +34,16 @@ var PlainListView = React.createClass({
   renderCards: function(card) {
     var observer;
     //find if there is cardObserver to pass
-    if (this.needsTobeObserved(card.name)) {
-      observer = this.props.cardObservers[card.name];
-      console.log("Need To observe " + card.name + " with " + observer);
+    if (this.needsTobeObserved(card["Name"])) {
+      observer = this.props.cardObservers[card["Name"]];
+      console.log("Need To observe " + card["Name"] + " with " + observer);
     }
     //find which card to render
-    var CardComponent = CardRouter.getComponent(card.name);
+    var CardComponent = CardRouter.getComponent(card["Name"]);
     return (
       <CardComponent
         observer={observer}
-        data={card.data}/>
+        data={card["Data"]}/>
     );
   },
   render: function() {

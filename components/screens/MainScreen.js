@@ -16,54 +16,54 @@ var update = require('react-addons-update');
 
 var MainScreen = React.createClass({
   mixins: [ScreenMixin],
-  getInitialState: function() {
-    return {
-      data: {
-        cards: [
-          {
-            name: "Explanation",
-            data:{
-              id: 1
-            }
-          },
-          {
-            name: "CurrencySelect",
-            data: {
-              id: 2,
-              currencyA: "HKD",
-              currencyB: "USD"
-            }
-          }
-        ]
-      }
-    };
+  displayName: "MainScreen",
+  endPoint: "main",
+  fetchData: function() {
+    fetch(this.props.api_domain + this.endPoint)
+      .then((response) => response.json())
+        .then((responseData) => {
+          console.log(responseData);
+          this.setState({
+            data: responseData,
+          });
+        })
+        .done();
   },
   subscribeToNavBarSubjects: (left, right) => {
     left.subscribe((x) => console.log(x));
     right.subscribe((x) => console.log(x));
   },
   currencySelectCardOnNext: function(event) {
-    if (event.currencyA) {
-      this.setCardDataState(event.id, "currencyA", event.currencyA);
+    if (event["CurrencyA"]) {
+      console.log(event["CurrencyA"]);
+      this.setCardDataState(event["UUID"], "CurrencyA", event["CurrencyA"]);
     }
-    else if (event.currencyB) {
-      this.setCardDataState(event.id, "currencyB", event.currencyB);
+    else if (event["CurrencyB"]) {
+      this.setCardDataState(event["UUID"], "CurrencyB", event["CurrencyB"]);
     }
-
-
   },
   render: function() {
     this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
-    var cardObservers = { }
-    cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
 
-    return (
-      <View style={styles.container}>
-        <PlainListView
-          cardObservers={cardObservers}
-          cards={this.state.data.cards}/>
-      </View>
-    );
+    if (this.state.data) {
+      var cardObservers = { }
+      cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
+
+      return (
+        <View style={styles.container}>
+          <PlainListView
+            cardObservers={cardObservers}
+            cards={this.state.data["Cards"]}/>
+        </View>
+      );
+    }
+    else {
+      return (
+        <View style={styles.container}>
+          <Text>Loading..</Text>
+        </View>
+      );
+    }
   }
 });
 

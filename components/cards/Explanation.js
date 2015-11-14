@@ -9,7 +9,7 @@ var Explanation = React.createClass({
   displayName: "ExplanationCard",
   render: function() {
     return (
-      <Text>Explanation</Text>
+      <Text>{this.props.data["Text"]}</Text>
     );
   }
 });
