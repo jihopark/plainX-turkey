@@ -13,21 +13,16 @@ var ScreenMixin =  {
     pushScreen: React.PropTypes.func.isRequired,
   },
   setCardDataState: function(id, key, value) {
-    var data = this.state.data;
-    for (var i=0;i<data["Cards"].length;i++) {
-      if (data["Cards"][i]["Data"]["UUID"] == id) {
-        this.setState({data: update(data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}})});
+    var cards = this.state.data["Cards"];
+    for (var i=0, numCards = cards.length ; i<numCards; i++) {
+      if (cards[i]["Data"]["UUID"] == id) {
+        this.setState({data: update(this.state.data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}})});
       }
     }
   },
   componentDidMount: function() {
     this.fetchData();
   },
-  getInitialState: function() {
-    return {
-      data: null
-    }
-  }
 };
 
 module.exports = ScreenMixin;

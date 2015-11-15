@@ -8,6 +8,7 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
+var ScreenMixin = require('./ScreenMixin.js');
 
 var OffersScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -18,41 +19,45 @@ var OffersScreen = React.createClass({
   getInitialState: function() {
     return {
       data: {
-        cards: [
+        "Cards": [
           {
-            name: "Explanation"
-          },
-          {
-            name: "CurrencySelect"
-          },
-          {
-            name: "Offer",
-            data: {
-              id: 1
+            "Name": "Explanation",
+            "Data": {
+              "UUID": 3,
+              "Text": "This is OffersList"
             }
           },
           {
-            name: "Offer",
-            data: {
-              id: 2
+            "Name": "Offer",
+            "Data": {
+              "UUID": 1
             }
           },
           {
-            name: "Offer",
-            data: {
-              id: 3
+            "Name": "Offer",
+            "Data": {
+              "UUID": 2
+            }
+          },
+          {
+            "Name": "Offer",
+            "Data": {
+              "UUID": 3
             }
           }
         ]
       }
     };
   },
+  fetchData: function() {
+
+  },
   render: function() {
     return (
       <View style={styles.container}>
         <PlainListView
           cardObservers={this.cardObservers}
-          cards={this.state.data.cards}/>
+          cards={this.state.data["Cards"]}/>
       </View>
     );
   }

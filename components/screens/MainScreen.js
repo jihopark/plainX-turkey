@@ -8,7 +8,6 @@ var {
   TouchableOpacity,
 } = React;
 
-var OffersList = require('../OffersList.js');
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./ScreenMixin.js');
 var PlainListView = require('../PlainListView.js');
@@ -18,6 +17,11 @@ var MainScreen = React.createClass({
   mixins: [ScreenMixin],
   displayName: "MainScreen",
   endPoint: "main",
+  getInitialState: function() {
+    return {
+      data: null
+    }
+  },
   fetchData: function() {
     fetch(this.props.api_domain + this.endPoint)
       .then((response) => response.json())
@@ -35,7 +39,6 @@ var MainScreen = React.createClass({
   },
   currencySelectCardOnNext: function(event) {
     if (event["CurrencyA"]) {
-      console.log(event["CurrencyA"]);
       this.setCardDataState(event["UUID"], "CurrencyA", event["CurrencyA"]);
     }
     else if (event["CurrencyB"]) {

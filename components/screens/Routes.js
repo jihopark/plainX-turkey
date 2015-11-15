@@ -34,15 +34,17 @@ class Routes {
   }
 
   isRegisteredName(name){
-    for (var i=0; i<this.getRegisteredRoutes().length; i++){
-      if (this.getRegisteredRoutes()[i].name==name) return true;
+    var registeredRoutes = this.getRegisteredRoutes();
+    for (var i=0, numRoutes = registeredRoutes.length; i<numRoutes; i++){
+      if (registeredRoutes[i].name==name) return true;
     }
     return false;
   }
 
   getRegisteredRouteWithName(name){
     if (this.isRegisteredName(name)) {
-      return this.getRegisteredRoutes()[this.getRegisteredRoutes().map((route)=>route.name).indexOf(name)];
+      var registeredRoutes = this.getRegisteredRoutes();
+      return registeredRoutes[registeredRoutes.map((route)=>route.name).indexOf(name)];
     }
     else {
       return null;

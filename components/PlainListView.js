@@ -18,12 +18,11 @@ var PlainListView = React.createClass({
   },
   nameOfCardsTobeObserved: [],
   needsTobeObserved: function(cardName) {
-    if (this.nameOfCardsTobeObserved.length == 0 &&
-      this.props.cardObservers &&
-       this.props.cardObservers.length!=0)
+    if (this.nameOfCardsTobeObserved.length == 0 && this.props.cardObservers
+       && this.props.cardObservers.length!=0)
       this.nameOfCardsTobeObserved = Object.keys(this.props.cardObservers);
 
-    for (var i=0; i<this.nameOfCardsTobeObserved.length; i++) {
+    for (var i=0, numCards = this.nameOfCardsTobeObserved.length; i<numCards; i++) {
       if (this.nameOfCardsTobeObserved[i] == cardName) return true;
     }
     return false;
