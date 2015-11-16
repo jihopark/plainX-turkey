@@ -15,7 +15,7 @@ var ScreenMixin =  {
   setCardDataState: function(id, key, value) {
     var cards = this.state.data["Cards"];
     for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["Data"]["UUID"] == id) {
+      if (cards[i]["UUID"] == id) {
         this.setState({data: update(this.state.data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}})});
       }
     }

@@ -2,11 +2,12 @@
 
 var React = require('react-native');
 var Rx = require('rx');
+var CurrencySelectText = require('../CurrencySelectText.js');
 
 var {
   View,
   Text,
-  TextInput,
+  TouchableOpacity,
 } = React;
 
 var CurrencySelect = React.createClass({
@@ -16,29 +17,38 @@ var CurrencySelect = React.createClass({
     if (this.props.observer) {
       subject.subscribe(this.props.observer);
     }
-    var id = this.props.data["UUID"];
+    var id = this.props.id;
+    var currencyList = this.props.data["CurrencyList"];
+    var next = {"id": id, "CurrencyList":currencyList};
+    var currencyA = this.props.data["CurrencyA"];
+    var currencyB = this.props.data["CurrencyB"];
 
     return (
       <View>
         <Text>I want to exchange</Text>
-        <TextInput
-          style={{width: 50, height: 30, borderColor: 'gray'}}
-          onChangeText={
-            function(text) {
-              subject.onNext({"UUID": id, "CurrencyA": text});
-            }}
-          value={this.props.data["CurrencyA"]}
-        />
+        <TouchableOpacity onPress={function(event) {
+          next["Target"] = "CurrencyA";
+          next["CurrentCurrency"] = currencyA;
+          subject.onNext(next);
+        }}>
+          <CurrencySelectText text={currencyA}/>
+        </TouchableOpacity>
+
         <Text>TO</Text>
-        <TextInput
-          style={{width: 50, height: 30, borderColor: 'gray'}}
-          onChangeText={
-            function(text) {
-              subject.onNext({"UUID": id, "CurrencyB": text});
-            }
-          }
-          value={this.props.data["CurrencyB"]}
-        />
+
+        <TouchableOpacity onPress={function(event) {
+          next["Target"] = "CurrencyB";
+          next["CurrentCurrency"] = currencyB;
+          subject.onNext(next);
+        }}>
+          <CurrencySelectText text={currencyB}/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={function(event) {
+          next["Target"] = "Button";
+          subject.onNext(next);
+        }}>
+          <Text>SEARCH</Text>
+        </TouchableOpacity>
       </View>
     );
   }

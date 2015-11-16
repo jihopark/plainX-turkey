@@ -6,12 +6,14 @@ var {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Platform
 } = React;
 
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./ScreenMixin.js');
 var PlainListView = require('../PlainListView.js');
-var update = require('react-addons-update');
+var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+
 
 var MainScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -19,7 +21,12 @@ var MainScreen = React.createClass({
   endPoint: "main",
   getInitialState: function() {
     return {
-      data: null
+      data: null,
+      showCurrencyPicker: false,
+      currencyList: [],
+      pickCurrency: null,
+      currencySelectId: null,
+      currentCurrency: null
     }
   },
   fetchData: function() {
@@ -38,12 +45,25 @@ var MainScreen = React.createClass({
     right.subscribe((x) => console.log(x));
   },
   currencySelectCardOnNext: function(event) {
-    if (event["CurrencyA"]) {
-      this.setCardDataState(event["UUID"], "CurrencyA", event["CurrencyA"]);
+    //If event is button
+    if (event["Target"] == "Button") {
+      console.log("BUTTON Clicked in CurrencySelectCard");
+      return ;
     }
-    else if (event["CurrencyB"]) {
-      this.setCardDataState(event["UUID"], "CurrencyB", event["CurrencyB"]);
-    }
+
+    //If event is selecting currency
+    this.setState({showCurrencyPicker: true,
+                    currentCurrency: event["CurrentCurrency"],
+                    pickCurrency: event["Target"],
+                    currencyList: event["CurrencyList"],
+                    currencySelectId: event["id"]});
+  },
+  onPickerValueChange: function(value) {
+    this.setCardDataState(this.state.currencySelectId, this.state.pickCurrency, value);
+    this.setState({currentCurrency: value});
+  },
+  dismissPicker: function() {
+    this.setState({showCurrencyPicker: false});
   },
   render: function() {
     this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
@@ -52,11 +72,31 @@ var MainScreen = React.createClass({
       var cardObservers = { }
       cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
 
+      var listView = (
+        <PlainListView
+          cardObservers={cardObservers}
+          cards={this.state.data["Cards"]}/>);
+
+      if (this.state.showCurrencyPicker) {
+        var currencyPicker = (
+          <CurrencyPicker
+            currentCurrency={this.state.currentCurrency}
+            currencyList={this.state.currencyList}
+            currencySelectId={this.state.currencySelectId}
+            pickCurrency={this.state.pickCurrency}
+            onPickerValueChange={this.onPickerValueChange}
+            dismissPicker={this.dismissPicker} />);
+
+        return (
+          <View style={styles.container}>
+            {listView}
+            {currencyPicker}
+          </View>
+        );
+      }
       return (
         <View style={styles.container}>
-          <PlainListView
-            cardObservers={cardObservers}
-            cards={this.state.data["Cards"]}/>
+          {listView}
         </View>
       );
     }
@@ -73,10 +113,6 @@ var MainScreen = React.createClass({
 var styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   }
 });
 

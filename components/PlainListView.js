@@ -41,6 +41,7 @@ var PlainListView = React.createClass({
     var CardComponent = CardRouter.getComponent(card["Name"]);
     return (
       <CardComponent
+        id={card["UUID"]}
         observer={observer}
         data={card["Data"]}/>
     );
