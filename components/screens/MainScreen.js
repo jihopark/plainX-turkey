@@ -10,13 +10,16 @@ var {
 } = React;
 
 var Routes = require('../screens/Routes.js');
-var ScreenMixin = require('./ScreenMixin.js');
+var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
+var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectMixin.js');
+
 var PlainListView = require('../PlainListView.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 
 var MainScreen = React.createClass({
-  mixins: [ScreenMixin],
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencySelectCardMixin],
   displayName: "MainScreen",
   endPoint: "main",
   getInitialState: function() {
@@ -24,7 +27,7 @@ var MainScreen = React.createClass({
       data: null,
       showCurrencyPicker: false,
       currencyList: [],
-      pickCurrency: null,
+      targetInput: null,
       currencySelectId: null,
       currentCurrency: null
     }
@@ -44,27 +47,6 @@ var MainScreen = React.createClass({
     left.subscribe((x) => console.log(x));
     right.subscribe((x) => console.log(x));
   },
-  currencySelectCardOnNext: function(event) {
-    //If event is button
-    if (event["Target"] == "Button") {
-      console.log("BUTTON Clicked in CurrencySelectCard");
-      return ;
-    }
-
-    //If event is selecting currency
-    this.setState({showCurrencyPicker: true,
-                    currentCurrency: event["CurrentCurrency"],
-                    pickCurrency: event["Target"],
-                    currencyList: event["CurrencyList"],
-                    currencySelectId: event["id"]});
-  },
-  onPickerValueChange: function(value) {
-    this.setCardDataState(this.state.currencySelectId, this.state.pickCurrency, value);
-    this.setState({currentCurrency: value});
-  },
-  dismissPicker: function() {
-    this.setState({showCurrencyPicker: false});
-  },
   render: function() {
     this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
 
@@ -82,8 +64,6 @@ var MainScreen = React.createClass({
           <CurrencyPicker
             currentCurrency={this.state.currentCurrency}
             currencyList={this.state.currencyList}
-            currencySelectId={this.state.currencySelectId}
-            pickCurrency={this.state.pickCurrency}
             onPickerValueChange={this.onPickerValueChange}
             dismissPicker={this.dismissPicker} />);
 

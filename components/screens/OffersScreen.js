@@ -8,7 +8,7 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./ScreenMixin.js');
+var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 
 var OffersScreen = React.createClass({
   mixins: [ScreenMixin],
