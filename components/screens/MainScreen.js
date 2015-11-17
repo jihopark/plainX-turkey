@@ -12,7 +12,7 @@ var {
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
-var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectMixin.js');
+var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
 
 var PlainListView = require('../PlainListView.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
