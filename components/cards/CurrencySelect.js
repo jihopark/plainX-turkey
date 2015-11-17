@@ -20,28 +20,28 @@ var CurrencySelect = React.createClass({
     var id = this.props.id;
     var currencyList = this.props.data["CurrencyList"];
     var next = {"id": id, "CurrencyList":currencyList};
-    var currencyA = this.props.data["CurrencyA"];
-    var currencyB = this.props.data["CurrencyB"];
+    var sell = this.props.data["Sell"];
+    var buy = this.props.data["Buy"];
 
     return (
       <View>
         <Text>I want to exchange</Text>
         <TouchableOpacity onPress={function(event) {
-          next["Target"] = "CurrencyA";
-          next["CurrentCurrency"] = currencyA;
+          next["Target"] = "Sell";
+          next["CurrentCurrency"] = sell;
           subject.onNext(next);
         }}>
-          <CurrencySelectText text={currencyA}/>
+          <CurrencySelectText text={sell}/>
         </TouchableOpacity>
 
         <Text>TO</Text>
 
         <TouchableOpacity onPress={function(event) {
-          next["Target"] = "CurrencyB";
-          next["CurrentCurrency"] = currencyB;
+          next["Target"] = "Buy";
+          next["CurrentCurrency"] = buy;
           subject.onNext(next);
         }}>
-          <CurrencySelectText text={currencyB}/>
+          <CurrencySelectText text={buy}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={function(event) {
           next["Target"] = "Button";
