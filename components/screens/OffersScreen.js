@@ -5,44 +5,61 @@ var React = require('react-native');
 var {
   View,
   StyleSheet,
+  Platform,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
+var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
+var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 var OffersScreen = React.createClass({
-  mixins: [ScreenMixin],
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin],
   displayName: "OffersScreen",
-  cardObservers: {
-    "Offer": (input) => console.log("Clicked Offer Card with id of "+input)
-  },
   getInitialState: function() {
     return {
+      showCurrencyPicker: false,
+      currencyList: [],
+      targetInput: null,
+      currencySelectId: null,
+      currentCurrency: null,
       data: {
         "Cards": [
           {
             "Name": "Explanation",
+            "UUID": 0,
             "Data": {
-              "UUID": 3,
               "Text": "This is OffersList"
             }
           },
           {
-            "Name": "Offer",
+            "Name": "CurrencyAmountSelect",
+            "UUID": 5,
             "Data": {
-              "UUID": 1
+              "Sell":"USD",
+              "Buy":"HKD",
+              "SellAmount": "0",
+              "BuyAmount": "0",
+              "CurrencyList":[{"Country":"Afghanistan","Code":"AFN"},{"Country":"China","Code":"CNY"},{"Country":"Hong Kong","Code":"HKD"},{"Country":"United States","Code":"USD"}]
             }
           },
           {
             "Name": "Offer",
+            "UUID": 1,
             "Data": {
-              "UUID": 2
             }
           },
           {
             "Name": "Offer",
+            "UUID": 2,
             "Data": {
-              "UUID": 3
+            }
+          },
+          {
+            "Name": "Offer",
+            "UUID": 3,
+            "Data": {
             }
           }
         ]
@@ -53,25 +70,45 @@ var OffersScreen = React.createClass({
 
   },
   render: function() {
-    return (
-      <View style={styles.container}>
-        <PlainListView
-          cardObservers={this.cardObservers}
-          cards={this.state.data["Cards"]}/>
-      </View>
-    );
+    if (this.state.data) {
+      var cardObservers = { };
+      cardObservers["Offer"] = (input) => console.log("Clicked Offer Card with id of "+input);
+      cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
+
+      var listView = (<PlainListView
+        cardObservers={cardObservers}
+        cards={this.state.data["Cards"]}/>);
+
+      if (this.state.showCurrencyPicker) {
+        var currencyPicker = (
+          <CurrencyPicker
+            currentCurrency={this.state.currentCurrency}
+            currencyList={this.state.currencyList}
+            onPickerValueChange={this.onPickerValueChange}
+            dismissPicker={this.dismissPicker} />);
+
+        return (
+          <View style={styles.container}>
+            {listView}
+            {currencyPicker}
+          </View>
+        );
+      }
+      return (
+        <View style={styles.container}>
+          {listView}
+        </View>
+      );
+    }
   }
 });
 
 var styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   }
 });
+
 
 
 module.exports = OffersScreen;

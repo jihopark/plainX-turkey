@@ -5,6 +5,7 @@ var {
   Navigator,
   Text,
   TouchableOpacity,
+  ScrollView,
 } = React;
 
 var Routes = require('./screens/Routes.js');
@@ -73,13 +74,15 @@ var PlainNavigator = React.createClass({
     if (routes!= null) {
       var Screen = routes.getCurrentRoute().getComponent();
       return (
-        <Screen
-          //subscribe to these subjects if need to receive left,right button events
-          leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-          rightNavBarButtonSubject={this.rightNavBarButtonSubject}
-          routes={routes}
-          pushScreen={navigator.push}
-          api_domain={API_DOMAIN} />
+        <ScrollView  keyboardShouldPersistTaps={false}>
+          <Screen
+            //subscribe to these subjects if need to receive left,right button events
+            leftNavBarButtonSubject={this.leftNavBarButtonSubject}
+            rightNavBarButtonSubject={this.rightNavBarButtonSubject}
+            routes={routes}
+            pushScreen={navigator.push}
+            api_domain={API_DOMAIN} />
+        </ScrollView>
       );
     }
     return null;
