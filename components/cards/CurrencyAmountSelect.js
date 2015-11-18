@@ -23,25 +23,25 @@ var CurrencyAmountSelect = React.createClass({
     var next = {"id": id, "CurrencyList":currencyList};
     var sell = this.props.data["Sell"];
     var buy = this.props.data["Buy"];
-    var sellAmount = this.props.data["SellAmount"];
-    var buyAmount = this.props.data["BuyAmount"];
+    var AmountSell = this.props.data["AmountSell"];
+    var AmountBuy = this.props.data["AmountBuy"];
     var canEditCurrency = true;
 
     return (
       <View>
-        <Text>Step 1: How much do you wish to exchange?</Text>
+        <Text>{this.props.data["TitleText"]}</Text>
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={function(num){
-            next["Target"] = "SellAmount";
-            next["SellAmount"] = num;
+            next["Target"] = "AmountSell";
+            next["AmountSell"] = num;
             subject.onNext(next);
           }}
           onFocus={function() {
             next["Target"] = "Focus";
             subject.onNext(next);
           }}
-          value={sellAmount}
+          value={AmountSell}
           keyboardType={"numeric"}
           clearTextOnFocus={true}
           returnKeyType={'done'}
@@ -61,15 +61,15 @@ var CurrencyAmountSelect = React.createClass({
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={function(num){
-            next["Target"] = "BuyAmount";
-            next["BuyAmount"] = num;
+            next["Target"] = "AmountBuy";
+            next["AmountBuy"] = num;
             subject.onNext(next);
           }}
           onFocus={function() {
             next["Target"] = "Focus";
             subject.onNext(next);
           }}
-          value={buyAmount}
+          value={AmountBuy}
           clearTextOnFocus={true}
           returnKeyType={'done'}
           keyboardType={"numeric"}
@@ -88,7 +88,6 @@ var CurrencyAmountSelect = React.createClass({
           next["Target"] = "Next";
           subject.onNext(next);
         }}>
-          <Text>Next</Text>
         </TouchableOpacity>
       </View>
     );

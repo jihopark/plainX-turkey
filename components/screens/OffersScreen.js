@@ -39,24 +39,21 @@ var OffersScreen = React.createClass({
             "Name": "CurrencyAmountSelect",
             "UUID": 5,
             "Data": {
+              "TitleText": "Step 1: How much do you wish to exchange?",
+              "DescriptionText": "",
               "Sell":"USD",
               "Buy":"HKD",
-              "SellAmount": "0",
-              "BuyAmount": "0",
+              "AmountSell": "0",
+              "AmountBuy": "0",
               "CurrencyList":[{"Country":"Afghanistan","Code":"AFN"},{"Country":"China","Code":"CNY"},{"Country":"Hong Kong","Code":"HKD"},{"Country":"United States","Code":"USD"}]
-            }
-          },
-          {
-            "Name": "ExpiryDateSelect",
-            "UUID": 1,
-            "Data": {
-              "Date": "2015-11-18"
             }
           },
           {
             "Name": "LocationSelect",
             "UUID": 2,
             "Data": {
+              "TitleText": "Step 2: Set your location",
+              "DescriptionText": "Check all the loactions that you are willing to trade your currency at",
               "Locations":
                 {
                   "HKUST":{"Selected":true},
@@ -67,7 +64,16 @@ var OffersScreen = React.createClass({
                   "BU":{"Selected":false}
                 }
             }
-          }
+          },
+          {
+            "Name": "ExpiryDateSelect",
+            "UUID": 1,
+            "Data": {
+              "TitleText": "Step 3: Set the expiry date",
+              "DescriptionText": "Your offer will be removed from the system after this date",
+              "Date": "2015-11-18"
+            }
+          },
         ]
       }
     };

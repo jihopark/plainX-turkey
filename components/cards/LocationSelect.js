@@ -44,9 +44,9 @@ var LocationSelect = React.createClass({
     });
     return (
       <View>
-        <Text>Step 3: Set your location</Text>
+        <Text>{this.props.data["TitleText"]}</Text>
         {selections}
-        <Text>FINISH</Text>
+        <Text>{this.props.data["DescriptionText"]}</Text>
       </View>
     );
   }

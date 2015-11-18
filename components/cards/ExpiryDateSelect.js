@@ -52,13 +52,12 @@ var ExpiryDateSelect = React.createClass({
 
     return (
       <View>
-        <Text>Step 2: Set the expiry date</Text>
+        <Text>{this.props.data["TitleText"]}</Text>
         <TouchableOpacity onPress={this.showDatePicker}>
           <Text>{date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()}</Text>
         </TouchableOpacity>
         {this.state.isDatePickerShown ? datePicker : null}
-        <Text>Your offer will be removed from the system after this date</Text>
-        <Text>Next</Text>
+        <Text>{this.props.data["DescriptionText"]}</Text>
       </View>
     );
   }

@@ -10,8 +10,8 @@ var CurrencyAmountSelectCardMixin =  {
       case "Next":
         console.log("NEXT");
         break;
-      case "SellAmount":
-      case "BuyAmount":
+      case "AmountSell":
+      case "AmountBuy":
         this.setCardDataState(event["id"], event["Target"], event[event["Target"]]);
         break;
       case "Sell":
