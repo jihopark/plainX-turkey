@@ -12,10 +12,11 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
+var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 var OffersScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin],
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin],
   displayName: "OffersScreen",
   getInitialState: function() {
     return {
@@ -45,20 +46,15 @@ var OffersScreen = React.createClass({
             }
           },
           {
-            "Name": "Offer",
+            "Name": "ExpiryDateSelect",
             "UUID": 1,
             "Data": {
+              "Date": "2015-11-18"
             }
           },
           {
             "Name": "Offer",
             "UUID": 2,
-            "Data": {
-            }
-          },
-          {
-            "Name": "Offer",
-            "UUID": 3,
             "Data": {
             }
           }
@@ -74,6 +70,7 @@ var OffersScreen = React.createClass({
       var cardObservers = { };
       cardObservers["Offer"] = (input) => console.log("Clicked Offer Card with id of "+input);
       cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
+      cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
 
       var listView = (<PlainListView
         cardObservers={cardObservers}
