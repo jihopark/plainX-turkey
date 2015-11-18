@@ -20,6 +20,14 @@ var ScreenMixin =  {
       }
     }
   },
+  getCardDataState: function(id) {
+    var cards = this.state.data["Cards"];
+    for (var i=0, numCards = cards.length ; i<numCards; i++) {
+      if (cards[i]["UUID"] == id) {
+        return cards[i]["UUID"];
+      }
+    }
+  },
   componentDidMount: function() {
     this.fetchData();
   },

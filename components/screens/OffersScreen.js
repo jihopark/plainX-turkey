@@ -12,11 +12,12 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
+var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
 var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 var OffersScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin],
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
   displayName: "OffersScreen",
   getInitialState: function() {
     return {
@@ -53,9 +54,18 @@ var OffersScreen = React.createClass({
             }
           },
           {
-            "Name": "Offer",
+            "Name": "LocationSelect",
             "UUID": 2,
             "Data": {
+              "Locations":
+                {
+                  "HKUST":{"Selected":true},
+                  "HKU":{"Selected":false},
+                  "CUHK":{"Selected":false},
+                  "POLYU":{"Selected":false},
+                  "CITYU":{"Selected":false},
+                  "BU":{"Selected":false}
+                }
             }
           }
         ]
@@ -71,6 +81,7 @@ var OffersScreen = React.createClass({
       cardObservers["Offer"] = (input) => console.log("Clicked Offer Card with id of "+input);
       cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
       cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
+      cardObservers["LocationSelect"] = this.locationSelectonNext;
 
       var listView = (<PlainListView
         cardObservers={cardObservers}
