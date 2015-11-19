@@ -14,10 +14,11 @@ var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
 var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
 var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
+var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 var OffersScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin, OfferCardMixin],
   displayName: "OffersScreen",
   getInitialState: function() {
     return {
@@ -28,13 +29,6 @@ var OffersScreen = React.createClass({
       currentCurrency: null,
       data: {
         "Cards": [
-          {
-            "Name": "Explanation",
-            "UUID": 0,
-            "Data": {
-              "Text": "This is OffersList"
-            }
-          },
           {
             "Name": "CurrencyAmountSelect",
             "UUID": 5,
@@ -74,6 +68,36 @@ var OffersScreen = React.createClass({
               "Date": "2015-11-18"
             }
           },
+          {
+            "UUID":"h2sn8fg8q4269VMRbninm6",
+            "Name":"CurrencyAmount",
+            "Data": {
+              "AmountSell":500,
+              "AmountBuy":600,
+              "Sell":"HKD",
+              "Buy":"CNY"
+            }
+          },
+          {
+            "UUID":"6MhrVHvTZ7pWG9XRgmQiRB",
+            "Name":"Location",
+            "Data":{
+              "TitleText": "Here are the available locations",
+              "Locations":
+                {
+                  "HKUST":{"Name":"HKUST"},
+                  "HKU":{"Name":"HKU"},
+                }
+            }
+          },
+          {
+            "UUID":"6MhrVH7pWG9XRgmQiRB",
+            "Name":"OfferSummary",
+            "Data":{
+              "TitleText": "Offer Summary",
+              "Details": "Blah Blah Blah \n asdfasdfdsfasdf heyhehy"
+            }
+          }
         ]
       }
     };
@@ -84,7 +108,7 @@ var OffersScreen = React.createClass({
   render: function() {
     if (this.state.data) {
       var cardObservers = { };
-      cardObservers["Offer"] = (input) => console.log("Clicked Offer Card with id of "+input);
+      cardObservers["Offer"] = this.offerCardonNext;
       cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
       cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
       cardObservers["LocationSelect"] = this.locationSelectonNext;

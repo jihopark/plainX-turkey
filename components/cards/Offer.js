@@ -10,18 +10,14 @@ var {
 
 var Offer = React.createClass({
   displayName: "OfferCard",
-  onPress: function(subject) {
-    return () => subject.onNext(this.props.data.id)
-  },
   render: function() {
-    //create here as a local variable, rather than component variable, because there may be multiple cards
     var subject = new Rx.Subject();
     if (this.props.observer) {
       subject.subscribe(this.props.observer);
     }
     return (
-      <TouchableOpacity onPress={this.onPress(subject)}>
-        <Text>OfferCard</Text>
+      <TouchableOpacity onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
+        <Text>{this.props.data["Sell"]} {this.props.data["AmountSell"]} to {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
       </TouchableOpacity>
     );
   }
