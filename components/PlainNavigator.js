@@ -18,13 +18,13 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main/offers'
+      uri: 'main/offers?q=123&abc=345'
     };
   },
   //To Load all necessary screens from the uri
   getInitialRouteStack: (uri) => {
     var initialRoutesStack = [];
-    var routes = new Routes(uri.split("/"));
+    var routes = new Routes(uri);
     var length = routes.getDepth();
     for (var i=0;i<length;i++) {
       initialRoutesStack.push({uri: routes.getUri()});
@@ -34,7 +34,7 @@ var PlainNavigator = React.createClass({
   },
   navBarRouter: {
     Title: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri.split("/"));
+      var routes = new Routes(route.uri);
       return (
         <Text>
           {routes.getCurrentRoute().title}
@@ -42,7 +42,7 @@ var PlainNavigator = React.createClass({
       );
     },
     LeftButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri.split("/"));
+      var routes = new Routes(route.uri);
       if (routes.getCurrentRoute().hasCustomLeftButton) {
         if (routes.getCurrentRoute().leftButtonText) {
           return (<NavigationTextButton
@@ -58,7 +58,7 @@ var PlainNavigator = React.createClass({
       return null;
     },
     RightButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri.split("/"));
+      var routes = new Routes(route.uri);
       if (routes.getCurrentRoute().hasCustomrRightButton) {
         if (routes.getCurrentRoute().rightButtonText) {
           return (<NavigationTextButton
@@ -70,7 +70,7 @@ var PlainNavigator = React.createClass({
     }
   },
   renderScene: function(route, navigator) {
-    var routes = new Routes(route.uri.split("/"));
+    var routes = new Routes(route.uri);
     if (routes!= null) {
       var Screen = routes.getCurrentRoute().getComponent();
       return (
@@ -81,7 +81,8 @@ var PlainNavigator = React.createClass({
             rightNavBarButtonSubject={this.rightNavBarButtonSubject}
             routes={routes}
             pushScreen={navigator.push}
-            api_domain={API_DOMAIN} />
+            api_domain={API_DOMAIN}
+            params={routes.getCurrentRouteParams()} />
         </ScrollView>
       );
     }

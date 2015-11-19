@@ -22,11 +22,16 @@ class Routes {
     ];
   }
 
-  constructor(routeNames) {
+  constructor(uri) {
+    var routeNames = uri.split('/');
     if (routeNames.length > 0){
       for (var i=0;i<routeNames.length; i++) {
-        if (!this.isRegisteredName(routeNames[i])){
+        if (!this.isRegisteredName(routeNames[i].split('?')[0])){
           return null;
+        }
+        if (routeNames[i].split('?').length > 1) {
+          this.params = this.params || {};
+          this.params[i] = routeNames[i].split('?')[1];
         }
       }
       this.routes = routeNames.map((name) => this.getRegisteredRouteWithName(name));
@@ -42,6 +47,7 @@ class Routes {
   }
 
   getRegisteredRouteWithName(name){
+    name = name.split('?')[0];
     if (this.isRegisteredName(name)) {
       var registeredRoutes = this.getRegisteredRoutes();
       return registeredRoutes[registeredRoutes.map((route)=>route.name).indexOf(name)];
@@ -59,21 +65,36 @@ class Routes {
     return this.routes[this.routes.length-1];
   }
 
+  getCurrentRouteParams() {
+    return this.params ? this.params[this.routes.length-1] || "" : null;
+  }
+
   addRoute(name) {
-    if (this.isRegisteredName(name))
+    if (this.isRegisteredName(name)) {
       this.routes.push(this.getRegisteredRouteWithName(name));
+      if (name.split('?').length > 1) {
+        this.params = this.params || {};
+        this.params[this.routes.length-1] = name.split('?')[1];
+        this.url += ("/" + name);
+      }
+    }
     return this.getUri();
   }
 
   getUri() {
     var uri = this.routes[0].name;
-    for (var i=1;i<this.routes.length;i++)
+    for (var i=1;i<this.routes.length;i++) {
       uri += ("/" + this.routes[i].name);
+      if (this.params && this.params[i])
+        uri+= ("?"+this.params[i]);
+    }
     return uri;
   }
 
   getPreviousRoutes() {
-    var previous = new Routes([]);
+    var previous = new Routes("");
+    if (this.params && this.params[this.routes.length-1])
+      delete this.params[this.routes.length-1];
     previous.routes = this.routes.slice(0, this.routes.length-1);
     return previous;
   }
