@@ -31,6 +31,20 @@ var ScreenMixin =  {
   componentDidMount: function() {
     this.fetchData();
   },
+  fetchData: function() {
+    if (this.endPoint){
+      console.log(this.props.api_domain + this.endPoint + "?" + this.props.params);
+      fetch(this.props.api_domain + this.endPoint + "?" + this.props.params)
+        .then((response) => response.json())
+          .then((responseData) => {
+            console.log(responseData);
+            this.setState({
+              data: responseData,
+            });
+          })
+          .done();
+    }
+  }
 };
 
 module.exports = ScreenMixin;

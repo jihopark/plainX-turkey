@@ -14,9 +14,9 @@ class Routes {
         leftButtonText: "Setting",
       },
       {
-        name: "offers",
+        name: "offerlist",
         id: 2,
-        getComponent: () => require("../screens/OffersScreen.js"),
+        getComponent: () => require("../screens/OfferListScreen.js"),
         title: "See all offers",
       }
     ];
@@ -66,7 +66,7 @@ class Routes {
   }
 
   getCurrentRouteParams() {
-    return this.params ? this.params[this.routes.length-1] || "" : null;
+    return this.params ? this.params[this.routes.length-1] || "" : "";
   }
 
   addRoute(name) {

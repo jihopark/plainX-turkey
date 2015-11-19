@@ -1,52 +1,48 @@
 'use strict';
 
 var React = require('react-native');
+
 var {
   View,
-  Text,
   StyleSheet,
-  TouchableOpacity,
-  Platform
+  Platform,
+  Text,
 } = React;
 
-var Routes = require('../screens/Routes.js');
+var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
-var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
-
-var PlainListView = require('../PlainListView.js');
+var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
+var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
+var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
+var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
-
-var MainScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencySelectCardMixin],
-  displayName: "MainScreen",
-  endPoint: "main",
+var OfferListScreen = React.createClass({
+  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin, OfferCardMixin],
+  displayName: "OfferListScreen",
+  endPoint: "offerlist",
   getInitialState: function() {
     return {
-      data: null,
       showCurrencyPicker: false,
       currencyList: [],
       targetInput: null,
       currencySelectId: null,
-      currentCurrency: null
-    }
-  },
-  subscribeToNavBarSubjects: (left, right) => {
-    left.subscribe((x) => console.log(x));
-    right.subscribe((x) => console.log(x));
+      currentCurrency: null,
+      data: null
+    };
   },
   render: function() {
-    this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
-
     if (this.state.data) {
-      var cardObservers = { }
-      cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
+      var cardObservers = { };
+      cardObservers["Offer"] = this.offerCardonNext;
+      cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
+      cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
+      cardObservers["LocationSelect"] = this.locationSelectonNext;
 
-      var listView = (
-        <PlainListView
-          cardObservers={cardObservers}
-          cards={this.state.data["Cards"]}/>);
+      var listView = (<PlainListView
+        cardObservers={cardObservers}
+        cards={this.state.data["Cards"]}/>);
 
       if (this.state.showCurrencyPicker) {
         var currencyPicker = (
@@ -86,4 +82,5 @@ var styles = StyleSheet.create({
 });
 
 
-module.exports = MainScreen;
+
+module.exports = OfferListScreen;
