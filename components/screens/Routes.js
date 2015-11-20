@@ -39,6 +39,7 @@ class Routes {
   }
 
   isRegisteredName(name){
+    name = name.split('?')[0];
     var registeredRoutes = this.getRegisteredRoutes();
     for (var i=0, numRoutes = registeredRoutes.length; i<numRoutes; i++){
       if (registeredRoutes[i].name==name) return true;
@@ -75,7 +76,6 @@ class Routes {
       if (name.split('?').length > 1) {
         this.params = this.params || {};
         this.params[this.routes.length-1] = name.split('?')[1];
-        this.url += ("/" + name);
       }
     }
     return this.getUri();
