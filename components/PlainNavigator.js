@@ -18,7 +18,7 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main/offerlist?sell=HKD&buy=CNY'
+      uri: 'main'
     };
   },
   //To Load all necessary screens from the uri

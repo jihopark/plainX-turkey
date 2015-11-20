@@ -4,7 +4,8 @@ var CurrencySelectMixin =  {
   currencySelectCardOnNext: function(event) {
     //If event is button
     if (event["Target"] == "Button") {
-      console.log("BUTTON Clicked in CurrencySelectCard");
+      var params = {"sell": event["Sell"], "buy": event["Buy"]};
+      this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+this.getParamsToString(params))});
       return ;
     }
 

@@ -44,6 +44,13 @@ var ScreenMixin =  {
           })
           .done();
     }
+  },
+  getParamsToString: function(params) {
+    var s = "";
+    var keys = Object.keys(params);
+    for (var i=0, length = keys.length ; i<length; i++)
+      s += (keys[i] + "=" + params[keys[i]] + "&");
+    return s;
   }
 };
 

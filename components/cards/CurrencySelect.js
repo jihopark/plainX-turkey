@@ -45,6 +45,8 @@ var CurrencySelect = React.createClass({
         </TouchableOpacity>
         <TouchableOpacity onPress={function(event) {
           next["Target"] = "Button";
+          next["Sell"] = sell;
+          next["Buy"] = buy;
           subject.onNext(next);
         }}>
           <Text>SEARCH</Text>
