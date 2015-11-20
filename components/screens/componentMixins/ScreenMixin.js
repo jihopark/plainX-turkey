@@ -2,6 +2,11 @@
 
 var React = require('react-native');
 var update = require('react-addons-update');
+var LoadingView = require('../../LoadingView.js');
+var {
+  View,
+  StyleSheet,
+} = React;
 
 //This mixin is to define common functions for Screen Components.
 
@@ -31,13 +36,27 @@ var ScreenMixin =  {
   componentDidMount: function() {
     this.fetchData();
   },
+  render: function() {
+    if (this.state.data) {
+      return this.renderScreen();
+    }
+    else {
+      return (
+        <View>
+          <LoadingView />
+        </View>
+      );
+    }
+  },
   fetchData: function() {
     if (this.endPoint){
+      this.props.setNetworkActivityIndicator(true);
       console.log(this.props.api_domain + this.endPoint + "?" + this.props.params);
       fetch(this.props.api_domain + this.endPoint + "?" + this.props.params)
         .then((response) => response.json())
           .then((responseData) => {
             console.log(responseData);
+            this.props.setNetworkActivityIndicator(false);
             this.setState({
               data: responseData,
             });

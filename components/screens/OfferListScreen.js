@@ -32,46 +32,37 @@ var OfferListScreen = React.createClass({
       data: null
     };
   },
-  render: function() {
-    if (this.state.data) {
-      var cardObservers = { };
-      cardObservers["Offer"] = this.offerCardonNext;
-      cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
-      cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
-      cardObservers["LocationSelect"] = this.locationSelectonNext;
+  renderScreen: function() {
+    var cardObservers = { };
+    cardObservers["Offer"] = this.offerCardonNext;
+    cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
+    cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
+    cardObservers["LocationSelect"] = this.locationSelectonNext;
 
-      var listView = (<PlainListView
-        cardObservers={cardObservers}
-        cards={this.state.data["Cards"]}/>);
+    var listView = (<PlainListView
+      cardObservers={cardObservers}
+      cards={this.state.data["Cards"]}/>);
 
-      if (this.state.showCurrencyPicker) {
-        var currencyPicker = (
-          <CurrencyPicker
-            currentCurrency={this.state.currentCurrency}
-            currencyList={this.state.currencyList}
-            onPickerValueChange={this.onPickerValueChange}
-            dismissPicker={this.dismissPicker} />);
+    if (this.state.showCurrencyPicker) {
+      var currencyPicker = (
+        <CurrencyPicker
+          currentCurrency={this.state.currentCurrency}
+          currencyList={this.state.currencyList}
+          onPickerValueChange={this.onPickerValueChange}
+          dismissPicker={this.dismissPicker} />);
 
-        return (
-          <View style={styles.container}>
-            {listView}
-            {currencyPicker}
-          </View>
-        );
-      }
       return (
         <View style={styles.container}>
           {listView}
+          {currencyPicker}
         </View>
       );
     }
-    else {
-      return (
-        <View style={styles.container}>
-          <Text>Loading..</Text>
-        </View>
-      );
-    }
+    return (
+      <View style={styles.container}>
+        {listView}
+      </View>
+    );
   }
 });
 

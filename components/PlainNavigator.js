@@ -6,6 +6,8 @@ var {
   Text,
   TouchableOpacity,
   ScrollView,
+  StatusBarIOS,
+  Platform,
 } = React;
 
 var Routes = require('./screens/Routes.js');
@@ -31,6 +33,10 @@ var PlainNavigator = React.createClass({
       routes = routes.getPreviousRoutes();
     }
     return initialRoutesStack.reverse();
+  },
+  setNetworkActivityIndicator: function(value) {
+    if (Platform.OS === 'ios')
+      StatusBarIOS.setNetworkActivityIndicatorVisible(value);
   },
   navBarRouter: {
     Title: (route, navigator, index, navState) => {
@@ -82,6 +88,7 @@ var PlainNavigator = React.createClass({
             routes={routes}
             pushScreen={navigator.push}
             api_domain={API_DOMAIN}
+            setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()} />
         </ScrollView>
       );

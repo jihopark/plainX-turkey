@@ -17,7 +17,6 @@ var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js')
 var PlainListView = require('../PlainListView.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
-
 var MainScreen = React.createClass({
   mixins: [ScreenMixin, CurrencyPickerMixin, CurrencySelectCardMixin],
   displayName: "MainScreen",
@@ -36,46 +35,37 @@ var MainScreen = React.createClass({
     left.subscribe((x) => console.log(x));
     right.subscribe((x) => console.log(x));
   },
-  render: function() {
+  renderScreen: function() {
     this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
 
-    if (this.state.data) {
-      var cardObservers = { }
-      cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
+    var cardObservers = { }
+    cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
 
-      var listView = (
-        <PlainListView
-          cardObservers={cardObservers}
-          cards={this.state.data["Cards"]}/>);
+    var listView = (
+      <PlainListView
+        cardObservers={cardObservers}
+        cards={this.state.data["Cards"]}/>);
 
-      if (this.state.showCurrencyPicker) {
-        var currencyPicker = (
-          <CurrencyPicker
-            currentCurrency={this.state.currentCurrency}
-            currencyList={this.state.currencyList}
-            onPickerValueChange={this.onPickerValueChange}
-            dismissPicker={this.dismissPicker} />);
+    if (this.state.showCurrencyPicker) {
+      var currencyPicker = (
+        <CurrencyPicker
+          currentCurrency={this.state.currentCurrency}
+          currencyList={this.state.currencyList}
+          onPickerValueChange={this.onPickerValueChange}
+          dismissPicker={this.dismissPicker} />);
 
-        return (
-          <View style={styles.container}>
-            {listView}
-            {currencyPicker}
-          </View>
-        );
-      }
       return (
         <View style={styles.container}>
           {listView}
+          {currencyPicker}
         </View>
       );
     }
-    else {
-      return (
-        <View style={styles.container}>
-          <Text>Loading..</Text>
-        </View>
-      );
-    }
+    return (
+      <View style={styles.container}>
+        {listView}
+      </View>
+    );
   }
 });
 
