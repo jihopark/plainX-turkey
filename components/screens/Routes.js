@@ -18,6 +18,12 @@ class Routes {
         id: 2,
         getComponent: () => require("../screens/OfferListScreen.js"),
         title: "See all offers",
+      },
+      {
+        name: "makeOffer",
+        id: 3,
+        getComponent: () => require("../screens/MakeOfferScreen.js"),
+        title: "Make an offer",
       }
     ];
   }
