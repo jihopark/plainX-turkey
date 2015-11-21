@@ -35,10 +35,10 @@ var LocationSelect = React.createClass({
       return (
         <TouchableOpacity onPress={function(){
           next["Location"] = location;
-          next["Selected"] = !locations[location]["Selected"];
+          next["IsSelected"] = !locations[location]["IsSelected"];
           subject.onNext(next);
         }}>
-          <LocationCheckBox name={location} selected={locations[location]["Selected"]}/>
+          <LocationCheckBox name={location} selected={locations[location]["IsSelected"]}/>
         </TouchableOpacity>
       );
     });

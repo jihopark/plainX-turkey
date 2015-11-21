@@ -26,8 +26,8 @@ var CurrencyAmountSelect = React.createClass({
     var next = {"id": id, "CurrencyList":currencyList};
     var sell = this.props.data["Sell"];
     var buy = this.props.data["Buy"];
-    var AmountSell = this.props.data["AmountSell"];
-    var AmountBuy = this.props.data["AmountBuy"];
+    var AmountSell = this.props.data["AmountSell"]+"";
+    var AmountBuy = this.props.data["AmountBuy"]+"";
     var canEditCurrency = true;
 
     return (
