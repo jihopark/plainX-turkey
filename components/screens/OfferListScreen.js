@@ -38,7 +38,9 @@ var OfferListScreen = React.createClass({
       cards={this.state.data["Cards"]}/>);
 
     var makeOfferButton = (<ActionButton
-      text={"Make Offer"} onPress={this.onPress} />);
+                            text={"Make Offer"}
+                            onPress={this.onPress}
+                            enabled={true} />);
 
     return (
       <View style={styles.container}>

@@ -15,11 +15,14 @@ var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
 var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
 var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
+
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+var ActionButton = require('../ActionButton.js');
 
 var MakeOfferScreen = React.createClass({
   mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
   displayName: "MakeOfferScreen",
+  endPoint: 'offer/make',
   getInitialState: function() {
     return {
       showCurrencyPicker: false,
@@ -27,56 +30,39 @@ var MakeOfferScreen = React.createClass({
       targetInput: null,
       currencySelectId: null,
       currentCurrency: null,
-      data: {
-        "Cards": [
-          {
-            "Name": "Explanation",
-            "UUID": 0,
-            "Data": {
-              "Text": "This is OffersList"
-            }
-          },
-          {
-            "Name": "CurrencyAmountSelect",
-            "UUID": 5,
-            "Data": {
-              "Sell":"USD",
-              "Buy":"HKD",
-              "CurrencyList":
-                 [ { Country: 'China', Code: 'CNY', Rate: 6.3807 },
-                   { Country: 'Austria', Code: 'EUR', Rate: 0.936944 },
-                   { Country: 'Hong Kong', Code: 'HKD', Rate: 7.7506 },
-                   { Country: 'Singapore', Code: 'SGD', Rate: 1.422735 },
-                   { Country: 'Thailand', Code: 'THB', Rate: 35.984501 },
-                   { Country: 'United States', Code: 'USD', Rate: 1 },
-                   { Country: 'Vietnam', Code: 'VND', Rate: 22465 } ]
-               }
-          },
-          {
-            "Name": "ExpiryDateSelect",
-            "UUID": 1,
-            "Data": {
-              "Date": "2015-11-18"
-            }
-          },
-          {
-            "Name": "LocationSelect",
-            "UUID": 2,
-            "Data": {
-              "Locations":
-                {
-                  "HKUST":{"Selected":true},
-                  "HKU":{"Selected":false},
-                  "CUHK":{"Selected":false},
-                  "POLYU":{"Selected":false},
-                  "CITYU":{"Selected":false},
-                  "BU":{"Selected":false}
-                }
-            }
-          }
-        ]
-      }
     };
+  },
+  getRequestParams: function() {
+    var locationInputValid = false;
+    var amountInputValid = false;
+    var currencyInputValid = false;
+    var params = {};
+
+    var cards = this.state.data["Cards"];
+    for (var i=0, numCards = cards.length ; i<numCards; i++) {
+      if (cards[i]["Name"] == "CurrencyAmountSelect") {
+        currencyInputValid = cards[i]["Data"]["Sell"] != cards[i]["Data"]["Buy"];
+        amountInputValid = cards[i]["Data"]["AmountSell"]!='' && cards[i]["Data"]["AmountSell"]!='0' &&
+                      cards[i]["Data"]["AmountBuy"]!='' && cards[i]["Data"]["AmountBuy"]!='0'
+        params["Buy"] = cards[i]["Data"]["Buy"];
+        params["Sell"] = cards[i]["Data"]["Sell"];
+        params["AmountSell"] = cards[i]["Data"]["AmountSell"];
+        params["AmountBuy"] = cards[i]["Data"]["AmountBuy"];
+      }
+      else if (cards[i]["Name"] == "LocationSelect") {
+        for (var location in cards[i]["Data"]["Locations"]) {
+          if (cards[i]["Data"]["Locations"][location]["IsSelected"]) {
+            locationInputValid = true;
+            params["Locations"] = params["Locations"] || [];
+            params["Locations"].push(location);
+          }
+        }
+      }
+    }
+    return locationInputValid && amountInputValid && currencyInputValid ? params : null;
+  },
+  onPress: function() {
+    console.log("PRESS");
   },
   renderScreen: function() {
     var cardObservers = { };
@@ -89,24 +75,24 @@ var MakeOfferScreen = React.createClass({
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}/>);
 
-    if (this.state.showCurrencyPicker) {
-      var currencyPicker = (
-        <CurrencyPicker
-          currentCurrency={this.state.currentCurrency}
-          currencyList={this.state.currencyList}
-          onPickerValueChange={this.onPickerValueChange}
-          dismissPicker={this.dismissPicker} />);
+    var requestParams = this.getRequestParams();
+    var finishButton = (<ActionButton
+      text={"Finish"}
+      onPress={this.onPress}
+      enabled={requestParams!=null} />);
+    console.log('Request Params:');
+    console.log(requestParams);
 
-      return (
-        <View style={styles.container}>
-          {listView}
-          {currencyPicker}
-        </View>
-      );
-    }
     return (
       <View style={styles.container}>
         {listView}
+        {this.state.showCurrencyPicker ? (
+            <CurrencyPicker
+              currentCurrency={this.state.currentCurrency}
+              currencyList={this.state.currencyList}
+              onPickerValueChange={this.onPickerValueChange}
+              dismissPicker={this.dismissPicker} />)
+          : finishButton}
       </View>
     );
   }
