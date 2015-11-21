@@ -11,56 +11,39 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
-var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
-var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
-var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
 var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
-var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+
+var ActionButton = require('../ActionButton.js');
 
 var OfferListScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin, OfferCardMixin],
+  mixins: [ScreenMixin, OfferCardMixin],
   displayName: "OfferListScreen",
-  endPoint: "offerlist",
+  endPoint: "offer/list",
   getInitialState: function() {
     return {
-      showCurrencyPicker: false,
-      currencyList: [],
-      targetInput: null,
-      currencySelectId: null,
-      currentCurrency: null,
+      showActionButton: true,
+
       data: null
     };
+  },
+  onPress: function() {
+    this.props.pushScreen({uri: this.props.routes.addRoute('makeOffer?'+this.props.params)});
   },
   renderScreen: function() {
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
-    cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
-    cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
-    cardObservers["LocationSelect"] = this.locationSelectonNext;
 
     var listView = (<PlainListView
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}/>);
 
-    if (this.state.showCurrencyPicker) {
-      var currencyPicker = (
-        <CurrencyPicker
-          currentCurrency={this.state.currentCurrency}
-          currencyList={this.state.currencyList}
-          onPickerValueChange={this.onPickerValueChange}
-          dismissPicker={this.dismissPicker} />);
+    var makeOfferButton = (<ActionButton
+      text={"Make Offer"} onPress={this.onPress} />);
 
-      return (
-        <View style={styles.container}>
-          {listView}
-          {currencyPicker}
-        </View>
-      );
-    }
     return (
       <View style={styles.container}>
         {listView}
+        {this.state.showActionButton ? makeOfferButton : null}
       </View>
     );
   }
