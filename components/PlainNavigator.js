@@ -20,7 +20,7 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main'
+      uri: 'makeOffer'
     };
   },
   //To Load all necessary screens from the uri

@@ -17,11 +17,11 @@ var ScreenMixin =  {
     routes: React.PropTypes.object.isRequired,
     pushScreen: React.PropTypes.func.isRequired,
   },
-  setCardDataState: function(id, key, value) {
-    var cards = this.state.data["Cards"];
+  mutateCardStateData: function(data, id, key, value) {
+    var cards = data["Cards"];
     for (var i=0, numCards = cards.length ; i<numCards; i++) {
       if (cards[i]["UUID"] == id) {
-        this.setState({data: update(this.state.data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}})});
+        return update(data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}});
       }
     }
   },

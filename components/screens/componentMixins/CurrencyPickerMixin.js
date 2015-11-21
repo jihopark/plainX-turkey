@@ -16,8 +16,8 @@ var React = require('react-native');
 
 var CurrencyPickerMixin =  {
   onPickerValueChange: function(value) {
-    this.setCardDataState(this.state.currencySelectId, this.state.targetInput, value);
-    this.setState({currentCurrency: value});
+    this.setState({data: this.mutateCardStateData(this.state.data, this.state.currencySelectId, this.state.targetInput, value),
+                  currentCurrency: value});
   },
   dismissPicker: function() {
     this.setState({showCurrencyPicker: false});

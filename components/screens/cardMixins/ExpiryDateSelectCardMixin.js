@@ -2,7 +2,7 @@
 
 var ExpiryDateSelectCardMixin =  {
   expiryDateSelectCardonNext: function(event) {
-    this.setCardDataState(event["id"], "Date", event["Date"]);
+    this.setState({data:this.mutateCardStateData(this.state.data, event["id"], "Date", event["Date"])});
   }
 }
 
