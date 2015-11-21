@@ -35,7 +35,7 @@ var PlainListView = React.createClass({
     //find if there is cardObserver to pass
     if (this.needsTobeObserved(card["Name"])) {
       observer = this.props.cardObservers[card["Name"]];
-      console.log("Need To observe " + card["Name"] + " with " + observer);
+    //  console.log("Need To observe " + card["Name"] + " with " + observer);
     }
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);

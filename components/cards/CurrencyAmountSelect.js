@@ -13,6 +13,9 @@ var {
 
 var CurrencyAmountSelect = React.createClass({
   displayName: "CurrencyAmountSelectCard",
+  getDynamicRateExplanation: (rate) => {
+    return rate ? (<Text>{"*Based on today's market rate:" + rate}</Text>) : null;
+  },
   render: function() {
     var subject = new Rx.Subject();
     if (this.props.observer) {
@@ -46,6 +49,7 @@ var CurrencyAmountSelect = React.createClass({
           clearTextOnFocus={true}
           returnKeyType={'done'}
         />
+        {this.getDynamicRateExplanation(this.props.data["SellRate"])}
 
         <TouchableOpacity onPress={function(event) {
           if (!canEditCurrency) return ;
@@ -74,6 +78,7 @@ var CurrencyAmountSelect = React.createClass({
           returnKeyType={'done'}
           keyboardType={"numeric"}
         />
+        {this.getDynamicRateExplanation(this.props.data["BuyRate"])}
 
         <TouchableOpacity onPress={function(event) {
           if (!canEditCurrency) return ;
