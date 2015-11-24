@@ -7,11 +7,11 @@ class Routes {
         name: "main",
         id: 1,
         getComponent: () => require("../screens/MainScreen.js"),
-        title: "Helloworld",
         hasCustomLeftButton: true,
         hasCustomRightButton: true,
-        rightButtonText: "Messages",
-        leftButtonText: "Setting",
+        rightButtonImageSource: () => require("../../assets/msgicon.png"),
+        leftButtonImageSource: () => require("../../assets/menuicon.png"),
+
       },
       {
         name: "offerlist",

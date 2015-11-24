@@ -3,7 +3,6 @@
 var React = require('react-native');
 var {
   Text,
-  TouchableOpacity,
 } = React;
 
 var NavigationTextButton = React.createClass({
@@ -14,9 +13,9 @@ var NavigationTextButton = React.createClass({
   },
   render: function() {
     return(
-      <TouchableOpacity onPress={this.props.onPress}>
-        <Text>{this.props.buttonText}</Text>
-      </TouchableOpacity>
+      <Text style={[this.props.styles.navBarText, this.props.styles.navBarButtonText]}>
+        {this.props.buttonText}
+      </Text>
     );
   }
 });
