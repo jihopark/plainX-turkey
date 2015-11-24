@@ -7,6 +7,9 @@ var CardRouter = require('./cards/CardRouter.js');
 
 var {
   ListView,
+  StyleSheet,
+  View,
+  PixelRatio,
 } = React;
 
 var PlainListView = React.createClass({
@@ -40,10 +43,12 @@ var PlainListView = React.createClass({
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);
     return (
-      <CardComponent
-        id={card["UUID"]}
-        observer={observer}
-        data={card["Data"]}/>
+      <View style={styles.cardContainer}>
+        <CardComponent
+          id={card["UUID"]}
+          observer={observer}
+          data={card["Data"]}/>
+      </View>
     );
   },
   render: function() {
@@ -56,6 +61,21 @@ var PlainListView = React.createClass({
     );
   }
 
+});
+
+var styles = StyleSheet.create({
+  cardContainer: {
+    borderRadius: 2,
+    backgroundColor: 'white',
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 10,
+    shadowRadius: 0.5,
+    shadowColor: 'grey',
+    shadowOffset: {width: 0.5, height: 0.5},
+    shadowOpacity: 0.8,
+  },
 });
 
 module.exports = PlainListView;
