@@ -32,7 +32,10 @@ var CurrencyAmountSelect = React.createClass({
 
     return (
       <View>
-        <Text>{this.props.data["TitleText"]}</Text>
+        <Text style={this.props.cardCommonStyles.titles}>
+          {this.props.data["TitleText"]}
+        </Text>
+
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={function(num){

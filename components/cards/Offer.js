@@ -6,6 +6,9 @@ var Rx = require('rx')
 var {
   Text,
   TouchableOpacity,
+  View,
+  Image,
+  StyleSheet,
 } = React;
 
 var Offer = React.createClass({
@@ -17,10 +20,48 @@ var Offer = React.createClass({
     }
     return (
       <TouchableOpacity onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
-        <Text>{this.props.data["Sell"]} {this.props.data["AmountSell"]} to {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
+        <View style={styles.container}>
+          <View style={{flex: 4}}>
+            <Text style={styles.leftCurrency}>
+              {this.props.data["Sell"]} {this.props.data["AmountSell"]}</Text>
+          </View>
+          <View style={{flex: 1}}>
+            <Image style={styles.center} source={require('../../assets/plane.png')}/>
+          </View>
+          <View style={{flex: 4}}>
+            <Text style={styles.rightCurrency}>
+              {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     );
   }
 });
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  center: {
+    marginTop: 3,
+    width: 20,
+    height: 12,
+    resizeMode: 'stretch',
+    alignSelf: 'center'
+  },
+  leftCurrency: {
+    color: '#333333',
+    fontSize: 60/3,
+    textAlign: 'right'
+  },
+  rightCurrency: {
+    color: '#333333',
+    fontSize: 60/3,
+    textAlign: 'left'
+  },
+});
+
 
 module.exports = Offer;

@@ -45,6 +45,7 @@ var PlainListView = React.createClass({
     return (
       <View style={styles.cardContainer}>
         <CardComponent
+          cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
           observer={observer}
           data={card["Data"]}/>
@@ -75,6 +76,32 @@ var styles = StyleSheet.create({
     shadowColor: 'grey',
     shadowOffset: {width: 0.5, height: 0.5},
     shadowOpacity: 0.8,
+  },
+});
+
+var cardCommonStyles = StyleSheet.create({
+  titles: {
+    color: '#333333',
+    fontSize: 36/3,
+    textAlign: 'center',
+    //font: 'SF UI Text Regular'
+  },
+  headings: {
+    color: '#333333',
+    fontSize: 36/3,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    //font: 'SF UI Text Semibold'
+  },
+  currency: {
+    color: '#333333',
+    fontSize: 40/3,
+    marginRight: 10,
+    //font: 'SF UI Text Regular'
+  },
+  finePrint: {
+    color: '#333333',
+    fontSize: 30/3,
   },
 });
 

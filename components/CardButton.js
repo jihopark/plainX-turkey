@@ -7,10 +7,10 @@ var {
   StyleSheet,
 } = React;
 
-var CurrencySelectText = React.createClass({
+var CardButton = React.createClass({
   render: function() {
     return (
-      <Text style={styles.currencySelectText}>
+      <Text style={styles.cardButton}>
         {this.props.text}
       </Text>
     );
@@ -18,17 +18,17 @@ var CurrencySelectText = React.createClass({
 });
 
 var styles = StyleSheet.create({
-  currencySelectText: {
-    width: 80,
-    padding: 5,
+  cardButton: {
+    flex: 1,
     fontSize: 60/3,
     textAlign: 'center',
-    color: '#33cc66',
-    borderWidth: 1,
-    borderColor: '#33cc66',
+    color: 'black',
+    backgroundColor: '#33cc66',
     borderRadius: 2,
-    //font: 'SF UI Text Light'
+    overflow:'hidden',
+    paddingTop:10,
+    paddingBottom:10,
   },
 });
 
-module.exports = CurrencySelectText;
+module.exports = CardButton;
