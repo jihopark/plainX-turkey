@@ -83,6 +83,11 @@ var cardCommonStyles = StyleSheet.create({
     textAlign: 'center',
     //font: 'SF UI Text Regular'
   },
+  description: {
+    color: '#333333',
+    fontSize: 36/3,
+    textAlign: 'center',
+  },
   headings: {
     color: '#333333',
     fontSize: 36/3,
