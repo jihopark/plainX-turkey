@@ -35,7 +35,9 @@ var OfferListScreen = React.createClass({
 
     var listView = (<PlainListView
       cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}/>);
+      cards={this.state.data["Cards"]}
+      onEndReached={this.loadMore}
+      />);
 
     var makeOfferButton = (<ActionButton
                             text={"Make Offer"}
@@ -43,20 +45,12 @@ var OfferListScreen = React.createClass({
                             enabled={true} />);
 
     return (
-      <View style={styles.container}>
+      <View style={this.screenCommonStyle.container}>
         {listView}
         {this.state.showActionButton ? makeOfferButton : null}
       </View>
     );
   }
 });
-
-var styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-  }
-});
-
-
 
 module.exports = OfferListScreen;

@@ -11,19 +11,21 @@ class Routes {
         hasCustomRightButton: true,
         rightButtonImageSource: () => require("../../assets/msgicon.png"),
         leftButtonImageSource: () => require("../../assets/menuicon.png"),
-
+        enablePagination: false
       },
       {
         name: "offerlist",
         id: 2,
         getComponent: () => require("../screens/OfferListScreen.js"),
         title: "See all offers",
+        enablePagination: true
       },
       {
         name: "makeOffer",
         id: 3,
         getComponent: () => require("../screens/MakeOfferScreen.js"),
         title: "Make an offer",
+        enablePagination: false
       }
     ];
   }

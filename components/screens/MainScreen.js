@@ -55,26 +55,18 @@ var MainScreen = React.createClass({
           dismissPicker={this.dismissPicker} />);
 
       return (
-        <View style={styles.container}>
+        <View style={this.screenCommonStyle.container}>
           <View style={{flex: 1}}>{listView}</View>
           {currencyPicker}
         </View>
       );
     }
     return (
-      <View style={styles.container}>
+      <View style={this.screenCommonStyle.container}>
         {listView}
       </View>
     );
   }
 });
-
-var styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    flex: 1,
-  }
-});
-
 
 module.exports = MainScreen;

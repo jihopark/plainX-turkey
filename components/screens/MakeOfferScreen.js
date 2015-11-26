@@ -84,7 +84,7 @@ var MakeOfferScreen = React.createClass({
     console.log(requestParams);
 
     return (
-      <View style={styles.container}>
+      <View style={this.screenCommonStyle.container}>
         {listView}
         {this.state.showCurrencyPicker ? (
             <CurrencyPicker
@@ -97,13 +97,6 @@ var MakeOfferScreen = React.createClass({
     );
   }
 });
-
-var styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-  }
-});
-
 
 
 module.exports = MakeOfferScreen;

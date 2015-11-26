@@ -30,9 +30,6 @@ var PlainListView = React.createClass({
     }
     return false;
   },
-  onEndReached: function() {
-
-  },
   renderCards: function(card) {
     var observer;
     //find if there is cardObserver to pass
@@ -57,7 +54,7 @@ var PlainListView = React.createClass({
       <ListView
         dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
         renderRow={this.renderCards}
-        onEndReached={this.onEndReached}
+        onEndReached={this.props.onEndReached}
       />
     );
   }

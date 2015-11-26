@@ -115,9 +115,11 @@ var PlainNavigator = React.createClass({
     if (routes!= null) {
       var Screen = routes.getCurrentRoute().getComponent();
       return (
-        <ScrollView contentContainerStyle={styles.scene} keyboardShouldPersistTaps={false}>
+        <View
+          style={styles.scene} keyboardShouldPersistTaps={false}>
           <Screen
             //subscribe to these subjects if need to receive left,right button events
+            enablePagination={routes.getCurrentRoute().enablePagination}
             leftNavBarButtonSubject={this.leftNavBarButtonSubject}
             rightNavBarButtonSubject={this.rightNavBarButtonSubject}
             routes={routes}
@@ -125,7 +127,7 @@ var PlainNavigator = React.createClass({
             api_domain={API_DOMAIN}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()} />
-        </ScrollView>
+        </View>
       );
     }
     return null;
