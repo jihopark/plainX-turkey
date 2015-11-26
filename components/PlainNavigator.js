@@ -115,7 +115,7 @@ var PlainNavigator = React.createClass({
     if (routes!= null) {
       var Screen = routes.getCurrentRoute().getComponent();
       return (
-        <ScrollView style={styles.scene} keyboardShouldPersistTaps={false}>
+        <ScrollView contentContainerStyle={styles.scene} keyboardShouldPersistTaps={false}>
           <Screen
             //subscribe to these subjects if need to receive left,right button events
             leftNavBarButtonSubject={this.leftNavBarButtonSubject}

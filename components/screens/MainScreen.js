@@ -56,7 +56,7 @@ var MainScreen = React.createClass({
 
       return (
         <View style={styles.container}>
-          {listView}
+          <View style={{flex: 1}}>{listView}</View>
           {currencyPicker}
         </View>
       );
@@ -72,6 +72,7 @@ var MainScreen = React.createClass({
 var styles = StyleSheet.create({
   container: {
     paddingTop: 50,
+    flex: 1,
   }
 });
 
