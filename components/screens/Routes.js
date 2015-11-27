@@ -26,6 +26,13 @@ class Routes {
         getComponent: () => require("../screens/MakeOfferScreen.js"),
         title: "Make an offer",
         enablePagination: false
+      },
+      {
+        name: "login",
+        id: 4,
+        getComponent: () => require("../screens/LoginScreen.js"),
+        title: "Login",
+        enablePagination: false
       }
     ];
   }
