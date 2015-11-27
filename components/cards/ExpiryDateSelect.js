@@ -97,7 +97,7 @@ var ExpiryDateSelect = React.createClass({
             mode="date"
             onDateChange={function(selectedDate){
               if (selectedDate >= new Date()) { //No past dates
-                next["Date"] = selectedDate;
+                next["Date"] = selectedDate.getTime();
                 subject.onNext(next);
               }
             }}

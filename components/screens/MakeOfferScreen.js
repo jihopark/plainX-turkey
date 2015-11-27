@@ -58,11 +58,16 @@ var MakeOfferScreen = React.createClass({
           }
         }
       }
+      else if (cards[i]["Name"] == "ExpiryDateSelect") {
+        params["Date"] = cards[i]["Data"]["Date"];
+      }
     }
     return locationInputValid && amountInputValid && currencyInputValid ? params : null;
   },
-  onPress: function() {
-    console.log("PRESS");
+  onPress: function(params){
+    return function() {
+      console.log(params);
+    };
   },
   renderScreen: function() {
     var cardObservers = { };
@@ -71,17 +76,16 @@ var MakeOfferScreen = React.createClass({
     cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
     cardObservers["LocationSelect"] = this.locationSelectonNext;
 
+    var requestParams = this.getRequestParams();
+
     var listView = (<PlainListView
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}/>);
 
-    var requestParams = this.getRequestParams();
     var finishButton = (<ActionButton
       text={"Finish"}
-      onPress={this.onPress}
+      onPress={this.onPress(this.getParamsToString(requestParams))}
       enabled={requestParams!=null} />);
-    console.log('Request Params:');
-    console.log(requestParams);
 
     return (
       <View style={this.screenCommonStyle.container}>
