@@ -178,10 +178,12 @@ var styles = StyleSheet.create({
   navBarLeftButton: {
     marginLeft: 10,
     marginTop: 12,
+    padding: 3,
   },
   navBarRightButton: {
     marginRight: 10,
     marginTop: 12,
+    padding: 3,
   },
   navBarButtonText: {
     color: '#33cc66',
