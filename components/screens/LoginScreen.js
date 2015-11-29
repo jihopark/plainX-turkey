@@ -8,12 +8,12 @@ var {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   AsyncStorage,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var PlainTextInput = require('../PlainTextInput.js');
 var sha256 = require('sha256');
 
 var LoginScreen = React.createClass({
@@ -64,7 +64,7 @@ var LoginScreen = React.createClass({
     })
   },
   onSignUp: function(){
-    console.log("Signup");
+    this.props.pushScreen({uri: this.props.routes.addRoute('signup')});
   },
   onChangeEmail: function(text) {
     this.setState({email: text});
@@ -77,21 +77,16 @@ var LoginScreen = React.createClass({
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'row', alignItems: 'center'}]}>
         <View style={styles.loginContainer}>
           <Text>You need to be logged in to continue!</Text>
-
-          <View style={styles.textContainer}>
-            <TextInput style={[styles.loginInput, styles.loginId]}
+          <PlainTextInput
               placeholder={"Email"}
               keyboardType={"email-address"}
               onChangeText={this.onChangeEmail}
               value={this.state.email} />
-          </View>
-          <View style={styles.textContainer}>
-            <TextInput style={[styles.loginInput, styles.loginPw]}
+          <PlainTextInput
               placeholder={"Password"}
               secureTextEntry={true}
               onChangeText={this.onChangePassword}
               value={this.state.password} />
-          </View>
           <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
           <TouchableOpacity onPress={this.onLogin}>
             <Text>Login</Text>
