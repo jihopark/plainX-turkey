@@ -39,6 +39,8 @@ var PlainListView = React.createClass({
     }
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);
+    if (CardComponent == null)
+      return null;
     return (
       <View style={styles.cardContainer}>
         <CardComponent
