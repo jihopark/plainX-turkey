@@ -13,7 +13,7 @@ var CurrencyAmountTextInput = React.createClass({
     return (
       <View style={styles.container}>
         <TextInput
-          style={styles.currencyAmountInput}
+          style={[styles.currencyAmountTextInput, this.props.textStyle]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
           value={this.props.value}
@@ -39,12 +39,9 @@ var styles = StyleSheet.create({
     borderBottomColor: '#33cc66',
     marginRight: 15,
   },
-  currencyAmountInput: {
+  currencyAmountTextInput: {
     width: 140,
     height: 30,
-    fontSize: 60/3,
-    textAlign: 'center',
-    color: '#33cc66',
   },
 });
 

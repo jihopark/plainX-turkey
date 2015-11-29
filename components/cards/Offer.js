@@ -22,14 +22,14 @@ var Offer = React.createClass({
       <TouchableOpacity onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
         <View style={styles.container}>
           <View style={{flex: 4}}>
-            <Text style={styles.leftCurrency}>
+            <Text style={[styles.leftCurrency, this.props.cardCommonStyles.currency]}>
               {this.props.data["Sell"]} {this.props.data["AmountSell"]}</Text>
           </View>
           <View style={{flex: 1}}>
             <Image style={styles.center} source={require('../../assets/plane.png')}/>
           </View>
           <View style={{flex: 4}}>
-            <Text style={styles.rightCurrency}>
+            <Text style={[styles.rightCurrency, this.props.cardCommonStyles.currency]}>
               {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
           </View>
         </View>
@@ -52,13 +52,9 @@ var styles = StyleSheet.create({
     alignSelf: 'center'
   },
   leftCurrency: {
-    color: '#333333',
-    fontSize: 60/3,
     textAlign: 'right'
   },
   rightCurrency: {
-    color: '#333333',
-    fontSize: 60/3,
     textAlign: 'left'
   },
 });

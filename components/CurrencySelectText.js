@@ -16,7 +16,7 @@ var CurrencySelectText = React.createClass({
         <Text style={styles.currencySelectText}>
           {this.props.text}
         </Text>
-        <Image style={styles.triangle} source={require('../assets/triangle.png')} />
+        <Image style={this.props.iconStyle} source={require('../assets/triangle.png')} />
       </View>
     );
   }
@@ -33,12 +33,6 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#33cc66',
     borderRadius: 4,
-  },
-  triangle: {
-    width: 11,
-    height: 5.5,
-    resizeMode: 'stretch',
-    alignSelf: 'center'
   },
   currencySelectText: {
     fontSize: 60/3,

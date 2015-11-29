@@ -38,7 +38,9 @@ var CurrencySelect = React.createClass({
             next["CurrentCurrency"] = sell;
             subject.onNext(next);
           }}>
-            <CurrencySelectText text={sell}/>
+            <CurrencySelectText
+              iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+              text={sell}/>
           </TouchableOpacity>
 
           <Text style={this.props.cardCommonStyles.titles, styles.to}>
@@ -50,7 +52,9 @@ var CurrencySelect = React.createClass({
             next["CurrentCurrency"] = buy;
             subject.onNext(next);
           }}>
-            <CurrencySelectText text={buy}/>
+            <CurrencySelectText
+              iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+              text={buy}/>
           </TouchableOpacity>
         </View>
 

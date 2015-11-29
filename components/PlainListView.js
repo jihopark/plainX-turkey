@@ -105,6 +105,23 @@ var cardCommonStyles = StyleSheet.create({
     color: '#333333',
     fontSize: 30/3,
   },
+  inputAmountText:{
+    fontSize: 60/3,
+    textAlign: 'center',
+    color: '#33cc66',
+    //font: 'SF UI Text Regular'
+  },
+  urgentText: {
+    fontSize: 30/3,
+    color: '#006633',
+    //font: 'SF UI Text Bold'
+  },
+  triangleIconStyle: {
+    width: 11,
+    height: 5.5,
+    resizeMode: 'stretch',
+    alignSelf: 'center'
+  },
 });
 
 module.exports = PlainListView;

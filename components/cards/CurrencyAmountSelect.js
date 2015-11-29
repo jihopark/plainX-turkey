@@ -48,6 +48,7 @@ var CurrencyAmountSelect = React.createClass({
         <View style={{flexDirection: 'column', alignItems:'center'}}>
           <View style={styles.row}>
             <CurrencyAmountTextInput
+              textStyle={this.props.cardCommonStyles.inputAmountText}
               onChangeText={function(num){
                 next["Target"] = "AmountSell";
                 next["AmountSell"] = num;
@@ -66,7 +67,9 @@ var CurrencyAmountSelect = React.createClass({
               next["CurrentCurrency"] = sell;
               subject.onNext(next);
             }}>
-              <CurrencySelectText text={sell}/>
+              <CurrencySelectText
+                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+                text={sell}/>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
@@ -79,6 +82,7 @@ var CurrencyAmountSelect = React.createClass({
           </View>
           <View style={styles.row}>
             <CurrencyAmountTextInput
+              textStyle={this.props.cardCommonStyles.inputAmountText}
               onChangeText={function(num){
                 next["Target"] = "AmountBuy";
                 next["AmountBuy"] = num;
@@ -96,7 +100,9 @@ var CurrencyAmountSelect = React.createClass({
               next["CurrentCurrency"] = buy;
               subject.onNext(next);
             }}>
-              <CurrencySelectText text={buy}/>
+              <CurrencySelectText
+                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+                text={buy}/>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
