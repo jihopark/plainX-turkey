@@ -21,23 +21,25 @@ var DateFormat = React.createClass({
     var triangle = require('../../assets/triangle.png');
     return (
       <View style={styles.dateformatContainer}>
-        <View style={[{width: 45}, styles.textContainer]}>
-          <Text style={styles.dateformatText}>{this.props.date.getDate()}</Text>
-          <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
-        </View>
-        <Image style={styles.triangle} source={triangle} />
-
+        <Image source={require('../../assets/calendar.png')}
+          style={styles.calendarIcon} />
         <View style={[{width: 45}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{(this.props.date.getMonth()+1)}</Text>
           <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
         </View>
-        <Image style={styles.triangle} source={triangle} />
+        <Image style={[this.props.triangleIconStyle, {marginRight: 5}]} source={triangle} />
+
+        <View style={[{width: 45}, styles.textContainer]}>
+          <Text style={styles.dateformatText}>{this.props.date.getDate()}</Text>
+          <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
+        </View>
+        <Image style={[this.props.triangleIconStyle, {marginRight: 5}]} source={triangle} />
 
         <View style={[{width: 90}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{this.props.date.getFullYear()}</Text>
           <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
         </View>
-        <Image style={styles.triangle} source={triangle} />
+        <Image style={[this.props.triangleIconStyle, {marginRight: 5}]} source={triangle} />
       </View>
     );
   }
@@ -58,11 +60,9 @@ var styles = StyleSheet.create({
     fontSize: 60/2,
     textAlign: 'center',
   },
-  triangle: {
-    width: 11,
-    height: 5.5,
-    resizeMode: 'stretch',
-    alignSelf: 'center',
+  calendarIcon: {
+    width: 30,
+    height: 30,
     marginRight: 5,
   },
 });
@@ -115,7 +115,9 @@ var ExpiryDateSelect = React.createClass({
           {this.props.data["TitleText"]}</Text>
         <Divider />
         <TouchableOpacity style={{flexDirection:'column', alignItems:'center'}} onPress={this.showDatePicker}>
-          <DateFormat date={date} />
+          <DateFormat
+            triangleIconStyle={this.props.cardCommonStyles.triangleIconStyle}
+            date={date} />
         </TouchableOpacity>
         {this.state.isDatePickerShown ? datePicker : null}
         <Text style={this.props.cardCommonStyles.description}>
