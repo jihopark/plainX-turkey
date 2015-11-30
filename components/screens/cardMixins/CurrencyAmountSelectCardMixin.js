@@ -36,10 +36,6 @@ var CurrencyAmountSelectCardMixin =  {
   currencyAmountSelectCardOnNext: function(event) {
     var data;
     switch(event["Target"]){
-      case "Focus":
-        if (this.state.showCurrencyPicker)
-          this.setState({showCurrencyPicker: false});
-          break;
       case "Next":
         console.log("NEXT");
         break;
@@ -70,16 +66,15 @@ var CurrencyAmountSelectCardMixin =  {
         }
         this.setState({data: data});
         break;
-      case "Sell":
-      case "Buy":
+      case "PressSell":
+      case "PressBuy":
         //Remove numbers if change of currency.
         data = this.clearAll(event["id"]);
-        this.setState({ data: data,
-                        showCurrencyPicker: true,
-                        currentCurrency: event["CurrentCurrency"],
-                        targetInput: event["Target"],
-                        currencyList: event["CurrencyList"],
-                        currencySelectId: event["id"]});
+        this.setState({ data: data });
+        break;
+      case "Buy":
+      case "Sell":
+        this.setState({data: this.mutateCardStateData(this.state.data, event["id"], event["Target"], event[event["Target"]])});
     }
   }
 }

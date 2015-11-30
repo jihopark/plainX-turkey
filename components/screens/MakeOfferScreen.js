@@ -11,25 +11,19 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
 var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
 var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
 
-var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 var ActionButton = require('../ActionButton.js');
 
 var MakeOfferScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
+  mixins: [ScreenMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
   displayName: "MakeOfferScreen",
   endPoint: 'offer/make',
   getInitialState: function() {
     return {
-      showCurrencyPicker: false,
-      currencyList: [],
-      targetInput: null,
-      currencySelectId: null,
-      currentCurrency: null,
+      data: null,
     };
   },
   getRequestParams: function() {
@@ -87,13 +81,7 @@ var MakeOfferScreen = React.createClass({
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
-        {this.state.showCurrencyPicker ? (
-            <CurrencyPicker
-              currentCurrency={this.state.currentCurrency}
-              currencyList={this.state.currencyList}
-              onPickerValueChange={this.onPickerValueChange}
-              dismissPicker={this.dismissPicker} />)
-          : finishButton}
+        {finishButton}
       </View>
     );
   }

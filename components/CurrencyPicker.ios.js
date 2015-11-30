@@ -15,11 +15,16 @@ var CurrencyPicker = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.close}
-          onPress={this.props.dismissPicker}>
-          <Text>Close</Text>
-        </TouchableOpacity>
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            onPress={this.props.dismissPicker}>
+            <Text>Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.props.onPick}>
+            <Text>Done</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.pickerContainer}>
           <PickerIOS
             style={{width: 320}}
@@ -43,18 +48,15 @@ var CurrencyPicker = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    borderTopWidth: 1,
-    borderTopColor: '#EAEAEA',
-    backgroundColor: 'white',
-    flex: 0.4,
-    flexDirection: 'column',
     alignItems:'center',
   },
   pickerContainer: {
     flex: 9,
+    backgroundColor: 'transparent',
   },
-  close: {
+  buttons: {
     flex: 1,
+    flexDirection: 'row',
     alignSelf: 'flex-end'
   }
 });

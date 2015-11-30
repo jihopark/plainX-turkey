@@ -11,24 +11,17 @@ var {
 
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var CurrencyPickerMixin = require('./componentMixins/CurrencyPickerMixin.js');
 var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
 
 var PlainListView = require('../PlainListView.js');
-var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
 
 var MainScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyPickerMixin, CurrencySelectCardMixin],
+  mixins: [ScreenMixin, CurrencySelectCardMixin],
   displayName: "MainScreen",
   endPoint: "main",
   getInitialState: function() {
     return {
       data: null,
-      showCurrencyPicker: false,
-      currencyList: [],
-      targetInput: null,
-      currencySelectId: null,
-      currentCurrency: null
     }
   },
   subscribeToNavBarSubjects: (left, right) => {
@@ -46,21 +39,6 @@ var MainScreen = React.createClass({
         cardObservers={cardObservers}
         cards={this.state.data["Cards"]}/>);
 
-    if (this.state.showCurrencyPicker) {
-      var currencyPicker = (
-        <CurrencyPicker
-          currentCurrency={this.state.currentCurrency}
-          currencyList={this.state.currencyList}
-          onPickerValueChange={this.onPickerValueChange}
-          dismissPicker={this.dismissPicker} />);
-
-      return (
-        <View style={this.screenCommonStyle.container}>
-          <View style={{flex: 1}}>{listView}</View>
-          {currencyPicker}
-        </View>
-      );
-    }
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}

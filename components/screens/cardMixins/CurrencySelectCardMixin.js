@@ -3,18 +3,16 @@
 var CurrencySelectMixin =  {
   currencySelectCardOnNext: function(event) {
     //If event is button
-    if (event["Target"] == "Button") {
-      var params = {"sell": event["Sell"], "buy": event["Buy"]};
-      this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+this.getParamsToString(params))});
-      return ;
+    switch (event["Target"]){
+      case "Button":
+        var params = {"Sell": event["Sell"], "Buy": event["Buy"]};
+        this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+this.getParamsToString(params))});
+        break;
+      case "Buy":
+      case "Sell":
+        this.setState({data: this.mutateCardStateData(this.state.data, event["id"], event["Target"], event[event["Target"]])});
+        break;
     }
-
-    //If event is selecting currency
-    this.setState({showCurrencyPicker: true,
-                    currentCurrency: event["CurrentCurrency"],
-                    targetInput: event["Target"],
-                    currencyList: event["CurrencyList"],
-                    currencySelectId: event["id"]});
   }
 }
 

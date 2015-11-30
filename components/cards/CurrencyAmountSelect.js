@@ -13,7 +13,11 @@ var {
   TextInput,
   StyleSheet,
   Image,
+  Platform,
 } = React;
+
+var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+
 
 var CurrencyAmountSelect = React.createClass({
   displayName: "CurrencyAmountSelectCard",
@@ -23,6 +27,29 @@ var CurrencyAmountSelect = React.createClass({
         {"*Based on today's market rate:" + rate}
       </Text>) :
       null;
+  },
+  getInitialState: function() {
+    return {
+      showSellCurrencyPicker: false,
+      showBuyCurrencyPicker: false,
+      selectedSellCurrency: null,
+      selectedBuyCurrency: null,
+    }
+  },
+  dismissPicker: function() {
+    this.setState({showSellCurrencyPicker: false, showBuyCurrencyPicker: false});
+  },
+  onPressSell: function(event) {
+    this.setState({showBuyCurrencyPicker: false, showSellCurrencyPicker: true, selectedSellCurrency: this.props.data["Sell"]});
+  },
+  onPressBuy: function(event) {
+    this.setState({showSellCurrencyPicker: false, showBuyCurrencyPicker: true, selectedBuyCurrency: this.props.data["Buy"]});
+  },
+  onSellPickerValueChange: function(value) {
+    this.setState({selectedSellCurrency: value});
+  },
+  onBuyPickerValueChange: function(value) {
+    this.setState({selectedBuyCurrency: value});
   },
   render: function() {
     var subject = new Rx.Subject();
@@ -37,6 +64,39 @@ var CurrencyAmountSelect = React.createClass({
     var AmountSell = this.props.data["AmountSell"]+"";
     var AmountBuy = this.props.data["AmountBuy"]+"";
     var canEditCurrency = true;
+
+    //For CurrencyPicker
+    var sellPick = this.state.selectedSellCurrency;
+    var buyPick = this.state.selectedBuyCurrency;
+    var dismiss = this.dismissPicker;
+    var onPressSell = this.onPressSell;
+    var onPressBuy = this.onPressBuy;
+
+    var sellPicker = this.state.showSellCurrencyPicker ?
+      (<CurrencyPicker
+        currentCurrency={this.state.selectedSellCurrency}
+        currencyList={currencyList}
+        onPick={function(){
+          next["Target"] = "Sell";
+          next["Sell"] = sellPick;
+          dismiss();
+          subject.onNext(next);
+        }}
+        onPickerValueChange={this.onSellPickerValueChange}
+        dismissPicker={this.dismissPicker} />) : null;
+
+    var buyPicker = this.state.showBuyCurrencyPicker ?
+      (<CurrencyPicker
+        onPick={function(){
+          next["Target"] = "Buy";
+          next["Buy"] = buyPick;
+          dismiss();
+          subject.onNext(next);
+        }}
+        currentCurrency={this.state.selectedBuyCurrency}
+        currencyList={currencyList}
+        onPickerValueChange={this.onBuyPickerValueChange}
+        dismissPicker={this.dismissPicker} />) : null;
 
     return (
       <View>
@@ -63,9 +123,9 @@ var CurrencyAmountSelect = React.createClass({
 
             <TouchableOpacity onPress={function(event) {
               if (!canEditCurrency) return ;
-              next["Target"] = "Sell";
-              next["CurrentCurrency"] = sell;
+              next["Target"] = "PressSell";
               subject.onNext(next);
+              onPressSell();
             }}>
               <CurrencySelectText
                 iconStyle={this.props.cardCommonStyles.triangleIconStyle}
@@ -96,9 +156,9 @@ var CurrencyAmountSelect = React.createClass({
             />
             <TouchableOpacity onPress={function(event) {
               if (!canEditCurrency) return ;
-              next["Target"] = "Buy";
-              next["CurrentCurrency"] = buy;
+              next["Target"] = "PressBuy";
               subject.onNext(next);
+              onPressBuy();
             }}>
               <CurrencySelectText
                 iconStyle={this.props.cardCommonStyles.triangleIconStyle}
@@ -114,6 +174,8 @@ var CurrencyAmountSelect = React.createClass({
           subject.onNext(next);
         }}>
         </TouchableOpacity>
+        {sellPicker}
+        {buyPicker}
       </View>
     );
   }
