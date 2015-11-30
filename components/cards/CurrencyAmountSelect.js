@@ -107,6 +107,18 @@ var CurrencyAmountSelect = React.createClass({
         <Divider />
         <View style={{flexDirection: 'column', alignItems:'center'}}>
           <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.marginRight}
+              onPress={function(event) {
+                if (!canEditCurrency) return ;
+                next["Target"] = "PressSell";
+                subject.onNext(next);
+                onPressSell();
+              }}>
+              <CurrencySelectText
+                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+                text={sell}/>
+            </TouchableOpacity>
             <CurrencyAmountTextInput
               textStyle={this.props.cardCommonStyles.inputAmountText}
               onChangeText={function(num){
@@ -120,17 +132,6 @@ var CurrencyAmountSelect = React.createClass({
               }}
               value={AmountSell}
             />
-
-            <TouchableOpacity onPress={function(event) {
-              if (!canEditCurrency) return ;
-              next["Target"] = "PressSell";
-              subject.onNext(next);
-              onPressSell();
-            }}>
-              <CurrencySelectText
-                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
-                text={sell}/>
-            </TouchableOpacity>
           </View>
           <View style={styles.row}>
             {this.getDynamicRateExplanation(this.props.data["SellRate"])}
@@ -141,6 +142,18 @@ var CurrencyAmountSelect = React.createClass({
               EXCHANGE TO:</Text>
           </View>
           <View style={styles.row}>
+            <TouchableOpacity
+              style={styles.marginRight}
+              onPress={function(event) {
+              if (!canEditCurrency) return ;
+              next["Target"] = "PressBuy";
+              subject.onNext(next);
+              onPressBuy();
+            }}>
+              <CurrencySelectText
+                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
+                text={buy}/>
+            </TouchableOpacity>
             <CurrencyAmountTextInput
               textStyle={this.props.cardCommonStyles.inputAmountText}
               onChangeText={function(num){
@@ -154,16 +167,6 @@ var CurrencyAmountSelect = React.createClass({
               }}
               value={AmountBuy}
             />
-            <TouchableOpacity onPress={function(event) {
-              if (!canEditCurrency) return ;
-              next["Target"] = "PressBuy";
-              subject.onNext(next);
-              onPressBuy();
-            }}>
-              <CurrencySelectText
-                iconStyle={this.props.cardCommonStyles.triangleIconStyle}
-                text={buy}/>
-            </TouchableOpacity>
           </View>
           <View style={styles.row}>
             {this.getDynamicRateExplanation(this.props.data["BuyRate"])}
@@ -185,6 +188,9 @@ var styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginTop: 10,
+  },
+  marginRight: {
+    marginRight: 10,
   },
   centerImage: {
     marginTop: 3,
