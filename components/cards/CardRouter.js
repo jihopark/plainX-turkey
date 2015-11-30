@@ -16,7 +16,9 @@ var CardRouter = {
     "MessageThread": () => require('../cards/Offer.js'),
     "Message": () => require('../cards/Offer.js'),
     "SettingOption": () => require('../cards/Offer.js'),
-    "Header": () => require('../cards/Header.js')
+    "Header": () => require('../cards/Header.js'),
+    "Empty": () => require('../cards/Empty.js'),
+    "Error": () => require('../cards/Error.js'),
   },
   getComponent: function(name){
     if (Object.keys(this.registeredCards).indexOf(name) == -1) return null;

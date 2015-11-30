@@ -88,7 +88,12 @@ var ScreenMixin =  {
               });
             }
           })
-          .done();
+        .catch((error) => {
+          console.log(error);
+          this.setState({data: {"Page":0, "HasNext": false,
+                           "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
+         })
+        .done();
     }
   },
   getParamsToString: function(params) {
