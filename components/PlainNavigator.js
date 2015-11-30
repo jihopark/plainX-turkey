@@ -96,7 +96,7 @@ var PlainNavigator = React.createClass({
         }
         if (routes.getCurrentRoute().rightButtonImageSource) {
           button = (
-            <Image style={[styles.navBarIcon, {width: 30, height: 30}]}
+            <Image style={[styles.navBarIcon, {position:'absolute', top:0, left: -20, width: 30, height: 30}]}
               source={routes.getCurrentRoute().rightButtonImageSource()} />);
         }
         return (
