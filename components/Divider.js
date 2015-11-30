@@ -8,7 +8,8 @@ var {
 var Divider = React.createClass({
   displayName: 'Divider',
   render: function() {
-    return (<View style={{flex:1, height: 1, backgroundColor: '#33cc66'}}/>);
+    return (<View style={[{flex:1, height: 1, backgroundColor: '#33cc66'},
+                      (this.props.margin || {})]}/>);
   }
 });
 module.exports = Divider;

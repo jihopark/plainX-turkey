@@ -4,6 +4,7 @@ var React = require('react-native');
 var Rx = require('rx');
 
 var CardRouter = require('./cards/CardRouter.js');
+var Divider = require('./Divider.js');
 
 var {
   ListView,
@@ -31,30 +32,44 @@ var PlainListView = React.createClass({
     }
     return false;
   },
+  getMarginStyle: function(merged) {
+    switch(merged){
+      case "":
+        return styles.singleCard;
+      case "Top":
+        return styles.topCard;
+      case "Mid":
+        return styles.midCard;
+      case "Bottom":
+        return styles.bottomCard;
+    }
+  },
   renderCards: function(card) {
     var observer;
     //find if there is cardObserver to pass
     if (this.needsTobeObserved(card["Name"])) {
       observer = this.props.cardObservers[card["Name"]];
-    //  console.log("Need To observe " + card["Name"] + " with " + observer);
     }
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);
     if (CardComponent == null)
       return null;
+
     return (
-      <View style={styles.cardContainer}>
+      <View style={[styles.cardContainer, this.getMarginStyle(card["Merged"])]}>
         <CardComponent
           cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
           observer={observer}
           data={card["Data"]}/>
+        {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
+          <Divider margin={styles.mergedCardDivider} /> : null}
       </View>
     );
   },
   render: function() {
     return (
-      <View style={styles.container}>
+      <View style={styles.listContainer}>
         <ListView
           dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
           renderRow={this.renderCards}
@@ -67,25 +82,49 @@ var PlainListView = React.createClass({
 });
 
 var styles = StyleSheet.create({
-  cardContainer: {
+  singleCard: {
+    marginTop: 2.5,
+    marginBottom: 2.5,
     borderRadius: 2,
-    backgroundColor: 'white',
-    marginBottom: 5,
+    padding: 10,
+  },
+  midCard:{
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderWidth: 0,
+    borderColor: 'transparent',
+  },
+  topCard:{
+    paddingTop: 10,
+    paddingBottom: 5,
+    borderTopLeftRadius: 2,
+    borderTopRightRadius: 2,
+    marginTop: 2.5,
+    borderBottomColor: 'transparent',
+  },
+  bottomCard: {
+    paddingTop: 5,
+    paddingBottom: 10,
+    marginBottom: 2.5,
+    borderTopColor: 'transparent',
+    borderBottomLeftRadius: 2,
+    borderBottomRightRadius: 2,
+  },
+  cardContainer: {
     marginLeft: 10,
     marginRight: 10,
-    padding: 10,
-    shadowRadius: 0.5,
+    backgroundColor: 'white',
+    shadowRadius: 0.3,
     shadowColor: 'grey',
     shadowOffset: {width: 0.5, height: 0.5},
     shadowOpacity: 0.8,
   },
-  container: {
+  listContainer: {
     flex:1,
   },
-  backgroundContainer: {
-    flex: 1,
-    position: 'absolute',
-    top: 0, bottom: 0, left: 0, right: 0,
+  mergedCardDivider: {
+    marginLeft: 16,
+    marginRight: 16,
   },
 });
 
