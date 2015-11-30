@@ -38,6 +38,7 @@ var styles = StyleSheet.create({
     fontSize: 60/3,
     textAlign: 'center',
     color: '#33cc66',
+    marginRight: 7,
     //font: 'SF UI Text Light'
   },
 });

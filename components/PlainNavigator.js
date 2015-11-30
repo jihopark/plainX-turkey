@@ -23,7 +23,7 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main/login'
+      uri: 'main'
     };
   },
   //To Load all necessary screens from the uri
@@ -96,7 +96,7 @@ var PlainNavigator = React.createClass({
         }
         if (routes.getCurrentRoute().rightButtonImageSource) {
           button = (
-            <Image style={styles.navBarIcon}
+            <Image style={[styles.navBarIcon, {width: 30, height: 30}]}
               source={routes.getCurrentRoute().rightButtonImageSource()} />);
         }
         return (

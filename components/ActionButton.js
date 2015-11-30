@@ -21,13 +21,13 @@ var ActionButton = React.createClass({
 var styles = StyleSheet.create({
   actionButton: {
     flex: 1,
-    fontSize: 60/3,
+    fontSize: 20,
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     backgroundColor: '#33cc66',
     overflow:'hidden',
-    paddingTop:10,
-    paddingBottom:10,
+    paddingTop:20,
+    paddingBottom:20,
   },
 });
 

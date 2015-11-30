@@ -19,16 +19,16 @@ var Offer = React.createClass({
       subject.subscribe(this.props.observer);
     }
     return (
-      <TouchableOpacity onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
+      <TouchableOpacity style={{flex:1}} onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
         <View style={styles.container}>
-          <View style={{flex: 4}}>
+          <View style={{flex: 4, justifyContent: 'center', flexDirection:'column'}}>
             <Text style={[styles.leftCurrency, this.props.cardCommonStyles.currency]}>
               {this.props.data["Sell"]} {this.props.data["AmountSell"]}</Text>
           </View>
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, flexDirection:'row', alignItems: 'center'}}>
             <Image style={styles.center} source={require('../../assets/plane.png')}/>
           </View>
-          <View style={{flex: 4}}>
+          <View style={{flex: 4, justifyContent: 'center', flexDirection:'column'}}>
             <Text style={[styles.rightCurrency, this.props.cardCommonStyles.currency]}>
               {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
           </View>
@@ -42,20 +42,21 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 40,
   },
   center: {
     marginTop: 3,
-    width: 20,
-    height: 12,
+    width: 30,
+    height: 18,
     resizeMode: 'stretch',
     alignSelf: 'center'
   },
   leftCurrency: {
-    textAlign: 'right'
+    textAlign: 'right',
   },
   rightCurrency: {
-    textAlign: 'left'
+    textAlign: 'left',
   },
 });
 

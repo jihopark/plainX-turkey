@@ -10,6 +10,7 @@ var {
   StyleSheet,
   View,
   PixelRatio,
+  Image,
 } = React;
 
 var PlainListView = React.createClass({
@@ -53,11 +54,13 @@ var PlainListView = React.createClass({
   },
   render: function() {
     return (
-      <ListView
-        dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
-        renderRow={this.renderCards}
-        onEndReached={this.props.onEndReached}
-      />
+      <View style={styles.container}>
+        <ListView
+          dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
+          renderRow={this.renderCards}
+          onEndReached={this.props.onEndReached}
+        />
+      </View>
     );
   }
 
@@ -76,45 +79,53 @@ var styles = StyleSheet.create({
     shadowOffset: {width: 0.5, height: 0.5},
     shadowOpacity: 0.8,
   },
+  container: {
+    flex:1,
+  },
+  backgroundContainer: {
+    flex: 1,
+    position: 'absolute',
+    top: 0, bottom: 0, left: 0, right: 0,
+  },
 });
 
 var cardCommonStyles = StyleSheet.create({
   titles: {
     color: '#333333',
-    fontSize: 36/3,
+    fontSize: 40/2,
     textAlign: 'center',
     //font: 'SF UI Text Regular'
   },
   description: {
     color: '#333333',
-    fontSize: 36/3,
+    fontSize: 36/2,
     textAlign: 'center',
   },
   headings: {
     color: '#333333',
-    fontSize: 36/3,
+    fontSize: 36/2,
     fontWeight: 'bold',
     textAlign: 'center',
     //font: 'SF UI Text Semibold'
   },
   currency: {
     color: '#333333',
-    fontSize: 40/3,
+    fontSize: 40/2,
     marginRight: 10,
     //font: 'SF UI Text Regular'
   },
   finePrint: {
     color: '#333333',
-    fontSize: 30/3,
+    fontSize: 30/2,
   },
   inputAmountText:{
-    fontSize: 60/3,
+    fontSize: 60/2,
     textAlign: 'center',
     color: '#33cc66',
     //font: 'SF UI Text Regular'
   },
   urgentText: {
-    fontSize: 30/3,
+    fontSize: 30/2,
     color: '#006633',
     //font: 'SF UI Text Bold'
   },
@@ -122,7 +133,7 @@ var cardCommonStyles = StyleSheet.create({
     width: 11,
     height: 5.5,
     resizeMode: 'stretch',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
 });
 

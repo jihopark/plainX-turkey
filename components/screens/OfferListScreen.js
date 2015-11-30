@@ -40,7 +40,7 @@ var OfferListScreen = React.createClass({
       />);
 
     var makeOfferButton = (<ActionButton
-                            text={"Make Offer"}
+                            text={"MAKE OFFER"}
                             onPress={this.onPress}
                             enabled={true} />);
 

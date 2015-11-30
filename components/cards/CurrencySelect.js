@@ -27,7 +27,7 @@ var CurrencySelect = React.createClass({
 
     return (
       <View>
-        <Text style={this.props.cardCommonStyles.titles}>
+        <Text style={[this.props.cardCommonStyles.titles, {marginBottom: 10,}]}>
           I WANT TO EXCHANGE
         </Text>
 

@@ -22,12 +22,13 @@ var styles = StyleSheet.create({
     flex: 1,
     fontSize: 60/3,
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     backgroundColor: '#33cc66',
     borderRadius: 2,
     overflow:'hidden',
-    paddingTop:10,
-    paddingBottom:10,
+    paddingTop:20,
+    paddingBottom:20,
+    marginTop: 10,
   },
 });
 

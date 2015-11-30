@@ -21,19 +21,19 @@ var DateFormat = React.createClass({
     var triangle = require('../../assets/triangle.png');
     return (
       <View style={styles.dateformatContainer}>
-        <View style={[{width: 25}, styles.textContainer]}>
+        <View style={[{width: 45}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{this.props.date.getDate()}</Text>
           <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
         </View>
         <Image style={styles.triangle} source={triangle} />
 
-        <View style={[{width: 25}, styles.textContainer]}>
+        <View style={[{width: 45}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{(this.props.date.getMonth()+1)}</Text>
           <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
         </View>
         <Image style={styles.triangle} source={triangle} />
 
-        <View style={[{width: 50}, styles.textContainer]}>
+        <View style={[{width: 90}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{this.props.date.getFullYear()}</Text>
           <View style={{height:1, flex:1, backgroundColor: '#33cc66'}} />
         </View>
@@ -55,7 +55,7 @@ var styles = StyleSheet.create({
   },
   dateformatText: {
     color: '#33cc66',
-    fontSize: 60/3,
+    fontSize: 60/2,
     textAlign: 'center',
   },
   triangle: {
