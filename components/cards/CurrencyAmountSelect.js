@@ -120,7 +120,8 @@ var CurrencyAmountSelect = React.createClass({
                 text={sell}/>
             </TouchableOpacity>
             <CurrencyAmountTextInput
-              textStyle={this.props.cardCommonStyles.inputAmountText}
+              textStyle={[this.props.cardCommonStyles.inputAmountText,
+                  (this.props.data["SellRate"] ? styles.calculated : {}) ]}
               onChangeText={function(num){
                 next["Target"] = "AmountSell";
                 next["AmountSell"] = num;
@@ -130,7 +131,7 @@ var CurrencyAmountSelect = React.createClass({
                 next["Target"] = "Focus";
                 subject.onNext(next);
               }}
-              value={AmountSell}
+              value={AmountSell + (this.props.data["SellRate"] ? "*": "")}
             />
           </View>
           <View style={styles.row}>
@@ -155,7 +156,9 @@ var CurrencyAmountSelect = React.createClass({
                 text={buy}/>
             </TouchableOpacity>
             <CurrencyAmountTextInput
-              textStyle={this.props.cardCommonStyles.inputAmountText}
+              textStyle={[this.props.cardCommonStyles.inputAmountText,
+                (this.props.data["BuyRate"] ? styles.calculated : {})
+              ]}
               onChangeText={function(num){
                 next["Target"] = "AmountBuy";
                 next["AmountBuy"] = num;
@@ -165,7 +168,7 @@ var CurrencyAmountSelect = React.createClass({
                 next["Target"] = "Focus";
                 subject.onNext(next);
               }}
-              value={AmountBuy}
+              value={AmountBuy + (this.props.data["BuyRate"] ? "*": "")}
             />
           </View>
           <View style={styles.row}>
@@ -199,6 +202,9 @@ var styles = StyleSheet.create({
     height: 12,
     resizeMode: 'stretch',
     alignSelf: 'center'
+  },
+  calculated: {
+    color: '#333333',
   },
 });
 
