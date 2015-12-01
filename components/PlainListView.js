@@ -89,21 +89,19 @@ var styles = StyleSheet.create({
     padding: 10,
   },
   midCard:{
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 10,
     borderWidth: 0,
     borderColor: 'transparent',
   },
   topCard:{
     paddingTop: 10,
-    paddingBottom: 5,
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
     marginTop: 2.5,
     borderBottomColor: 'transparent',
   },
   bottomCard: {
-    paddingTop: 5,
+    paddingTop: 10,
     paddingBottom: 10,
     marginBottom: 2.5,
     borderTopColor: 'transparent',
@@ -125,6 +123,7 @@ var styles = StyleSheet.create({
   mergedCardDivider: {
     marginLeft: 16,
     marginRight: 16,
+    marginTop: 10,
   },
 });
 
