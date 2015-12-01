@@ -13,6 +13,7 @@ var {
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var RestKit = require('react-native-rest-kit');
+var md5 = require('md5');
 
 var PlainTextInput = require('../PlainTextInput.js');
 
@@ -40,6 +41,7 @@ var SignUpScreen = React.createClass({
   handleRequest: function(error, json){
     this.props.setNetworkActivityIndicator(false);
     if (error){
+      console.log(error);
       if (error.status == 400) {
         var errorMsg = JSON.parse(error.body)["Error"];
         if (errorMsg)
@@ -47,8 +49,11 @@ var SignUpScreen = React.createClass({
       }
       return ;
     }
-    // if 200
-    this.setState({showConfirmation: true});
+    console.log(json);
+    if (json){
+      // if 200
+      this.setState({showConfirmation: true});
+    }
   },
   onSignUp: function(){
     if (this.state.password != this.state.passwordConfirm) {
@@ -66,7 +71,7 @@ var SignUpScreen = React.createClass({
       },
       body: JSON.stringify({
         email: this.state.email,
-        hashedpw: pwd,
+        hashedpw: md5(pwd),
       })
     };
     RestKit.send(url, request, this.handleRequest);

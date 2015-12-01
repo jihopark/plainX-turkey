@@ -15,6 +15,7 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var PlainTextInput = require('../PlainTextInput.js');
 var RestKit = require('react-native-rest-kit');
+var md5 = require('md5');
 
 var LoginScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -38,7 +39,7 @@ var LoginScreen = React.createClass({
   },
   onLogin: function(){
     var email = this.state.email;
-    var pwd = ""+this.state.pwd;
+    var pwd = ""+this.state.password;
     this.props.setNetworkActivityIndicator(true);
     var url = this.props.api_domain + "login";
     var request = {
@@ -49,7 +50,7 @@ var LoginScreen = React.createClass({
       },
       body: JSON.stringify({
         email: email,
-        hashedpw: pwd,
+        hashedpw: md5(pwd),
       })
     };
     RestKit.send(url, request, this.handleRequest);
@@ -66,8 +67,10 @@ var LoginScreen = React.createClass({
       return ;
     }
     // if 200
-    console.log(json["Session"]);
-    this.saveToken(json["Session"]);
+    if (json){
+      console.log(json["Session"]);
+      this.saveToken(json["Session"]);
+    }
   },
   onSignUp: function(){
     this.props.pushScreen({uri: this.props.routes.addRoute('signup')});
