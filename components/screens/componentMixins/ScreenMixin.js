@@ -73,11 +73,7 @@ var ScreenMixin =  {
       return this.renderScreen();
     }
     else {
-      return (
-        <View>
-          <LoadingView />
-        </View>
-      );
+      return (<LoadingView />);
     }
   },
   fetchData: function(token, page) {
