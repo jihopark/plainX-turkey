@@ -112,7 +112,7 @@ var ScreenMixin =  {
       return ;
 
     // if normal response 200
-
+    console.log(json);
     this.setState({
       data: json,
     });
