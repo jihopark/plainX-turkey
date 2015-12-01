@@ -65,6 +65,15 @@ var styles = StyleSheet.create({
     height: 30,
     marginRight: 5,
   },
+  doneButtonIcon: {
+    width:14,
+    height: 14,
+  },
+  doneButtonText: {
+    fontSize: 15,
+    color: '#33cc66',
+    fontWeight: 'bold',
+  },
 });
 
 var ExpiryDateSelect = React.createClass({
@@ -102,8 +111,10 @@ var ExpiryDateSelect = React.createClass({
               }
             }}
           />
-        <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={this.closeDatePicker}>
-          <Text>Close</Text>
+        <TouchableOpacity style={{alignSelf: 'flex-end', flexDirection: 'row', marginRight: 10,}} onPress={this.closeDatePicker}>
+          <Image source={require('../../assets/checkmark.png')}
+                  style={styles.doneButtonIcon}/>
+          <Text style={styles.doneButtonText}>Close</Text>
         </TouchableOpacity>
       </View>
     ) :

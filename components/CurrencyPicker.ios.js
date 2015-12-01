@@ -7,6 +7,7 @@ var {
   TouchableOpacity,
   Text,
   StyleSheet,
+  Image,
 } = React;
 
 var PickerItemIOS = PickerIOS.Item;
@@ -15,16 +16,6 @@ var CurrencyPicker = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            onPress={this.props.dismissPicker}>
-            <Text>Close</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.props.onPick}>
-            <Text>Done</Text>
-          </TouchableOpacity>
-        </View>
         <View style={styles.pickerContainer}>
           <PickerIOS
             style={{width: 320}}
@@ -41,6 +32,22 @@ var CurrencyPicker = React.createClass({
             )}
             </PickerIOS>
         </View>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.props.dismissPicker}>
+            <Image source={require('../assets/cross.png')}
+                    style={styles.icon}/>
+            <Text style={styles.text} >Close</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.props.onPick}>
+            <Image source={require('../assets/checkmark.png')}
+                    style={styles.icon}/>
+            <Text style={styles.text} >Done</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   },
@@ -48,17 +55,32 @@ var CurrencyPicker = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    alignItems:'center',
+    marginTop: 10,
+    flexDirection: 'column',
   },
   pickerContainer: {
     flex: 9,
     backgroundColor: 'transparent',
+    alignSelf:'center',
   },
-  buttons: {
+  buttonsContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignSelf: 'flex-end'
-  }
+    justifyContent: 'space-between'
+  },
+  button:{
+    flexDirection:'row',
+    alignItems: 'center',
+  },
+  icons: {
+    width:14,
+    height: 14,
+  },
+  text: {
+    fontSize: 15,
+    color: '#33cc66',
+    fontWeight: 'bold',
+  },
 });
 
 module.exports = CurrencyPicker;
