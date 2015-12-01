@@ -105,8 +105,8 @@ var ScreenMixin =  {
         this.setState({data: {"Page":0, "HasNext": false,
                          "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
       }
-      else if (error.status == 400){
-
+      else if (error.status == 401){
+        this.props.replaceScreen({uri:this.props.routes.addRoute('login')});
       }
       return ;
     }

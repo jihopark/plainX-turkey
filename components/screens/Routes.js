@@ -40,7 +40,14 @@ class Routes {
         getComponent: () => require("../screens/SignUpScreen.js"),
         title: "Sign Up",
         enablePagination: false
-      }
+      },
+      {
+        name: "offerConfirm",
+        id: 6,
+        getComponent: () => require("../screens/OfferConfirmationScreen.js"),
+        title: "Confirm your offer",
+        enablePagination: false
+      },
     ];
   }
 

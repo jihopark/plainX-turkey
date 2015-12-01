@@ -58,6 +58,9 @@ var MakeOfferScreen = React.createClass({
     }
     return locationInputValid && amountInputValid && currencyInputValid ? params : null;
   },
+  onPressNextButton: function() {
+    this.props.pushScreen({uri: this.props.routes.addRoute('offerConfirm?'+this.getParamsToString(this.getRequestParams()))});
+  },
   renderScreen: function() {
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
@@ -73,9 +76,7 @@ var MakeOfferScreen = React.createClass({
 
     var finishButton = (<ActionButton
       text={"NEXT"}
-      onPress={function(){
-        this.props.pushScreen({uri: this.props.routes.addRoute('offerConfirm?'+this.getParamsToString(requestParams))});
-      }}
+      onPress={this.onPressNextButton}
       enabled={requestParams!=null} />);
 
     return (

@@ -23,7 +23,7 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main/login'
+      uri: 'main'
     };
   },
   //To Load all necessary screens from the uri
@@ -125,6 +125,7 @@ var PlainNavigator = React.createClass({
             routes={routes}
             pushScreen={navigator.push}
             popScreen={navigator.pop}
+            replaceScreen={navigator.replace}
             api_domain={API_DOMAIN}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()} />
