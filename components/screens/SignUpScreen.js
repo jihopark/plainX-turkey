@@ -15,7 +15,6 @@ var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var RestKit = require('react-native-rest-kit');
 
 var PlainTextInput = require('../PlainTextInput.js');
-var sha256 = require('sha256');
 
 var SignUpScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -58,7 +57,7 @@ var SignUpScreen = React.createClass({
     }
     this.props.setNetworkActivityIndicator(true);
     var url = this.props.api_domain + "register";
-
+    var pwd = ""+this.state.password;
     var request = {
       method: 'post',
       headers: {
@@ -67,10 +66,9 @@ var SignUpScreen = React.createClass({
       },
       body: JSON.stringify({
         email: this.state.email,
-        hashedpw: sha256(this.state.password),
+        hashedpw: pwd,
       })
     };
-
     RestKit.send(url, request, this.handleRequest);
   },
   popScreen: function(){

@@ -14,7 +14,7 @@ var {
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var PlainTextInput = require('../PlainTextInput.js');
-var sha256 = require('sha256');
+var RestKit = require('react-native-rest-kit');
 
 var LoginScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -38,9 +38,10 @@ var LoginScreen = React.createClass({
   },
   onLogin: function(){
     var email = this.state.email;
-    var pwd = 'l' //sha256(""+this.state.pwd);
+    var pwd = ""+this.state.pwd;
     this.props.setNetworkActivityIndicator(true);
-    fetch(this.props.api_domain + "login", {
+    var url = this.props.api_domain + "login";
+    var request = {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -50,18 +51,23 @@ var LoginScreen = React.createClass({
         email: email,
         hashedpw: pwd,
       })
-    })
-    .then(response => response.json())
-    .then(responseData => {
-      if (responseData["Session"]){
-        console.log(responseData["Session"]);
-        this.saveToken(responseData["Session"]);
+    };
+    RestKit.send(url, request, this.handleRequest);
+  },
+  handleRequest: function(error, json){
+    this.props.setNetworkActivityIndicator(false);
+
+    if (error){
+      if (error.status == 400) {
+        var errorMsg = JSON.parse(error.body)["Error"];
+        if (errorMsg)
+          this.setState({errorMsg: errorMsg});
       }
-      else if (responseData["Error"]) {
-        this.props.setNetworkActivityIndicator(false);
-        this.setState({errorMsg: responseData["Error"]});
-      }
-    })
+      return ;
+    }
+    // if 200
+    console.log(json["Session"]);
+    this.saveToken(json["Session"]);
   },
   onSignUp: function(){
     this.props.pushScreen({uri: this.props.routes.addRoute('signup')});
