@@ -113,6 +113,11 @@ var CurrencySelect = React.createClass({
         }}>
           <CardButton text={"FIND OFFERS"} />
         </TouchableOpacity>
+        {buy != "HKD" && sell != "HKD" ?
+        (<Text style={[this.props.cardCommonStyles.headings, {marginTop: 10,}]}>
+            {"*Your chances of match will be\nhigher if it involves Hong Kong Dollars."}
+          </Text>)
+         : null}
         {sellPicker}
         {buyPicker}
       </View>
