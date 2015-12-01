@@ -3,8 +3,11 @@
 var React = require('react-native');
 var update = require('react-addons-update');
 var LoadingView = require('../../LoadingView.js');
+var RestKit = require('react-native-rest-kit');
+
 var {
   View,
+  AsyncStorage,
   StyleSheet,
 } = React;
 
@@ -47,8 +50,23 @@ var ScreenMixin =  {
       }
     }
   },
+  async loadTokenIfAny(){
+    try {
+      var value = await AsyncStorage.getItem("SESSION");
+      console.log("User Is Logged In");
+      return value;
+    } catch (error) {
+      console.log("Error Retreving LoginToken");
+      return null;
+    }
+  },
   componentDidMount: function() {
-    this.fetchData(this.props.enablePagination ? 1 : 0);
+    var enablePagination = this.props.enablePagination;
+    this.loadTokenIfAny().then((value) => {
+      console.log("PAGINATION");
+      console.log(this.props.enablePagination);
+      this.fetchData(value, this.props.enablePagination ? 1 : 0);
+    }).done();
   },
   render: function() {
     if (this.state.data) {
@@ -62,39 +80,70 @@ var ScreenMixin =  {
       );
     }
   },
-  fetchData: function(page) {
+  fetchData: function(token, page) {
     if (this.endPoint){
       this.props.setNetworkActivityIndicator(true);
       var url = this.props.api_domain + this.endPoint + "?" + this.props.params + "page=" + page;
       console.log(url);
-      fetch(url)
-        .then((response) => response.json())
-          .then((responseData) => {
-            console.log(responseData);
-            this.props.setNetworkActivityIndicator(false);
-            if (page <= 1) {
-              this.setState({
-                data: responseData
-              });
-            }
-            else {
-              console.log("Load More the Card List");
-              var data = update(this.state.data, {"Cards": {$push : responseData["Cards"] }})
-              data = update(data, {"HasNext": {$set : responseData["HasNext"] }})
-              data = update(data, {"Page": {$set : responseData["HasNext"] }})
 
-              this.setState({
-                data: data
-              });
-            }
-          })
-        .catch((error) => {
-          console.log(error);
-          this.setState({data: {"Page":0, "HasNext": false,
-                           "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
-         })
-        .done();
+      var request = token ?
+      {
+        method: 'get',
+        headers:{ 'X-Session': token, }
+      } : { method: 'get' };
+
+      RestKit.send(url, request, page <= 1 ? this.handleInitialRequest : this.handleAddMoreRequest);
+
     }
+  },
+  handleInitialRequest: function(error, json){
+    this.props.setNetworkActivityIndicator(false);
+    if (error) {
+      console.log("ERROR");
+      console.log(error);
+      if (error.status == 500 || error.status == 404) {
+        this.setState({data: {"Page":0, "HasNext": false,
+                         "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
+      }
+      else if (error.status == 400){
+
+      }
+      return ;
+    }
+    if (json == undefined)
+      return ;
+
+    // if normal response 200
+
+    this.setState({
+      data: json,
+    });
+  },
+  handleAddMoreRequest: function(error, json){
+    this.props.setNetworkActivityIndicator(false);
+    if (error) {
+      console.log(error);
+      if (error.status == 500) {
+      //  this.setState({data: {"Page":0, "HasNext": false,
+      //                   "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
+      }
+      else if (error.status == 400){
+
+      }
+      return ;
+    }
+    // if normal response 200
+    if (json == undefined)
+      return ;
+    console.log(json);
+    console.log("Load More the Card List");
+    var data = update(this.state.data, {"Cards": {$push : json["Cards"] }})
+    data = update(data, {"HasNext": {$set : json["HasNext"] }})
+    data = update(data, {"Page": {$set : json["HasNext"] }})
+
+    this.setState({
+      data: data
+    });
   },
   getParamsToString: function(params) {
     var s = "";
