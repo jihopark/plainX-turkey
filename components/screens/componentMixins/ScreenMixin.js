@@ -28,10 +28,9 @@ var ScreenMixin =  {
     pushScreen: React.PropTypes.func.isRequired,
   },
   loadMore: function() {
-    console.log("Load More");
     if (this.state.data["HasNext"]) {
       console.log("Fetch Data " + (this.state.data["Page"]+1));
-      this.fetchData(this.state.data["Page"]+1);
+      this.fetchData(this.loginToken, (this.state.data["Page"]+1));
     }
   },
   mutateCardStateData: function(data, id, key, value) {
@@ -50,10 +49,13 @@ var ScreenMixin =  {
       }
     }
   },
+  loginToken: null,
   async loadTokenIfAny(){
+    if (this.loginToken) return this.loginToken;
     try {
       var value = await AsyncStorage.getItem("SESSION");
       console.log("User Is Logged In");
+      this.loginToken = value;
       return value;
     } catch (error) {
       console.log("Error Retreving LoginToken");
@@ -79,7 +81,7 @@ var ScreenMixin =  {
   fetchData: function(token, page) {
     if (this.endPoint){
       this.props.setNetworkActivityIndicator(true);
-      var url = this.props.api_domain + this.endPoint + "?" + this.props.params + "page=" + page;
+      var url = this.props.api_domain + this.endPoint + "?" + this.props.params + "Page=" + page;
       console.log(url);
 
       var request = token ?
@@ -131,15 +133,16 @@ var ScreenMixin =  {
     // if normal response 200
     if (json == undefined)
       return ;
-    console.log(json);
-    console.log("Load More the Card List");
-    var data = update(this.state.data, {"Cards": {$push : json["Cards"] }})
-    data = update(data, {"HasNext": {$set : json["HasNext"] }})
-    data = update(data, {"Page": {$set : json["HasNext"] }})
+    if (this.state.data != null && this.state.data["Page"] < json["Page"]) {
+      console.log(json);
+      var data = update(this.state.data, {"Cards": {$push : json["Cards"] }})
+      data = update(data, {"HasNext": {$set : json["HasNext"] }})
+      data = update(data, {"Page": {$set : json["Page"] }})
 
-    this.setState({
-      data: data
-    });
+      this.setState({
+        data: data
+      });
+    }
   },
   getParamsToString: function(params) {
     var s = "";
