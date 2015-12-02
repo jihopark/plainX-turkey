@@ -116,6 +116,7 @@ var CurrencyAmountSelect = React.createClass({
                 onPressSell();
               }}>
               <CurrencySelectText
+                selected={this.state.showSellCurrencyPicker}
                 iconStyle={this.props.cardCommonStyles.triangleIconStyle}
                 text={sell}/>
             </TouchableOpacity>
@@ -152,6 +153,7 @@ var CurrencyAmountSelect = React.createClass({
               onPressBuy();
             }}>
               <CurrencySelectText
+                selected={this.state.showBuyCurrencyPicker}
                 iconStyle={this.props.cardCommonStyles.triangleIconStyle}
                 text={buy}/>
             </TouchableOpacity>

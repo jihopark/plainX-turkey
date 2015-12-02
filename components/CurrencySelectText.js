@@ -12,8 +12,8 @@ var {
 var CurrencySelectText = React.createClass({
   render: function() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.currencySelectText}>
+      <View style={[styles.container, (this.props.selected ? {borderWidth: 2} : {})]}>
+        <Text style={[styles.currencySelectText, (this.props.selected ? {fontWeight: 'bold'} : {})]}>
           {this.props.text}
         </Text>
         <Image style={this.props.iconStyle} source={require('../assets/triangle.png')} />
