@@ -14,6 +14,7 @@ var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
 var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 
+var TutorialPager = require('../TutorialPager.js');
 var PlainListView = require('../PlainListView.js');
 
 var MainScreen = React.createClass({
@@ -43,7 +44,10 @@ var MainScreen = React.createClass({
 
     return (
       <View style={this.screenCommonStyle.container}>
-        {listView}
+        {(this.props.metaData && this.props.metaData["showTutorial"]) ?
+          (<TutorialPager
+            urls={{}} />) : //this.props.metaData["tutorialURLs"]
+          listView}
       </View>
     );
   }
