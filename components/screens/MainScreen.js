@@ -12,11 +12,12 @@ var {
 var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
+var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 
 var PlainListView = require('../PlainListView.js');
 
 var MainScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencySelectCardMixin],
+  mixins: [ScreenMixin, CurrencySelectCardMixin, OfferCardMixin],
   displayName: "MainScreen",
   endPoint: "main",
   getInitialState: function() {
@@ -33,6 +34,7 @@ var MainScreen = React.createClass({
 
     var cardObservers = { }
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
+    cardObservers["Offer"] = this.offerCardonNext;
 
     var listView = (
       <PlainListView

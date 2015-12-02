@@ -48,6 +48,13 @@ class Routes {
         title: "Confirm your offer",
         enablePagination: false
       },
+      {
+        name: "offerDetail",
+        id: 7,
+        getComponent: () => require("../screens/OfferDetailScreen.js"),
+        title: "Offer Detail",
+        enablePagination: false
+      },
     ];
   }
 

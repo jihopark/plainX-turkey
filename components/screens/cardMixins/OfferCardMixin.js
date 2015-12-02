@@ -1,8 +1,8 @@
 'use strict';
 
 var OfferCardMixin =  {
-  offerCardonNext: (event) => {
-    console.log(event);
+  offerCardonNext: function(event) {
+    this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+this.getParamsToString({"Id": event["Id"]}))});
   },
 }
 

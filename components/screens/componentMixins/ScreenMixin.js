@@ -150,7 +150,16 @@ var ScreenMixin =  {
     for (var i=0, length = keys.length ; i<length; i++)
       s += (keys[i] + "=" + params[keys[i]] + "&");
     return s;
-  }
+  },
+  getStringToParams: function(queryString) {
+    var params = {};
+    var paramStrings = queryString.split("&");
+    for (var i=0; i<paramStrings.length-1; i++) {
+      var split = paramStrings[i].split("=");
+      params[split[0]] = split[1];
+    }
+    return params;
+  },
 };
 
 module.exports = ScreenMixin;
