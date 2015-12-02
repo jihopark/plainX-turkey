@@ -60,6 +60,7 @@ var PlainListView = React.createClass({
         <CardComponent
           cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
+          key={card["UUID"]}
           observer={observer}
           data={card["Data"]}/>
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
