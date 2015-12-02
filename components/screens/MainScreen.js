@@ -25,12 +25,14 @@ var MainScreen = React.createClass({
       data: null,
     }
   },
-  subscribeToNavBarSubjects: (left, right) => {
-    left.subscribe((x) => console.log(x));
-    right.subscribe((x) => console.log(x));
+  toggleSideMenu: function(event) {
+    this.context.menuActions.toggle();
+  },
+  contextTypes: {
+    menuActions: React.PropTypes.object.isRequired,
   },
   renderScreen: function() {
-    this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
+    this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
 
     var cardObservers = { }
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
