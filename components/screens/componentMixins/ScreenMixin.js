@@ -98,10 +98,12 @@ var ScreenMixin =  {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log("ERROR");
-      console.log(error);
-      if (error.status == 500 || error.status == 404) {
+      console.log(error.status);
+      if (error.status == 500 || error.status == 400 || error.status == 404) {
+        console.log(error);
+        var text = JSON.parse(error.body)["Error"];
         this.setState({data: {"Page":0, "HasNext": false,
-                         "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
+                         "Cards": [{"UUID": "1", "Name": "Error", "Merged": "", "Data": {"Text": text}}]}});
       }
       else if (error.status == 401){
         this.props.replaceScreen({uri:this.props.routes.addRoute('login')});
