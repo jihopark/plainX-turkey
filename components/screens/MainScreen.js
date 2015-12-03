@@ -26,12 +26,11 @@ var MainScreen = React.createClass({
       data: null,
     }
   },
-  subscribeToNavBarSubjects: (left, right) => {
-    left.subscribe((x) => console.log(x));
-    right.subscribe((x) => console.log(x));
+  pushConversationsScreen: function(event) {
+    this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
   },
   renderScreen: function() {
-    this.subscribeToNavBarSubjects(this.props.leftNavBarButtonSubject, this.props.rightNavBarButtonSubject);
+    this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
 
     var cardObservers = { }
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
