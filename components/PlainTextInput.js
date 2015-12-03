@@ -25,20 +25,17 @@ var PlainTextInput = React.createClass({
 
 var styles = StyleSheet.create({
   textContainer: {
-    width: 200,
-    height: 40,
+    width: 300,
+    height: 50,
     flexDirection: 'column',
     padding: 3,
-    borderWidth: 1,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderBottomColor: '#33cc66',
     alignItems: 'center',
+    backgroundColor: 'rgba(256,256,256,0.3)',
+    marginBottom: 10,
   },
   text: {
-    width: 200,
-    height: 30,
+    width: 300,
+    height: 40,
     fontSize: 60/3,
     color: '#33cc66',
   },

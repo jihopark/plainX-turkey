@@ -9,6 +9,7 @@ var {
   StyleSheet,
   TouchableOpacity,
   AsyncStorage,
+  Image,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -16,6 +17,7 @@ var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var PlainTextInput = require('../PlainTextInput.js');
 var RestKit = require('react-native-rest-kit');
 var md5 = require('md5');
+var ActionButton = require('../ActionButton.js');
 
 var LoginScreen = React.createClass({
   mixins: [ScreenMixin],
@@ -83,27 +85,44 @@ var LoginScreen = React.createClass({
   },
   renderScreen: function() {
     return (
-      <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'row', alignItems: 'center'}]}>
-        <View style={styles.loginContainer}>
-          <Text>You need to be logged in to continue!</Text>
-          <PlainTextInput
-              placeholder={"Email"}
-              keyboardType={"email-address"}
-              onChangeText={this.onChangeEmail}
-              value={this.state.email} />
-          <PlainTextInput
-              placeholder={"Password"}
-              secureTextEntry={true}
-              onChangeText={this.onChangePassword}
-              value={this.state.password} />
-          <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
-          <TouchableOpacity onPress={this.onLogin}>
-            <Text>Login</Text>
-          </TouchableOpacity>
-          <Text>Or</Text>
-          <TouchableOpacity onPress={this.onSignUp}>
-            <Text>Sign Up</Text>
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
+        <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
+          <View style={styles.container}>
+
+            <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+
+            <TouchableOpacity onPress={this.onSignUp}>
+              <Text style={styles.descriptionText}>
+                {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
+              </Text>
+            </TouchableOpacity>
+
+            <View style={{marginTop: 70,}}>
+              <PlainTextInput
+                  placeholder={"Email"}
+                  keyboardType={"email-address"}
+                  onChangeText={this.onChangeEmail}
+                  value={this.state.email} />
+              <PlainTextInput
+                  placeholder={"Password"}
+                  secureTextEntry={true}
+                  onChangeText={this.onChangePassword}
+                  value={this.state.password} />
+            </View>
+            <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
+
+            <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
+              {"*If you have forgotten your password,\nplease email "}
+              <Text style={{color: '#33cc66'}}>info@plainexchange.xyz</Text>
+              {" to reset it."}
+            </Text>
+          </View>
+        </Image>
+        <View  style={{alignSelf:'stretch'}}>
+          <ActionButton
+            text={"LOGIN"}
+            onPress={this.onLogin}
+            enabled={true} />
         </View>
       </ScrollView>
     );
@@ -111,10 +130,18 @@ var LoginScreen = React.createClass({
 });
 
 var styles = StyleSheet.create({
-  loginContainer: {
+  backgroundImage: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  container: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
   },
   textContainer: {
     width: 200,
@@ -128,20 +155,17 @@ var styles = StyleSheet.create({
     borderBottomColor: '#33cc66',
     alignItems: 'center',
   },
-  loginInput: {
-    width: 200,
-    height: 30,
-    fontSize: 60/3,
-    color: '#33cc66',
+  logo:{
+    width:180,
+    height:75,
+  },
+  descriptionText: {
+    marginTop: 20,
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   errorMsg: {
     color: 'red',
-  },
-  loginId: {
-
-  },
-  loginPw: {
-
   },
 });
 

@@ -7,6 +7,7 @@ var {
   ScrollView,
   Text,
   StyleSheet,
+  Image,
   TouchableOpacity,
 } = React;
 
@@ -15,6 +16,7 @@ var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var RestKit = require('react-native-rest-kit');
 var md5 = require('md5');
 
+var ActionButton = require('../ActionButton.js');
 var PlainTextInput = require('../PlainTextInput.js');
 
 var SignUpScreen = React.createClass({
@@ -81,28 +83,47 @@ var SignUpScreen = React.createClass({
   },
   renderScreen: function() {
     var signUpFormsView = (
-      <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'row', alignItems: 'center'}]}>
-        <View style={styles.signupContainer}>
-          <Text>This is Sign up</Text>
-          <PlainTextInput
-              placeholder={"Email"}
-              keyboardType={"email-address"}
-              onChangeText={this.onChangeEmail}
-              value={this.state.email} />
-          <PlainTextInput
-              placeholder={"Password"}
-              secureTextEntry={true}
-              onChangeText={this.onChangePassword}
-              value={this.state.password} />
-          <PlainTextInput
-              placeholder={"Password Confirmation"}
-              secureTextEntry={true}
-              onChangeText={this.onChangePasswordConfirm}
-              value={this.state.passwordConfirmation} />
-          <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
-          <TouchableOpacity onPress={this.onSignUp}>
-            <Text>Sign Up</Text>
-          </TouchableOpacity>
+      <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
+        <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
+          <View style={styles.container}>
+
+            <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+
+            <TouchableOpacity onPress={this.props.popScreen}>
+              <Text style={styles.descriptionText}>
+                {"Already have an account?"} <Text style={{color: '#33cc66'}}>{"Login Here!"}</Text>
+              </Text>
+            </TouchableOpacity>
+
+            <View style={{marginTop: 70,}}>
+              <PlainTextInput
+                  placeholder={"Email"}
+                  keyboardType={"email-address"}
+                  onChangeText={this.onChangeEmail}
+                  value={this.state.email} />
+              <PlainTextInput
+                  placeholder={"Password"}
+                  secureTextEntry={true}
+                  onChangeText={this.onChangePassword}
+                  value={this.state.password} />
+              <PlainTextInput
+                  placeholder={"Password Confirmation"}
+                  secureTextEntry={true}
+                  onChangeText={this.onChangePasswordConfirm}
+                  value={this.state.passwordConfirm} />
+            </View>
+            <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
+
+            <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
+              {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
+            </Text>
+          </View>
+        </Image>
+        <View  style={{alignSelf:'stretch'}}>
+          <ActionButton
+            text={"REGISTER"}
+            onPress={this.onSignUp}
+            enabled={true} />
         </View>
       </ScrollView>
     );
@@ -119,10 +140,39 @@ var SignUpScreen = React.createClass({
 });
 
 var styles = StyleSheet.create({
-  signupContainer: {
+  backgroundImage: {
     flex: 1,
     flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  container: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
+  },
+  textContainer: {
+    width: 200,
+    height: 40,
+    flexDirection: 'column',
+    padding: 3,
+    borderWidth: 1,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: 'transparent',
+    borderBottomColor: '#33cc66',
+    alignItems: 'center',
+  },
+  logo:{
+    width:180,
+    height:75,
+  },
+  descriptionText: {
+    marginTop: 20,
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   errorMsg: {
     color: 'red',
