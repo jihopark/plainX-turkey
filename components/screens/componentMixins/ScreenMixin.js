@@ -50,8 +50,17 @@ var ScreenMixin =  {
     }
   },
   loginToken: null,
-  async loadTokenIfAny(){
+  async logOut(){
     if (this.loginToken) return this.loginToken;
+    try {
+      await AsyncStorage.removeItem("SESSION");
+      console.log("User Is Logged Out");
+    } catch (error) {
+      console.log("Error Logging Out");
+    }
+  },
+  async loadTokenIfAny(){
+    if (this.loginToken) this.loginToken = null;
     try {
       var value = await AsyncStorage.getItem("SESSION");
       console.log("User Is Logged In");
