@@ -21,16 +21,16 @@ var Offer = React.createClass({
     return (
       <TouchableOpacity style={{flex:1}} onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
         <View style={styles.container}>
-          <View style={{flex: 4, justifyContent: 'center', flexDirection:'column'}}>
-            <Text style={[styles.leftCurrency, this.props.cardCommonStyles.currency]}>
-              {this.props.data["Sell"]} {this.props.data["AmountSell"]}</Text>
+          <View style={styles.sideContainer}>
+            <Text style={[this.props.cardCommonStyles.currency, styles.leftCurrency]}>
+              {this.props.data["Sell"]+"\n"+this.props.data["AmountSell"]}</Text>
           </View>
-          <View style={{flex: 1, flexDirection:'row', alignItems: 'center'}}>
+          <View style={styles.centerContainer}>
             <Image style={styles.center} source={require('../../assets/plane.png')}/>
           </View>
-          <View style={{flex: 4, justifyContent: 'center', flexDirection:'column'}}>
-            <Text style={[styles.rightCurrency, this.props.cardCommonStyles.currency]}>
-              {this.props.data["Buy"]} {this.props.data["AmountBuy"]}</Text>
+          <View style={styles.sideContainer}>
+            <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>
+              {this.props.data["Buy"]+"\n"+this.props.data["AmountBuy"]}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -45,18 +45,34 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     height: 40,
   },
+  centerContainer: {
+    flex: 2,
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems: 'center',
+    marginLeft: 5,
+    marginRight: 5,
+
+  },
   center: {
     marginTop: 3,
-    width: 30,
-    height: 18,
+    width: 40,
+    height: 24,
     resizeMode: 'stretch',
-    alignSelf: 'center'
+    alignSelf: 'center',
+  },
+  sideContainer: {
+    flex: 4,
+    justifyContent: 'center',
+    flexDirection:'column',
   },
   leftCurrency: {
     textAlign: 'right',
+    marginLeft: 0, marginRight: 0,
   },
   rightCurrency: {
     textAlign: 'left',
+    marginLeft: 0, marginRight: 0,
   },
 });
 
