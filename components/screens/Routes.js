@@ -62,6 +62,13 @@ class Routes {
         title: "Conversations",
         enablePagination: true,
       },
+      {
+        name: "conversationRoom",
+        id: 9,
+        getComponent: () => require("../screens/ConversationRoomScreen.js"),
+        title: "Room",
+        enablePagination: true,
+      },
     ];
   }
 
