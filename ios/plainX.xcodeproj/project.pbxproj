@@ -34,6 +34,7 @@
 		7FA713331BE8827600D23353 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA7132A1BE8827600D23353 /* QuartzCore.framework */; };
 		7FA713341BE8827600D23353 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA7132B1BE8827600D23353 /* Security.framework */; };
 		7FA713351BE8827600D23353 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA7132C1BE8827600D23353 /* StoreKit.framework */; };
+		7FD785C01C106344005AEB44 /* libRNKeyboardEvents.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FD785BF1C1062A5005AEB44 /* libRNKeyboardEvents.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -115,6 +116,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTPushNotification;
 		};
+		7FD785BE1C1062A5005AEB44 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F12AFB9B1ADAF8F800E0535D;
+			remoteInfo = RNKeyboardEvents;
+		};
 		832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */;
@@ -157,6 +165,7 @@
 		7FA7132A1BE8827600D23353 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7FA7132B1BE8827600D23353 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		7FA7132C1BE8827600D23353 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNKeyboardEvents.xcodeproj; path = "../node_modules/react-native-keyboardevents/RNKeyboardEvents.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,6 +183,7 @@
 			files = (
 				7FA7132D1BE8827600D23353 /* AudioToolbox.framework in Frameworks */,
 				7FA7132E1BE8827600D23353 /* CFNetwork.framework in Frameworks */,
+				7FD785C01C106344005AEB44 /* libRNKeyboardEvents.a in Frameworks */,
 				7FA7132F1BE8827600D23353 /* CoreGraphics.framework in Frameworks */,
 				7FA713301BE8827600D23353 /* CoreLocation.framework in Frameworks */,
 				7FA713311BE8827600D23353 /* libsqlite3.tbd in Frameworks */,
@@ -311,9 +321,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		7FD785BB1C1062A5005AEB44 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7FD785BF1C1062A5005AEB44 /* libRNKeyboardEvents.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */,
 				7FA713181BE73F8B00D23353 /* RCTPushNotification.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -487,6 +506,10 @@
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
+				{
+					ProductGroup = 7FD785BB1C1062A5005AEB44 /* Products */;
+					ProjectRef = 7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -565,6 +588,13 @@
 			fileType = archive.ar;
 			path = libRCTPushNotification.a;
 			remoteRef = 7FA7131C1BE73F8B00D23353 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7FD785BF1C1062A5005AEB44 /* libRNKeyboardEvents.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNKeyboardEvents.a;
+			remoteRef = 7FD785BE1C1062A5005AEB44 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		832341B51AAA6A8300B99B32 /* libRCTText.a */ = {

@@ -5,7 +5,6 @@ var React = require('react-native');
 var {
   View,
   StyleSheet,
-  Platform,
   Text,
 } = React;
 
@@ -22,7 +21,8 @@ var ConversationsScreen = React.createClass({
     };
   },
   getConversation: function(event) {
-    console.log(event);
+    var params = {"Convid": event["Id"]};
+    this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+this.getParamsToString(params))});
   },
   renderScreen: function() {
     var cardObservers = { };
@@ -32,7 +32,6 @@ var ConversationsScreen = React.createClass({
       cards={this.state.data["Cards"]}
       onEndReached={this.loadMore}
       />);
-
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
@@ -40,5 +39,6 @@ var ConversationsScreen = React.createClass({
     );
   }
 });
+
 
 module.exports = ConversationsScreen;
