@@ -13,6 +13,7 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
+var update = require('react-addons-update');
 
 var actionButtonStates = {"connected": "CONNECTED!",
                         "connecting": "Loading",
@@ -26,7 +27,6 @@ var OfferDetailScreen = React.createClass({
   endPoint: "offer/details",
   getInitialState: function() {
     return {
-      actionButtonState: "not_connected",
       data: null
     };
   },
@@ -36,7 +36,8 @@ var OfferDetailScreen = React.createClass({
     var url = this.props.api_domain + CONNECT_ENDPOINT;
     var bodyParams = this.getStringToParams(this.props.params);
     console.log(url);
-    console.log(JSON.stringify(bodyParams));
+    console.log("LOGINTOKEN");
+    console.log(this.loginToken);
 
     var request = {
       method: 'post',
@@ -48,28 +49,52 @@ var OfferDetailScreen = React.createClass({
       body: JSON.stringify(bodyParams),
     };
     this.props.setNetworkActivityIndicator(true);
-    this.setState({actionButtonState: "connecting"});
+    this.setOfferState("connecting");
     RestKit.send(url, request, this.handleConnectRequest);
   },
   handleConnectRequest: function(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
-      this.setState({actionButtonState: "error"});
-      if (error.status == 500 || error.status == 404) {
-
-      }
+      console.log("ERROR");
+      this.setOfferState("error");
       return ;
     }
     if (json) {
       console.log("SUCCESS");
-      console.log(json);
-      this.setState({actionButtonState: "connected"});
+      console.log(json["ConversationId"]);
+      this.setOfferState("connected");
+    }
+  },
+  getOfferState: function() {
+    var meta = this.state.data["Meta"];
+    if (meta){
+      if (meta["isConnected"]){
+        return "connected";
+      }
+      else if (meta["isOwnOffer"])
+        return "self";
+      else if (meta["isConnecting"])
+          return "connecting";
+      else if (meta["error"])
+        return "error";
+    }
+    return "not_connected";
+  },
+  setOfferState: function(value) {
+    switch(value) {
+      case "connected":
+        this.setState({data: update(this.state.data, {"Meta": {"isConnected": {$set:true}}})});
+        break;
+      case "error":
+        this.setState({data: update(this.state.data, {"Meta": {"error": {$set:true}}})});
+        break;
+      case "connecting":
+        this.setState({data: update(this.state.data, {"Meta": {"isConnecting": {$set:true}}})});
     }
   },
   renderScreen: function() {
     var cardObservers = { };
-
     var listView = (<PlainListView
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}
@@ -77,14 +102,14 @@ var OfferDetailScreen = React.createClass({
       />);
 
     var makeOfferButton = (<ActionButton
-                            text={actionButtonStates[this.state.actionButtonState]}
+                            text={actionButtonStates[this.getOfferState()]}
                             onPress={this.onConnectOffer}
-                            enabled={this.state.actionButtonState == "not_connected"} />);
+                            enabled={this.getOfferState() == "not_connected"} />);
 
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
-        {this.state.actionButtonState != "self" ? makeOfferButton : null}
+        {this.getOfferState() != "self" ? makeOfferButton : null}
       </View>
     );
   }
