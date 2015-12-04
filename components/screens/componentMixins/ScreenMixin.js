@@ -155,11 +155,23 @@ var ScreenMixin =  {
       });
     }
   },
+  isNumeric: function(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+  },
+  parseNumber: function(s) {
+    return s.indexOf('.') == -1 ? parseInt(s) : parseFloat(s);
+  },
   getParamsToString: function(params) {
     var s = "";
     var keys = Object.keys(params);
-    for (var i=0, length = keys.length ; i<length; i++)
-      s += (keys[i] + "=" + params[keys[i]] + "&");
+    for (var i=0, length = keys.length ; i<length; i++) {
+      if (this.isNumeric(params[keys[i]])){
+        s += (keys[i] + "=" + params[keys[i]] + "&");
+      }
+      else {
+        s += (keys[i] + "=" + params[keys[i]] + "&");
+      }
+    }
     return s;
   },
   getStringToParams: function(queryString) {
@@ -167,7 +179,7 @@ var ScreenMixin =  {
     var paramStrings = queryString.split("&");
     for (var i=0; i<paramStrings.length-1; i++) {
       var split = paramStrings[i].split("=");
-      params[split[0]] = split[1];
+      params[split[0]] = this.isNumeric(split[1]) ? this.parseNumber(split[1]+"") : split[1];
     }
     return params;
   },
