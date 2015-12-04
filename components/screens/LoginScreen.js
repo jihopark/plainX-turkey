@@ -14,19 +14,23 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var KeyboardSpaceMixin = require('./componentMixins/KeyboardSpaceMixin.js');
+
 var PlainTextInput = require('../PlainTextInput.js');
 var RestKit = require('react-native-rest-kit');
 var md5 = require('md5');
 var ActionButton = require('../ActionButton.js');
 
+
 var LoginScreen = React.createClass({
-  mixins: [ScreenMixin],
+  mixins: [ScreenMixin, KeyboardSpaceMixin],
   displayName: "LoginScreen",
   getInitialState: function() {
     return {
       password: "",
       email: "",
       data: [],
+      keyboardSpace: 0,
     };
   },
   async saveToken(token) {
@@ -87,17 +91,15 @@ var LoginScreen = React.createClass({
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-          <View style={styles.container}>
-
-            <Image source={require('../../assets/logo.png')} style={styles.logo}/>
-
+          <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
+            <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
             <TouchableOpacity onPress={this.onSignUp}>
               <Text style={styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
               </Text>
             </TouchableOpacity>
 
-            <View style={{marginTop: 70,}}>
+            <View style={{marginTop: 70}}>
               <PlainTextInput
                   placeholder={"Email"}
                   keyboardType={"email-address"}

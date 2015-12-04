@@ -11,12 +11,10 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-
-var KeyboardEvents = require('react-native-keyboardevents');
-var KeyboardEventEmitter = KeyboardEvents.Emitter;
+var KeyboardSpaceMixin = require('./componentMixins/KeyboardSpaceMixin.js');
 
 var ConversationRoomScreen = React.createClass({
-  mixins: [ScreenMixin],
+  mixins: [ScreenMixin,KeyboardSpaceMixin],
   displayName: "ConversationRoomScreen",
   endPoint: "conversation",
   getInitialState: function() {
@@ -24,20 +22,6 @@ var ConversationRoomScreen = React.createClass({
       data: null,
       keyboardSpace: 0,
     };
-  },
-  updateKeyboardSpace: function(frames) {
-    this.setState({keyboardSpace: frames.end.height});
-  },
-  resetKeyboardSpace: function() {
-    this.setState({keyboardSpace: 0});
-  },
-  componentDidMount: function() {
-    KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-    KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
-  },
-  componentWillUnmount: function() {
-    KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-    KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
   },
   renderScreen: function() {
     var cardObservers = { };
@@ -51,7 +35,7 @@ var ConversationRoomScreen = React.createClass({
     return (
       <View style={[this.screenCommonStyle.container, styles.container]}>
         {listView}
-        <View style={[styles.sendContainer, {height: (40+this.state.keyboardSpace)}]} >
+        <View style={[styles.sendContainer, , {marginBottom: this.state.keyboardSpace}]} >
           <TextInput style={styles.msgInput}/>
           <Text style={styles.sendButton} >Send</Text>
         </View>

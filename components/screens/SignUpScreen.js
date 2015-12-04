@@ -13,6 +13,8 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var KeyboardSpaceMixin = require('./componentMixins/KeyboardSpaceMixin.js');
+
 var RestKit = require('react-native-rest-kit');
 var md5 = require('md5');
 
@@ -20,7 +22,7 @@ var ActionButton = require('../ActionButton.js');
 var PlainTextInput = require('../PlainTextInput.js');
 
 var SignUpScreen = React.createClass({
-  mixins: [ScreenMixin],
+  mixins: [ScreenMixin, KeyboardSpaceMixin],
   displayName: "SignUpScreen",
   getInitialState: function() {
     return {
@@ -29,6 +31,7 @@ var SignUpScreen = React.createClass({
       email: "",
       data: [],
       showConfirmation: false,
+      keyboardSpace: 0,
     };
   },
   onChangeEmail: function(text) {
@@ -85,7 +88,7 @@ var SignUpScreen = React.createClass({
     var signUpFormsView = (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-          <View style={styles.container}>
+        <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
 
             <Image source={require('../../assets/logo.png')} style={styles.logo}/>
 
