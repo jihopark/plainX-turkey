@@ -8,8 +8,8 @@ class Routes {
         id: 1,
         getComponent: () => require("../screens/MainScreen.js"),
         hasCustomLeftButton: true,
-        hasCustomRightButton: true,
-        rightButtonImageSource: () => require("../../assets/msgicon.png"),
+        //hasCustomRightButton: true,
+        //rightButtonImageSource: () => require("../../assets/msgicon.png"),
         leftButtonImageSource: () => require("../../assets/menuicon.png"),
         enablePagination: false
       },

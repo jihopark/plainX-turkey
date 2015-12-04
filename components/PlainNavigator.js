@@ -87,27 +87,13 @@ var PlainNavigator = React.createClass({
     },
     RightButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
-      if (routes.getCurrentRoute().hasCustomRightButton) {
-        var button;
-        if (routes.getCurrentRoute().rightButtonText) {
-          button = (<NavigationTextButton
-              styles={styles}
-              buttonText={routes.getCurrentRoute().rightNavBarButtonText} />);
-        }
-        if (routes.getCurrentRoute().rightButtonImageSource) {
-          button = (
+      return (
+        <TouchableOpacity
+          style={styles.navBarRightButton}
+          onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
             <Image style={[styles.navBarIcon, {position:'absolute', top:0, left: -20, width: 30, height: 30}]}
-              source={routes.getCurrentRoute().rightButtonImageSource()} />);
-        }
-        return (
-            <TouchableOpacity
-              style={styles.navBarRightButton}
-              onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
-                {button}
-              </TouchableOpacity>);
-
-      }
-      return null;
+              source={require("../assets/msgicon.png")} />
+          </TouchableOpacity>);
     }
   },
   renderScene: function(route, navigator) {
