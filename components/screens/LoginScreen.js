@@ -101,11 +101,13 @@ var LoginScreen = React.createClass({
 
             <View style={{marginTop: 70}}>
               <PlainTextInput
+                  icon={require("../../assets/emailicon.png")}
                   placeholder={"Email"}
                   keyboardType={"email-address"}
                   onChangeText={this.onChangeEmail}
                   value={this.state.email} />
               <PlainTextInput
+                  icon={require("../../assets/passwordicon.png")}
                   placeholder={"Password"}
                   secureTextEntry={true}
                   onChangeText={this.onChangePassword}
@@ -139,8 +141,8 @@ var styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
+    paddingTop: 80,
     flex:1,
-    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     backgroundColor: 'transparent',

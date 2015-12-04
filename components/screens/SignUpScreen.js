@@ -85,59 +85,59 @@ var SignUpScreen = React.createClass({
     this.props.popScreen();
   },
   renderScreen: function() {
-    var signUpFormsView = (
+    return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
         <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
+            <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
+            {this.state.showConfirmation ?
+              (<Text style={styles.descriptionText}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
+              :
+            (<View style={{flex:1, alignItems: 'center', flexDirection: 'column'}}>
+                <TouchableOpacity onPress={this.props.popScreen}>
+                <Text style={styles.descriptionText}>
+                  {"Already have an account?"} <Text style={{color: '#33cc66'}}>{"Login Here!"}</Text>
+                </Text>
+              </TouchableOpacity>
 
-            <Image source={require('../../assets/logo.png')} style={styles.logo}/>
+              <View style={{marginTop: 70,}}>
+                <PlainTextInput
+                    icon={require("../../assets/emailicon.png")}
+                    placeholder={"Email"}
+                    keyboardType={"email-address"}
+                    onChangeText={this.onChangeEmail}
+                    value={this.state.email} />
+                <PlainTextInput
+                    icon={require("../../assets/passwordicon.png")}
+                    placeholder={"Password"}
+                    secureTextEntry={true}
+                    onChangeText={this.onChangePassword}
+                    value={this.state.password} />
+                <PlainTextInput
+                    icon={require("../../assets/passwordicon.png")}
+                    placeholder={"Password Confirmation"}
+                    secureTextEntry={true}
+                    onChangeText={this.onChangePasswordConfirm}
+                    value={this.state.passwordConfirm} />
+              </View>
+              <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
 
-            <TouchableOpacity onPress={this.props.popScreen}>
-              <Text style={styles.descriptionText}>
-                {"Already have an account?"} <Text style={{color: '#33cc66'}}>{"Login Here!"}</Text>
+              <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
+                {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
               </Text>
-            </TouchableOpacity>
-
-            <View style={{marginTop: 70,}}>
-              <PlainTextInput
-                  placeholder={"Email"}
-                  keyboardType={"email-address"}
-                  onChangeText={this.onChangeEmail}
-                  value={this.state.email} />
-              <PlainTextInput
-                  placeholder={"Password"}
-                  secureTextEntry={true}
-                  onChangeText={this.onChangePassword}
-                  value={this.state.password} />
-              <PlainTextInput
-                  placeholder={"Password Confirmation"}
-                  secureTextEntry={true}
-                  onChangeText={this.onChangePasswordConfirm}
-                  value={this.state.passwordConfirm} />
-            </View>
-            <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
-
-            <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
-              {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
-            </Text>
+            </View>)}
           </View>
         </Image>
-        <View  style={{alignSelf:'stretch'}}>
-          <ActionButton
-            text={"REGISTER"}
-            onPress={this.onSignUp}
-            enabled={true} />
-        </View>
+        {this.state.showConfirmation ? null :
+          (<View  style={{alignSelf:'stretch'}}>
+            <ActionButton
+              text={"REGISTER"}
+              onPress={this.onSignUp}
+              enabled={true} />
+          </View>)}
       </ScrollView>
     );
-    var activationNeededView = (
-      <View style={this.screenCommonStyle.container}>
-        <Text>You need to activate.</Text>
-        <TouchableOpacity onPress={this.popScreen}>
-          <Text>Okay</Text>
-        </TouchableOpacity>
-      </View>
-    );
+
     return this.state.showConfirmation ? activationNeededView : signUpFormsView;
   }
 });
@@ -150,8 +150,8 @@ var styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
+    paddingTop: 80,
     flex:1,
-    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
     backgroundColor: 'transparent',
@@ -171,6 +171,7 @@ var styles = StyleSheet.create({
   logo:{
     width:180,
     height:75,
+    resizeMode: 'stretch',
   },
   descriptionText: {
     marginTop: 20,
