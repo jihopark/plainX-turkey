@@ -15,6 +15,9 @@ var {
 
 var Routes = require('./screens/Routes.js');
 var Rx = require('rx')
+var SideMenu = require('react-native-side-menu');
+
+var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
 
@@ -67,7 +70,7 @@ var PlainNavigator = React.createClass({
         }
         return (
           <TouchableOpacity
-            onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes)}
+            onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
             style={styles.navBarLeftButton}>
             {button}
           </TouchableOpacity>);
@@ -124,18 +127,21 @@ var PlainNavigator = React.createClass({
   rightNavBarButtonSubject: new Rx.Subject(),
   render: function() {
     return (
-      <Navigator
-        leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-        rightNavBarButtonSubject={this.rightNavBarButtonSubject}
-        initialRouteStack={this.getInitialRouteStack(this.props.uri)}
-        renderScene={this.renderScene}
-        style={styles.appContainer}
-        navigationBar={
-          <Navigator.NavigationBar
-            style={styles.navBar}
-            routeMapper={this.navBarRouter}/>
-        }
-      />
+      <SideMenu menu={<PlainSideMenu />}
+                touchToClose={true}>
+        <Navigator
+          leftNavBarButtonSubject={this.leftNavBarButtonSubject}
+          rightNavBarButtonSubject={this.rightNavBarButtonSubject}
+          initialRouteStack={this.getInitialRouteStack(this.props.uri)}
+          renderScene={this.renderScene}
+          style={styles.appContainer}
+          navigationBar={
+            <Navigator.NavigationBar
+              style={styles.navBar}
+              routeMapper={this.navBarRouter}/>
+          }
+        />
+      </SideMenu>
     );
   }
 });

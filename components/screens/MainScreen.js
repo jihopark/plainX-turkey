@@ -29,9 +29,16 @@ var MainScreen = React.createClass({
   pushConversationsScreen: function(event) {
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
   },
+  toggleSideMenu: function(event) {
+    this.context.menuActions.toggle();
+  },
+  contextTypes: {
+    menuActions: React.PropTypes.object.isRequired,
+  },
   renderScreen: function() {
+    this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
     this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
-
+    
     var cardObservers = { }
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
     cardObservers["Offer"] = this.offerCardonNext;
