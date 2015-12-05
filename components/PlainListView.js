@@ -174,6 +174,15 @@ var cardCommonStyles = StyleSheet.create({
     resizeMode: 'stretch',
     alignSelf: 'center',
   },
+  offerTitle:{
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  offerOptions:{
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: "#333",
+  },
 });
 
 module.exports = PlainListView;
