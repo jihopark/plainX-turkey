@@ -14,14 +14,14 @@ var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var ConversationsScreen = React.createClass({
   mixins: [ScreenMixin],
   displayName: "ConversationsScreen",
-  endPoint: "user/conversation",
+  endPoint: "user/conversations",
   getInitialState: function() {
     return {
       data: null,
     };
   },
   getConversation: function(event) {
-    var params = {"Convid": event["Id"]};
+    var params = {"id": event["Id"]};
     this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+this.getParamsToString(params))});
   },
   renderScreen: function() {

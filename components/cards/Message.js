@@ -16,7 +16,7 @@ var Message = React.createClass({
     return (
       <TouchableOpacity style={{flex:1}} onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
         <View style={styles.container}>
-          <Text>{this.props.data["Id"]}</Text>
+          <Text>{this.props.data["User"]} {this.props.data["Text"]}</Text>
         </View>
       </TouchableOpacity>
     );
