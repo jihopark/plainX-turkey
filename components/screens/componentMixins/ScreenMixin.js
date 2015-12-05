@@ -51,7 +51,7 @@ var ScreenMixin =  {
   },
   loginToken: null,
   async logOut(){
-    if (this.loginToken) return this.loginToken = null;
+    if (this.loginToken) this.loginToken = null;
     try {
       await AsyncStorage.removeItem("SESSION");
       console.log("User Is Logged Out");
