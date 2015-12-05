@@ -27,8 +27,8 @@ var PlainTextInput = React.createClass({
 
 var styles = StyleSheet.create({
   textContainer: {
-    width: 300,
-    height: 50,
+    width: 652/2,
+    height: 110/2,
     flexDirection: 'row',
     padding: 3,
     alignItems: 'center',
@@ -39,7 +39,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     width: 300,
     height: 40,
-    fontSize: 15,
+    fontSize: 18,
     color: '#333333',
   },
   icon: {

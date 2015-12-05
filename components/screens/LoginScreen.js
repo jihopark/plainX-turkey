@@ -98,8 +98,8 @@ var LoginScreen = React.createClass({
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
               </Text>
             </TouchableOpacity>
-
-            <View style={{marginTop: 70}}>
+            <View style={{marginTop: 70, alignItems: 'center'}}>
+              <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
               <PlainTextInput
                   icon={require("../../assets/emailicon.png")}
                   placeholder={"Email"}
@@ -113,7 +113,6 @@ var LoginScreen = React.createClass({
                   onChangeText={this.onChangePassword}
                   value={this.state.password} />
             </View>
-            <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
 
             <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
               {"*If you have forgotten your password,\nplease email "}
@@ -166,10 +165,11 @@ var styles = StyleSheet.create({
   descriptionText: {
     marginTop: 20,
     fontSize: 15,
-    fontWeight: 'bold',
+    color: '#333333',
   },
   errorMsg: {
-    color: 'red',
+    color: '#ff3366',
+    fontSize: 15,
   },
 });
 

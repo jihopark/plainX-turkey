@@ -91,7 +91,7 @@ var SignUpScreen = React.createClass({
         <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
             <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
             {this.state.showConfirmation ?
-              (<Text style={styles.descriptionText}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
+              (<Text style={[styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
               :
             (<View style={{flex:1, alignItems: 'center', flexDirection: 'column'}}>
                 <TouchableOpacity onPress={this.props.popScreen}>
@@ -100,7 +100,8 @@ var SignUpScreen = React.createClass({
                 </Text>
               </TouchableOpacity>
 
-              <View style={{marginTop: 70,}}>
+              <View style={{marginTop: 70, alginItems:'center'}}>
+                <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
                 <PlainTextInput
                     icon={require("../../assets/emailicon.png")}
                     placeholder={"Email"}
@@ -120,7 +121,6 @@ var SignUpScreen = React.createClass({
                     onChangeText={this.onChangePasswordConfirm}
                     value={this.state.passwordConfirm} />
               </View>
-              <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
 
               <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
                 {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
@@ -176,10 +176,11 @@ var styles = StyleSheet.create({
   descriptionText: {
     marginTop: 20,
     fontSize: 15,
-    fontWeight: 'bold',
+    color: '#333333',
   },
   errorMsg: {
-    color: 'red',
+    color: '#ff3366',
+    fontSize: 15,
   },
 });
 
