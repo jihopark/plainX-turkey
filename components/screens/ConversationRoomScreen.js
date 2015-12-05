@@ -180,6 +180,7 @@ var ConversationRoomScreen = React.createClass({
     var cardObservers = { };
 
     var listView = (<PlainListView
+      invertList={true}
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}
       onEndReached={this.loadMore}
@@ -189,7 +190,7 @@ var ConversationRoomScreen = React.createClass({
       <View style={[this.screenCommonStyle.container, styles.container]}>
         {listView}
         <View style={[styles.sendContainer, , {marginBottom: this.state.keyboardSpace}]} >
-          <TextInput style={styles.msgInput} onChangeText={this.onChangeMsgInput} />
+          <TextInput style={styles.msgInput} onChangeText={this.onChangeMsgInput} value={this.state.msgInput} />
           <TouchableOpacity onPress={this.onSend}>
             <Text style={styles.sendButton} >Send</Text>
           </TouchableOpacity>

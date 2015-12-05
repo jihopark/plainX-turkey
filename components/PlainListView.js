@@ -69,13 +69,29 @@ var PlainListView = React.createClass({
     );
   },
   render: function() {
+    var listView;
+
+    if (this.props.invertList) {
+       var InvertibleScrollView = require('react-native-invertible-scroll-view');
+
+       listView = (<ListView
+         renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
+         dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards.slice().reverse())}
+         renderRow={this.renderCards}
+         onEndReached={this.props.onEndReached}
+       />);
+    }
+    else {
+      listView = (<ListView
+        dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
+        renderRow={this.renderCards}
+        onEndReached={this.props.onEndReached}
+      />);
+    }
+
     return (
       <View style={styles.listContainer}>
-        <ListView
-          dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
-          renderRow={this.renderCards}
-          onEndReached={this.props.onEndReached}
-        />
+        {listView}
       </View>
     );
   }
