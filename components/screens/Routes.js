@@ -120,6 +120,18 @@ class Routes {
     return this.params ? this.params[this.routes.length-1] || "" : "";
   }
 
+  getScreenNameInParamsIfAny() {
+    var queryString = this.getCurrentRouteParams();
+    var params = {};
+    var paramStrings = queryString.split("&");
+    for (var i=0; i<paramStrings.length-1; i++) {
+      var split = paramStrings[i].split("=");
+      if (split[0]=="screenName")
+        return split[1];
+    }
+    return null;
+  }
+
   addRoute(name) {
     if (this.isRegisteredName(name)) {
       this.routes.push(this.getRegisteredRouteWithName(name));

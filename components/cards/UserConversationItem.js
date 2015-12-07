@@ -18,7 +18,14 @@ var UserConversationItem = React.createClass({
       subject.subscribe(this.props.observer);
     }
     return (
-      <TouchableOpacity style={{flex:1}} onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
+      <TouchableOpacity style={{flex:1}}
+        onPress={() => {
+            var param = {"Id": this.props.data["Id"]};
+            if (this.props.data["Users"][0]["Email"])
+              param["ScreenName"] = this.props.data["Users"][0]["Email"];
+            subject.onNext(param);
+          }
+        }>
         <View style={styles.container}>
           <Text>{this.props.data["Id"]}</Text>
         </View>

@@ -21,7 +21,7 @@ var ConversationsScreen = React.createClass({
     };
   },
   getConversation: function(event) {
-    var params = {"id": event["Id"]};
+    var params = {"id": event["Id"], "screenName": event["ScreenName"]};
     this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+this.getParamsToString(params))});
   },
   renderScreen: function() {

@@ -47,8 +47,10 @@ var PlainNavigator = React.createClass({
   navBarRouter: {
     Title: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
+      var screenNameParam = routes.getScreenNameInParamsIfAny();
+
       return routes.getCurrentRoute().title ?
-      (<Text style={[styles.navBarText, styles.navBarTitleText]}>{routes.getCurrentRoute().title}</Text>)
+      (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
       :
       (<Image style={styles.navBarTitleImage} source={require('../assets/logo.png')} />);
     },
