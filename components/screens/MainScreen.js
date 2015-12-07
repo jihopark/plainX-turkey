@@ -6,7 +6,8 @@ var {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Platform
+  Platform,
+  AsyncStorage,
 } = React;
 
 var Routes = require('../screens/Routes.js');
@@ -24,7 +25,32 @@ var MainScreen = React.createClass({
   getInitialState: function() {
     return {
       data: null,
+      showTutorial: false,
     }
+  },
+  async checkIfFirstExec(){
+    try {
+      var keys = await AsyncStorage.getAllKeys();
+      if (keys.indexOf("FIRST_LOGIN") == -1) {
+        await AsyncStorage.setItem("FIRST_LOGIN", "false");
+        return true;
+      }
+      else
+        return false;
+    } catch (error) {
+      console.log("Error Retreving checkIfFirstLogin");
+      return false;
+    }
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    if (nextState["data"] && nextState["showTutorial"] == false) {
+      this.checkIfFirstExec().then((isFirstExec) => {
+        if (isFirstExec) {
+          this.setState({showTutorial: true});
+        }
+      }).done();
+    }
+    return true;
   },
   pushConversationsScreen: function(event) {
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
@@ -35,10 +61,13 @@ var MainScreen = React.createClass({
   contextTypes: {
     menuActions: React.PropTypes.object.isRequired,
   },
+  closeTutorial: function() {
+    this.setState({showTutorial: false});
+  },
   renderScreen: function() {
     this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
     this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
-    
+
     var cardObservers = { }
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
     cardObservers["Offer"] = this.offerCardonNext;
@@ -50,9 +79,10 @@ var MainScreen = React.createClass({
 
     return (
       <View style={this.screenCommonStyle.container}>
-        {(this.props.metaData && this.props.metaData["showTutorial"]) ?
+        {(this.state.data["Meta"] && this.state.data["Meta"]["tutorialUrls"] && this.state.showTutorial) ?
           (<TutorialPager
-            urls={{}} />) : //this.props.metaData["tutorialURLs"]
+            closeTutorial={this.closeTutorial}
+            urls={this.state.data["Meta"]["tutorialUrls"]} />) :
           listView}
       </View>
     );

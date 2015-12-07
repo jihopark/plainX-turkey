@@ -17,7 +17,7 @@ var ScreenMixin =  {
   screenCommonStyle:
     StyleSheet.create({
       container: {
-        paddingTop: 50,
+        paddingTop: 45,
         flex: 1,
       }
     }),
