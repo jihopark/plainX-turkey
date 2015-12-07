@@ -90,8 +90,10 @@ var PlainNavigator = React.createClass({
     },
     RightButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
-      return (
-        <TouchableOpacity
+      var routeName = routes.getCurrentRoute().name;
+      var isMessageRelatedScreen = routeName == "conversations" || routeName == "conversationRoom"
+      return isMessageRelatedScreen ? null :
+        (<TouchableOpacity
           style={styles.navBarRightButton}
           onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
             <Image style={[styles.navBarIcon, {position:'absolute', top:0, left: -20, width: 30, height: 30}]}
