@@ -22,6 +22,9 @@ var CardRouter = {
   getComponent: function(name){
     if (Object.keys(this.registeredCards).indexOf(name) == -1) return null;
     else return this.registeredCards[name]();
+  },
+  isConversationCard: function(name) {
+    return name.indexOf("Conversation")!= -1 || name.indexOf("Message")!= -1;
   }
 };
 

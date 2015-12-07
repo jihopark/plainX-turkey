@@ -55,8 +55,10 @@ var PlainListView = React.createClass({
     if (CardComponent == null)
       return null;
 
+    var isConversationCard = CardRouter.isConversationCard(card["Name"]);
+
     return (
-      <View style={[styles.cardContainer, this.getMarginStyle(card["Merged"])]}>
+      <View style={isConversationCard ? null : [styles.cardContainer, this.getMarginStyle(card["Merged"])]}>
         <CardComponent
           cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
@@ -75,6 +77,7 @@ var PlainListView = React.createClass({
        var InvertibleScrollView = require('react-native-invertible-scroll-view');
 
        listView = (<ListView
+         style={this.props.hasBackgroundColor ? styles.background: null}
          renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
          dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards.slice().reverse())}
          renderRow={this.renderCards}
@@ -83,6 +86,7 @@ var PlainListView = React.createClass({
     }
     else {
       listView = (<ListView
+        style={this.props.hasBackgroundColor ? styles.background: null}
         dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
         renderRow={this.renderCards}
         onEndReached={this.props.onEndReached}
@@ -99,6 +103,9 @@ var PlainListView = React.createClass({
 });
 
 var styles = StyleSheet.create({
+  background: {
+    backgroundColor: 'white',
+  },
   singleCard: {
     marginTop: 2.5,
     marginBottom: 2.5,

@@ -180,6 +180,7 @@ var ConversationRoomScreen = React.createClass({
     var cardObservers = { };
 
     var listView = (<PlainListView
+      hasBackgroundColor={true}
       invertList={true}
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}
