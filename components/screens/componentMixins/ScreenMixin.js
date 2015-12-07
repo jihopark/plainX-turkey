@@ -90,10 +90,18 @@ var ScreenMixin =  {
       return (<LoadingView />);
     }
   },
+  checkEndPointInParams: function() {
+    var params = this.getStringToParams(this.props.params);
+    console.log(this.props.params);
+    if (params["endPoint"])
+      return params["endPoint"];
+    return null;
+  },
   fetchData: function(token, page) {
-    if (this.endPoint){
+    var endPoint = this.endPoint || this.checkEndPointInParams();
+    if (endPoint){
       this.props.setNetworkActivityIndicator(true);
-      var url = this.props.api_domain + this.endPoint + "?" + this.props.params + "Page=" + page;
+      var url = this.props.api_domain + endPoint + "?" + this.props.params + "Page=" + page;
       console.log(url);
 
       var request = token ?
