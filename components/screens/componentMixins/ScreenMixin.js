@@ -74,9 +74,13 @@ var ScreenMixin =  {
   componentDidMount: function() {
     this.loadScreen();
   },
+  componentWillUnmount: function() {
+    this.props.updateInfo(this.loginToken);
+  },
   loadScreen: function() {
     var enablePagination = this.props.enablePagination;
     this.loadTokenIfAny().then((value) => {
+      this.props.updateInfo(value);
       console.log("PAGINATION");
       console.log(this.props.enablePagination);
       this.fetchData(value, this.props.enablePagination ? 1 : 0);

@@ -20,6 +20,7 @@ var SideMenu = require('react-native-side-menu');
 var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
+var RestKit = require('react-native-rest-kit');
 
 var routesMap;
 
@@ -27,6 +28,12 @@ var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
       uri: 'main'
+    };
+  },
+  getInitialState: function() {
+    return {
+      user: {},
+      messageCount: 0,
     };
   },
   //To Load all necessary screens from the uri
@@ -103,6 +110,46 @@ var PlainNavigator = React.createClass({
           </TouchableOpacity>);
     }
   },
+  updateInfo: function(token) {
+    console.log("UPDATEINFO" + token);
+    if (token) {
+      var request = {
+        method: 'get',
+        headers:{ 'X-Session': token, }
+      };
+      if (!this.state.user){
+        var url = API_DOMAIN + "user/me";
+        RestKit.send(url, request, this.updateUserInfo);
+
+      }
+      var unread_url = API_DOMAIN + "user/unreadmsgs";
+      RestKit.send(unread_url, request, this.updateMessageCount);
+    }
+  },
+  updateUserInfo: function(error, json) {
+    if (error) {
+      console.log("Error loading UserInfo"+error)
+      return ;
+    }
+    if (json) {
+      console.log("Update User info " + json);
+      this.setState({user: json});
+    }
+  },
+  updateMessageCount: function(error, json) {
+    if (error) {
+      console.log("Error loading MsgCount"+error)
+      return ;
+    }
+    if (json) {
+      console.log("Message Count is " + json["Count"]);
+      if (this.state.messageCount != json["Count"]) {
+        console.log("Update Message Count!")
+        this.setState({messageCount: json["Count"]});
+      }
+
+    }
+  },
   renderScene: function(route, navigator) {
     var routes = new Routes(route.uri);
     if (routes!= null) {
@@ -120,6 +167,7 @@ var PlainNavigator = React.createClass({
             popScreen={navigator.pop}
             replaceScreen={navigator.replace}
             api_domain={API_DOMAIN}
+            updateInfo={this.updateInfo}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()} />
         </View>
