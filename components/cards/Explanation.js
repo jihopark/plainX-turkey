@@ -9,7 +9,7 @@ var Explanation = React.createClass({
   displayName: "ExplanationCard",
   render: function() {
     return (
-      <Text style={{textAlign:'center'}, this.props.cardCommonStyles.headings}>
+      <Text style={[this.props.cardCommonStyles.explanation,{textAlign:'center'}]}>
         {this.props.data["Text"]}
       </Text>
     );

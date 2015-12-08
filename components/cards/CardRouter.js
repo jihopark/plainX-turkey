@@ -18,6 +18,7 @@ var CardRouter = {
     "Header": () => require('../cards/Header.js'),
     "Empty": () => require('../cards/Empty.js'),
     "Error": () => require('../cards/Error.js'),
+    "TodaysRateOffer": () => require('../cards/TodaysRateOffer.js'),
   },
   getComponent: function(name){
     if (Object.keys(this.registeredCards).indexOf(name) == -1) return null;
