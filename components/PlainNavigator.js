@@ -11,6 +11,7 @@ var {
   Platform,
   StyleSheet,
   Image,
+  Animated,
 } = React;
 
 var Routes = require('./screens/Routes.js');
@@ -34,7 +35,18 @@ var PlainNavigator = React.createClass({
     return {
       user: {},
       messageCount: 0,
+      messageBounceValue: new Animated.Value(0),
+      shouldBounceCount: true,
     };
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    if (nextState["messageCount"]>0 && nextState["messageCount"]!= this.state.messageCount)
+      this.setState({shouldBounceCount: true});
+    return true;
+  },
+  componentDidUpdate: function() {
+    if (this.state.shouldBounceCount)
+      this.bounceMessage();
   },
   //To Load all necessary screens from the uri
   getInitialRouteStack: (uri) => {
@@ -101,12 +113,19 @@ var PlainNavigator = React.createClass({
       var routes = new Routes(route.uri);
       var routeName = routes.getCurrentRoute().name;
       var isMessageRelatedScreen = routeName == "conversations" || routeName == "conversationRoom"
+      console.log(navigator.props.messageCount);
       return isMessageRelatedScreen ? null :
         (<TouchableOpacity
           style={styles.navBarRightButton}
           onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
-            <Image style={[styles.navBarIcon, {position:'absolute', top:0, left: -20, width: 30, height: 30}]}
+            <Image style={[styles.navBarIcon, styles.messageIcon]}
               source={require("../assets/msgicon.png")} />
+            {navigator.props.messageCount > 0 ?
+              (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
+                <Text style={styles.messageCount}>
+                  {navigator.props.messageCount}
+                </Text>
+              </Animated.View>) : null}
           </TouchableOpacity>);
     }
   },
@@ -142,13 +161,24 @@ var PlainNavigator = React.createClass({
       return ;
     }
     if (json) {
-      console.log("Message Count is " + json["Count"]);
-      if (this.state.messageCount != json["Count"]) {
+      var count = json["Count"];
+      console.log("Message Count is " + count);
+      if (this.state.messageCount != count) {
         console.log("Update Message Count!")
-        this.setState({messageCount: json["Count"]});
+        this.setState({messageCount: count});
       }
 
     }
+  },
+  bounceMessage: function() {
+    this.state.messageBounceValue.setValue(1.1);
+    Animated.spring(
+      this.state.messageBounceValue,
+      {
+        toValue: 0.8,
+        friction: 0.5,
+      }
+    ).start();
   },
   renderScene: function(route, navigator) {
     var routes = new Routes(route.uri);
@@ -186,6 +216,8 @@ var PlainNavigator = React.createClass({
           rightNavBarButtonSubject={this.rightNavBarButtonSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}
           renderScene={this.renderScene}
+          messageCount={this.state.messageCount}
+          messageBounceValue={this.state.messageBounceValue}
           style={styles.appContainer}
           navigationBar={
             <Navigator.NavigationBar
@@ -239,6 +271,28 @@ var styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: '#EAEAEA', //should change to background image later
   },
+  messageIcon: {
+    position:'absolute',
+    top:-2,
+    left: -20,
+    width: 30, height: 30
+  },
+  messageCountContainer: {
+    backgroundColor:'#33cc66',
+    width:20, height: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    position:'absolute',
+    top:-2,
+    left: -33,
+  },
+  messageCount: {
+    color: 'white',
+    textAlign: 'center',
+    alignSelf: 'center',
+  }
 });
 
 module.exports = PlainNavigator;
