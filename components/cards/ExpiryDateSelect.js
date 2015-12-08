@@ -106,7 +106,7 @@ var ExpiryDateSelect = React.createClass({
             mode="date"
             onDateChange={function(selectedDate){
               if (selectedDate >= new Date()) { //No past dates
-                next["Date"] = selectedDate.getTime();
+                next["Date"] = selectedDate.getTime()/1000;
                 subject.onNext(next);
               }
             }}
