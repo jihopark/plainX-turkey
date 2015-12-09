@@ -56,6 +56,7 @@ var MainScreen = React.createClass({
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
   },
   toggleSideMenu: function(event) {
+    console.log("TOGGLE FROM MaIN");
     this.context.menuActions.toggle();
   },
   contextTypes: {

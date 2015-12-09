@@ -28,12 +28,13 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main'
+      uri: 'main',
+      sideMenuSubject: new Rx.Subject(),
     };
   },
   getInitialState: function() {
     return {
-      user: {},
+      user: null,
       messageCount: 0,
       messageBounceValue: new Animated.Value(0),
       shouldBounceCount: true,
@@ -130,24 +131,26 @@ var PlainNavigator = React.createClass({
     }
   },
   updateInfo: function(token) {
-    console.log("UPDATEINFO" + token);
-    if (token) {
-      var request = {
-        method: 'get',
-        headers:{ 'X-Session': token, }
-      };
-      if (!this.state.user){
-        var url = API_DOMAIN + "user/me";
-        RestKit.send(url, request, this.updateUserInfo);
+    var request = {
+      method: 'get',
+      headers:{ 'X-Session': token, }
+    };
 
-      }
+    if (!this.state.user){
+      console.log("UPDATE USER INFO");
+      var url = API_DOMAIN + "user/me";
+      RestKit.send(url, request, this.updateUserInfo);
+    }
+    if (token) {
+      console.log("UPDATE MESSAGE COUNT");
       var unread_url = API_DOMAIN + "user/unreadmsgs";
       RestKit.send(unread_url, request, this.updateMessageCount);
     }
   },
   updateUserInfo: function(error, json) {
     if (error) {
-      console.log("Error loading UserInfo"+error)
+      console.log("Error loading UserInfo")
+      console.log(error);
       return ;
     }
     if (json) {
@@ -180,9 +183,26 @@ var PlainNavigator = React.createClass({
       }
     ).start();
   },
+  setLogoutState: function() {
+    this.setState({user:null});
+  },
   renderScene: function(route, navigator) {
     var routes = new Routes(route.uri);
     if (routes!= null) {
+      if (!navigator.props.sideMenuSubject.hasObservers()) {
+        var changeState =
+        navigator.props.sideMenuSubject.subscribe(function(event){
+          switch (event.type) {
+            case "pushScreen":
+              navigator.push({uri: routes.addRoute(event.uri)});
+              break;
+            case "logout":
+              navigator.props.setLogoutState();
+              break;
+          }
+        });
+      }
+
       var Screen = routes.getCurrentRoute().getComponent();
       return (
         <View
@@ -209,9 +229,14 @@ var PlainNavigator = React.createClass({
   rightNavBarButtonSubject: new Rx.Subject(),
   render: function() {
     return (
-      <SideMenu menu={<PlainSideMenu />}
-                touchToClose={true}>
+      <SideMenu menu={
+          <PlainSideMenu
+            sideMenuSubject={this.props.sideMenuSubject}
+            user={this.state.user} />}
+            touchToClose={true}>
         <Navigator
+          setLogoutState={this.setLogoutState}
+          sideMenuSubject={this.props.sideMenuSubject}
           leftNavBarButtonSubject={this.leftNavBarButtonSubject}
           rightNavBarButtonSubject={this.rightNavBarButtonSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}

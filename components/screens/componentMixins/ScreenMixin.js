@@ -50,15 +50,6 @@ var ScreenMixin =  {
     }
   },
   loginToken: null,
-  async logOut(){
-    if (this.loginToken) this.loginToken = null;
-    try {
-      await AsyncStorage.removeItem("SESSION");
-      console.log("User Is Logged Out");
-    } catch (error) {
-      console.log("Error Logging Out");
-    }
-  },
   async loadTokenIfAny(){
     if (this.loginToken) return this.loginToken;
     try {
@@ -75,7 +66,9 @@ var ScreenMixin =  {
     this.loadScreen();
   },
   componentWillUnmount: function() {
-    this.props.updateInfo(this.loginToken);
+    this.loadTokenIfAny().then((value) => {
+      this.props.updateInfo(value);
+    });
   },
   loadScreen: function() {
     var enablePagination = this.props.enablePagination;
