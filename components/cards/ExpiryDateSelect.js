@@ -100,6 +100,11 @@ var ExpiryDateSelect = React.createClass({
     var datePicker = Platform.OS === 'ios' ?
      (
       <View style={{alignItems:'center', flexDirection:'column'}}>
+        <TouchableOpacity style={{alignSelf: 'flex-end', flexDirection: 'row', marginRight: 10,}} onPress={this.closeDatePicker}>
+          <Image source={require('../../assets/checkmark.png')}
+                  style={styles.doneButtonIcon}/>
+          <Text style={styles.doneButtonText}>Close</Text>
+        </TouchableOpacity>
         <DatePickerIOS
             style={{backgroundColor: 'transparent'}}
             date={date}
@@ -111,11 +116,6 @@ var ExpiryDateSelect = React.createClass({
               }
             }}
           />
-        <TouchableOpacity style={{alignSelf: 'flex-end', flexDirection: 'row', marginRight: 10,}} onPress={this.closeDatePicker}>
-          <Image source={require('../../assets/checkmark.png')}
-                  style={styles.doneButtonIcon}/>
-          <Text style={styles.doneButtonText}>Close</Text>
-        </TouchableOpacity>
       </View>
     ) :
     null; //for android

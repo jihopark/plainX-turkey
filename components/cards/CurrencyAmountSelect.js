@@ -97,7 +97,7 @@ var CurrencyAmountSelect = React.createClass({
         currencyList={currencyList}
         onPickerValueChange={this.onBuyPickerValueChange}
         dismissPicker={this.dismissPicker} />) : null;
-
+    var dismissPicker = this.dismissPicker;
     return (
       <View>
         <Text style={[this.props.cardCommonStyles.titles, {marginBottom: 5}]}>
@@ -130,6 +130,7 @@ var CurrencyAmountSelect = React.createClass({
               }}
               onFocus={function() {
                 next["Target"] = "Focus";
+                dismissPicker();
                 subject.onNext(next);
               }}
               value={AmountSell + (this.props.data["SellRate"] ? "*": "")}
@@ -168,6 +169,7 @@ var CurrencyAmountSelect = React.createClass({
               }}
               onFocus={function() {
                 next["Target"] = "Focus";
+                dismissPicker();
                 subject.onNext(next);
               }}
               value={AmountBuy + (this.props.data["BuyRate"] ? "*": "")}

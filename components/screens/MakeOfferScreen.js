@@ -7,6 +7,7 @@ var {
   StyleSheet,
   Platform,
   Text,
+  ScrollView,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -80,10 +81,10 @@ var MakeOfferScreen = React.createClass({
       enabled={requestParams!=null} />);
 
     return (
-      <View style={this.screenCommonStyle.container}>
+      <ScrollView contentContainerStyle={this.screenCommonStyle.container}>
         {listView}
         {finishButton}
-      </View>
+      </ScrollView>
     );
   }
 });
