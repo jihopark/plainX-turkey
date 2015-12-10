@@ -76,6 +76,13 @@ class Routes {
         title: "Room",
         enablePagination: true,
       },
+      {
+        name: "offerSubmitted",
+        id: 10,
+        getComponent: () => require("../screens/OfferSubmittedScreen.js"),
+        title: "",
+        enablePagination: false,
+      },
     ];
   }
 

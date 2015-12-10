@@ -19,6 +19,7 @@ var CardRouter = {
     "Empty": () => require('../cards/Empty.js'),
     "Error": () => require('../cards/Error.js'),
     "TodaysRateOffer": () => require('../cards/TodaysRateOffer.js'),
+    "IconExplanation": () => require('../cards/IconExplanation.js'),
   },
   getComponent: function(name){
     if (Object.keys(this.registeredCards).indexOf(name) == -1) return null;

@@ -217,6 +217,7 @@ var PlainNavigator = React.createClass({
             pushScreen={navigator.push}
             popScreen={navigator.pop}
             replaceScreen={navigator.replace}
+            immediatelyResetRouteStack={navigator.immediatelyResetRouteStack}
             api_domain={API_DOMAIN}
             updateInfo={this.updateInfo}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
