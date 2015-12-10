@@ -38,6 +38,7 @@ var PlainNavigator = React.createClass({
       messageCount: 0,
       messageBounceValue: new Animated.Value(0),
       shouldBounceCount: true,
+      isSideMenuOpen: false,
     };
   },
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -229,8 +230,11 @@ var PlainNavigator = React.createClass({
   rightNavBarButtonSubject: new Rx.Subject(),
   render: function() {
     return (
-      <SideMenu menu={
+      <SideMenu
+          onChange={(isOpen) => this.setState({isSideMenuOpen: isOpen})}
+          menu={
           <PlainSideMenu
+            isOpen={this.state.isSideMenuOpen}
             sideMenuSubject={this.props.sideMenuSubject}
             user={this.state.user} />}
             touchToClose={true}>

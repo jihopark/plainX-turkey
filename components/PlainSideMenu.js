@@ -66,7 +66,6 @@ var PlainSideMenu = React.createClass({
     }
   },
   render: function() {
-    console.log("PlainSIDE"+this.props.user);
     var commonMenus = (<View><MenuItem text={"FAQ"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/faq")} />
     <MenuItem text={"TERMS & CONDITIONS"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/terms")} />
     <MenuItem text={"ABOUT US"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz")} /></View>);
@@ -84,7 +83,7 @@ var PlainSideMenu = React.createClass({
       </View>);
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, (this.props.isOpen ? null : {opacity: 0})]}>
         <View style={styles.header}>
           {this.props.user ?
             (<Text style={styles.nameText}>{this.props.user["Email"]}</Text>) : null}
