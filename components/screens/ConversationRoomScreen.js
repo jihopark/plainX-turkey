@@ -208,14 +208,19 @@ var styles = StyleSheet.create({
   msgInput: {
     flex: 6,
     height: 35,
+    alignSelf: 'center',
   },
   sendButton: {
     flex:1,
+    color:'#33cc66',
+    fontWeight:'bold',
+    marginRight: 5,
   },
   sendContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#eee',
+    height:45,
   },
 });
 
