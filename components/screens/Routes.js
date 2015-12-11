@@ -175,6 +175,16 @@ class Routes {
     return previous;
   }
 
+  getRouteStack() {
+    var stack = [];
+    var r = new Routes(this.getUri());
+    for (var i=0; i<this.getDepth(); i++) {
+      stack.push(r.getUri());
+      r = r.getPreviousRoutes();
+    }
+    return stack;
+  }
+
 
   hasBack() {
     return this.routes.length != 1

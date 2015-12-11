@@ -20,7 +20,6 @@ var SideMenu = require('react-native-side-menu');
 
 var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
-var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
 var RestKit = require('react-native-rest-kit');
 
 var routesMap;
@@ -28,21 +27,22 @@ var routesMap;
 var PlainNavigator = React.createClass({
   getDefaultProps: () => {
     return {
-      uri: 'main',
       sideMenuSubject: new Rx.Subject(),
     };
   },
   getInitialState: function() {
     return {
       user: null,
-      messageCount: 0,
       messageBounceValue: new Animated.Value(0),
       shouldBounceCount: true,
       isSideMenuOpen: false,
     };
   },
   shouldComponentUpdate: function(nextProps, nextState) {
-    if (nextState["messageCount"]>0 && nextState["messageCount"]!= this.state.messageCount)
+    if (nextProps["uri"] != this.props.uri) {
+      this.shouldRerender = true;
+    }
+    if (nextProps["messageCount"]>0 && nextProps["messageCount"]!= this.props.messageCount)
       this.setState({shouldBounceCount: true});
     return true;
   },
@@ -139,14 +139,10 @@ var PlainNavigator = React.createClass({
 
     if (!this.state.user){
       console.log("UPDATE USER INFO");
-      var url = API_DOMAIN + "user/me";
+      var url = this.props.API_DOMAIN + "user/me";
       RestKit.send(url, request, this.updateUserInfo);
     }
-    if (token) {
-      console.log("UPDATE MESSAGE COUNT");
-      var unread_url = API_DOMAIN + "user/unreadmsgs";
-      RestKit.send(unread_url, request, this.updateMessageCount);
-    }
+    this.props.updateMessageCount(token);
   },
   updateUserInfo: function(error, json) {
     if (error) {
@@ -157,21 +153,6 @@ var PlainNavigator = React.createClass({
     if (json) {
       console.log("Update User info " + json);
       this.setState({user: json});
-    }
-  },
-  updateMessageCount: function(error, json) {
-    if (error) {
-      console.log("Error loading MsgCount"+error)
-      return ;
-    }
-    if (json) {
-      var count = json["Count"];
-      console.log("Message Count is " + count);
-      if (this.state.messageCount != count) {
-        console.log("Update Message Count!")
-        this.setState({messageCount: count});
-      }
-
     }
   },
   bounceMessage: function() {
@@ -189,6 +170,12 @@ var PlainNavigator = React.createClass({
   },
   renderScene: function(route, navigator) {
     var routes = new Routes(route.uri);
+    if (this.shouldRerender && this.props.uri != route.uri) {
+      this.shouldRerender = false;
+      var newRouteStack = this.getInitialRouteStack(this.props.uri);
+      navigator.immediatelyResetRouteStack(newRouteStack);
+      return ;
+    }
     if (routes!= null) {
       if (!navigator.props.sideMenuSubject.hasObservers()) {
         var changeState =
@@ -218,7 +205,7 @@ var PlainNavigator = React.createClass({
             popScreen={navigator.pop}
             replaceScreen={navigator.replace}
             immediatelyResetRouteStack={navigator.immediatelyResetRouteStack}
-            api_domain={API_DOMAIN}
+            api_domain={this.props.API_DOMAIN}
             updateInfo={this.updateInfo}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()} />
@@ -246,7 +233,7 @@ var PlainNavigator = React.createClass({
           rightNavBarButtonSubject={this.rightNavBarButtonSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}
           renderScene={this.renderScene}
-          messageCount={this.state.messageCount}
+          messageCount={this.props.messageCount}
           messageBounceValue={this.state.messageBounceValue}
           style={styles.appContainer}
           navigationBar={
