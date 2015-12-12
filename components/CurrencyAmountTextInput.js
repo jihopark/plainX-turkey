@@ -13,7 +13,8 @@ var CurrencyAmountTextInput = React.createClass({
     return (
       <View style={styles.container}>
         <TextInput
-          style={[styles.currencyAmountTextInput, this.props.textStyle]}
+          style={[styles.currencyAmountTextInput, this.props.textStyle,
+                (this.props.value.length > 5 ? {fontSize: 20} : {})]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
           value={this.props.value}
