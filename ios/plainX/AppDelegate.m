@@ -15,6 +15,10 @@
 
 #import <Parse/Parse.h>
 
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
+
 
 @implementation AppDelegate
 
@@ -38,7 +42,7 @@ currentInstallation.channels = @[ @"global" ];
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
+  
   //For Parse
   // Initialize Parse.
   [Parse setApplicationId:@"AbGNATEXLxsdDAPalV5Qlh8uncqdzo44Gm8som0S"
@@ -93,6 +97,11 @@ currentInstallation.channels = @[ @"global" ];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  //For Crashlytics
+  [Fabric with:@[[Crashlytics class]]];
+  
+  
   return YES;
 }
 

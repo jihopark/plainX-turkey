@@ -21,6 +21,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		7F96BD991C1C256B00CFE791 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F96BD971C1C256B00CFE791 /* Fabric.framework */; };
+		7F96BD9A1C1C256B00CFE791 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F96BD981C1C256B00CFE791 /* Crashlytics.framework */; };
 		7FA7131F1BE73FDF00D23353 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA7131D1BE73F8B00D23353 /* libRCTPushNotification.a */; };
 		7FA713221BE8821800D23353 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA713201BE8821800D23353 /* Bolts.framework */; };
 		7FA713231BE8821800D23353 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA713211BE8821800D23353 /* Parse.framework */; };
@@ -152,6 +154,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = plainX/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7F96BD971C1C256B00CFE791 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		7F96BD981C1C256B00CFE791 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		7FA713181BE73F8B00D23353 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		7FA713201BE8821800D23353 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		7FA713211BE8821800D23353 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -191,6 +195,7 @@
 				7FA713341BE8827600D23353 /* Security.framework in Frameworks */,
 				7FA713351BE8827600D23353 /* StoreKit.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
+				7F96BD991C1C256B00CFE791 /* Fabric.framework in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				7FA713221BE8821800D23353 /* Bolts.framework in Frameworks */,
@@ -200,6 +205,7 @@
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				7FA7131F1BE73FDF00D23353 /* libRCTPushNotification.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
+				7F96BD9A1C1C256B00CFE791 /* Crashlytics.framework in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
@@ -358,6 +364,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				7F96BD971C1C256B00CFE791 /* Fabric.framework */,
+				7F96BD981C1C256B00CFE791 /* Crashlytics.framework */,
 				7FA713241BE8827600D23353 /* AudioToolbox.framework */,
 				7FA713251BE8827600D23353 /* CFNetwork.framework */,
 				7FA713261BE8827600D23353 /* CoreGraphics.framework */,
@@ -415,6 +423,7 @@
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
+				7F96BD8A1C1C251E00CFE791 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -623,6 +632,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7F96BD8A1C1C251E00CFE791 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run c1ecad49be084509ea4b85c66e77f8715a163cb7 0796f73890a13ca192517de113ea743797fa8aaa280096992f8ba81eecf08900";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		00E356EA1AD99517003FC87E /* Sources */ = {
