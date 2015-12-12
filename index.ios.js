@@ -72,7 +72,17 @@ var body = React.createClass({
   onRegister: function(deviceToken) {
     console.log("DEVICETOKEN" + deviceToken);
     this.saveDeviceToken(deviceToken);
-    // TODO: Sent Device Token to Mushroom
+    var request = {
+      method: 'post',
+      headers:{
+        'X-Session': "",
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({"Token": deviceToken}),
+    };
+    var url = API_DOMAIN + "user/token";
+    RestKit.send(url, request, (error, json)=> {console.log(error); console.log(json); });
   },
   updateMessageCount: function(token) {
     var request = {

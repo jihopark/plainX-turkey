@@ -31,19 +31,21 @@ var LoginScreen = React.createClass({
       email: "",
       data: [],
       keyboardSpace: 0,
+      enableLoginButton: true,
     };
   },
   async saveToken(token) {
     try {
       await AsyncStorage.setItem("SESSION", token);
       console.log("SAVED");
-      this.props.popScreen();
     } catch (error) {
       this.setState({errorMsg: "Problem occured. Please try again."});
     }
     this.props.setNetworkActivityIndicator(false);
+    return token;
   },
   onLogin: function(){
+    this.setState({enableLoginButton: false});
     var email = this.state.email;
     var pwd = ""+this.state.password;
     this.props.setNetworkActivityIndicator(true);
@@ -75,7 +77,45 @@ var LoginScreen = React.createClass({
     // if 200
     if (json){
       console.log(json["Session"]);
-      this.saveToken(json["Session"]);
+      this.saveToken(json["Session"]).then(this.getDeviceToken);
+    }
+  },
+  getDeviceToken: function(loginToken){
+    if (loginToken){
+      this.getDeviceTokenFromStorage(loginToken).then(this.saveDeviceTokenToServer).done();
+    }
+  },
+  async getDeviceTokenFromStorage(loginToken){
+    try {
+      var value = await AsyncStorage.getItem("DEVICE_TOKEN");
+      return {"loginToken": loginToken, "deviceToken": value};
+    } catch (error) {
+      console.log("Error Retreving LoginToken");
+      return null;
+    }
+  },
+  saveDeviceTokenToServer: function(tokens){
+    if (tokens) {
+      this.setState({enableLoginButton: true});
+      console.log("DEVICE_TOKEN " + tokens["deviceToken"]);
+
+      var request = {
+        method: 'post',
+        headers:{
+          'X-Session': tokens["loginToken"],
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"Token": tokens["deviceToken"]}),
+      };
+      var url = this.props.api_domain + "user/token";
+      RestKit.send(url, request, function(error, json){
+        console.log("SENT DEVICE TOKEN TO SERVER");
+      });
+      this.props.popScreen();
+    }
+    else{
+      console.log("Cannot load deviceToken..");
     }
   },
   onSignUp: function(){
@@ -125,7 +165,7 @@ var LoginScreen = React.createClass({
           <ActionButton
             text={"LOGIN"}
             onPress={this.onLogin}
-            enabled={true} />
+          enabled={this.state.enableLoginButton} />
         </View>
       </ScrollView>
     );
