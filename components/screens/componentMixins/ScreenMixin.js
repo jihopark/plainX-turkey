@@ -98,7 +98,7 @@ var ScreenMixin =  {
     var endPoint = this.endPoint || this.checkEndPointInParams();
     if (endPoint){
       this.props.setNetworkActivityIndicator(true);
-      var url = this.props.api_domain + endPoint + "?" + this.props.params + "Page=" + page;
+      var url = this.props.api_domain + endPoint + "?" + this.props.params + "&Page=" + page;
       console.log(url);
 
       var request = token ?
