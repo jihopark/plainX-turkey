@@ -55,7 +55,7 @@ var OfferConfirmationScreen = React.createClass({
     if (json) {
       console.log("SUCCESS"+json);
       this.setState({buttonState:"done"});
-      var routes = [{uri: 'main'}, {uri: 'main/offerSubmitted'}];
+      var routes = [{uri: 'offerSubmitted'}];
       this.props.immediatelyResetRouteStack(routes);
     }
   },

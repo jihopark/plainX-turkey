@@ -54,8 +54,7 @@ var body = React.createClass({
     PushNotificationIOS.addEventListener("notification", this.onNotification);
   },
   onNotification: function(event) {
-    // TODO: Need to check whether it is message or not
-    // TODO: Need to check if it is intended for logged in user
+    console.log(event);
     var state = AppStateIOS.currentState;
     if (state!='active' && event["_data"]["uri"]){
       this.setState({uri: event["_data"]["uri"]});

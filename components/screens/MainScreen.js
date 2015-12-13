@@ -14,12 +14,13 @@ var Routes = require('../screens/Routes.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
 var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
+var MenuButtonMixin = require('./componentMixins/MenuButtonMixin.js');
 
 var TutorialPager = require('../TutorialPager.js');
 var PlainListView = require('../PlainListView.js');
 
 var MainScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencySelectCardMixin, OfferCardMixin],
+  mixins: [ScreenMixin, CurrencySelectCardMixin, OfferCardMixin, MenuButtonMixin],
   displayName: "MainScreen",
   endPoint: "main",
   getInitialState: function() {
@@ -54,13 +55,6 @@ var MainScreen = React.createClass({
   },
   pushConversationsScreen: function(event) {
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
-  },
-  toggleSideMenu: function(event) {
-    console.log("TOGGLE FROM MaIN");
-    this.context.menuActions.toggle();
-  },
-  contextTypes: {
-    menuActions: React.PropTypes.object.isRequired,
   },
   closeTutorial: function() {
     this.setState({showTutorial: false});

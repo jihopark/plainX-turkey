@@ -77,20 +77,10 @@ var PlainNavigator = React.createClass({
     },
     LeftButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
-      if (routes.getCurrentRoute().hasCustomLeftButton) {
-        var button;
-        if (routes.getCurrentRoute().leftButtonText) {
-          button = (
-              <NavigationTextButton
-                styles={styles}
-                buttonText={routes.getCurrentRoute().leftButtonText} />);
-        }
-        if (routes.getCurrentRoute().leftButtonImageSource) {
-          button = (
-            <Image style={styles.navBarIcon}
-              source={routes.getCurrentRoute().leftButtonImageSource()} />
-          );
-        }
+      if (routes.getDepth() == 1) {
+        var button = (
+          <Image style={styles.navBarIcon}
+            source={require("../assets/menuicon.png")} /> );
         return (
           <TouchableOpacity
             onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
