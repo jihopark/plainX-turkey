@@ -14,12 +14,12 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
 var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
-var ExpiryDateSelectCardMixin = require('./cardMixins/ExpiryDateSelectCardMixin.js');
+var ExpirySelectCardMixin = require('./cardMixins/ExpirySelectCardMixin.js');
 
 var ActionButton = require('../ActionButton.js');
 
 var MakeOfferScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyAmountSelectCardMixin, ExpiryDateSelectCardMixin, LocationSelectCardMixin],
+  mixins: [ScreenMixin, CurrencyAmountSelectCardMixin, ExpirySelectCardMixin, LocationSelectCardMixin],
   displayName: "MakeOfferScreen",
   endPoint: 'offer/make',
   getInitialState: function() {
@@ -53,8 +53,8 @@ var MakeOfferScreen = React.createClass({
           }
         }
       }
-      else if (cards[i]["Name"] == "ExpiryDateSelect") {
-        params["Date"] = cards[i]["Data"]["Date"];
+      else if (cards[i]["Name"] == "ExpirySelect") {
+        params["Expiry"] = cards[i]["Data"]["Expiry"];
       }
     }
     return locationInputValid && amountInputValid && currencyInputValid ? params : null;
@@ -66,7 +66,7 @@ var MakeOfferScreen = React.createClass({
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
     cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
-    cardObservers["ExpiryDateSelect"] = this.expiryDateSelectCardonNext;
+    cardObservers["ExpirySelect"] = this.expirySelectCardonNext;
     cardObservers["LocationSelect"] = this.locationSelectonNext;
 
     var requestParams = this.getRequestParams();

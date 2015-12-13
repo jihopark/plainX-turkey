@@ -9,15 +9,15 @@ var {
   StyleSheet,
 } = React;
 
-var ExpiryDate = React.createClass({
-  displayName: "ExpiryDateCard",
+var Expiry = React.createClass({
+  displayName: "ExpiryCard",
   render: function() {
     return (
       <View style={styles.container}>
         <Image style={styles.icon} source={require('../../assets/calendaricon_gray.png')} />
         <Text style={this.props.cardCommonStyles.offerTitle}>{this.props.data["TitleText"]}</Text>
         <Text style={this.props.cardCommonStyles.offerOptions}>
-          {this.props.data["Date"] == -1 ? "None" : new Date(this.props.data["Date"]) }
+          {this.props.data["Expiry"] == -1 ? "None" : new Date(this.props.data["Expiry"]) }
         </Text>
       </View>
     );
@@ -35,4 +35,4 @@ var styles = StyleSheet.create({
   },
 });
 
-module.exports = ExpiryDate;
+module.exports = Expiry;

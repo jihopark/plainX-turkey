@@ -76,8 +76,8 @@ var styles = StyleSheet.create({
   },
 });
 
-var ExpiryDateSelect = React.createClass({
-  displayName: "ExpiryDateSelectCard",
+var ExpirySelect = React.createClass({
+  displayName: "ExpirySelect",
   getInitialState: function() {
     return {
       isDatePickerShown: false
@@ -95,7 +95,7 @@ var ExpiryDateSelect = React.createClass({
       subject.subscribe(this.props.observer);
     }
     var next = {"id": this.props.id};
-    var date = new Date(this.props.data["Date"]*1000);
+    var date = new Date(this.props.data["Expiry"]*1000);
 
     var datePicker = Platform.OS === 'ios' ?
      (
@@ -111,7 +111,7 @@ var ExpiryDateSelect = React.createClass({
             mode="date"
             onDateChange={function(selectedDate){
               if (selectedDate >= new Date()) { //No past dates
-                next["Date"] = selectedDate.getTime()/1000;
+                next["Expiry"] = selectedDate.getTime()/1000;
                 subject.onNext(next);
               }
             }}
@@ -138,4 +138,4 @@ var ExpiryDateSelect = React.createClass({
   }
 });
 
-module.exports = ExpiryDateSelect;
+module.exports = ExpirySelect;
