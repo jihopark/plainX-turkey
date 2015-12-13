@@ -34,7 +34,21 @@ var SignUpScreen = React.createClass({
       data: [],
       showConfirmation: false,
       keyboardSpace: 0,
+      signup_note: "",
     };
+  },
+  componentDidMount: function(){
+    var url = this.props.api_domain + "meta?key=signup_note";
+    var request = {
+      method: 'get',
+      'Content-Type': 'application/text'
+   };
+    RestKit.send(url, request, this.handleSignUpNote);
+  },
+  handleSignUpNote: function(error, json) {
+    if (!error) {
+      this.setState({signup_note: (json["Text"] || "")});
+    }
   },
   onChangeEmail: function(text) {
     this.setState({email: text});
@@ -44,23 +58,6 @@ var SignUpScreen = React.createClass({
   },
   onChangePasswordConfirm: function(text) {
     this.setState({passwordConfirm: text});
-  },
-  handleRequest: function(error, json){
-    this.props.setNetworkActivityIndicator(false);
-    if (error){
-      console.log(error);
-      if (error.status == 400) {
-        var errorMsg = JSON.parse(error.body)["Error"];
-        if (errorMsg)
-          this.setState({errorMsg: errorMsg});
-      }
-      return ;
-    }
-    console.log(json);
-    if (json){
-      // if 200
-      this.setState({showConfirmation: true});
-    }
   },
   onSignUp: function(){
     if (this.state.password != this.state.passwordConfirm) {
@@ -82,6 +79,23 @@ var SignUpScreen = React.createClass({
       })
     };
     RestKit.send(url, request, this.handleRequest);
+  },
+  handleRequest: function(error, json){
+    this.props.setNetworkActivityIndicator(false);
+    if (error){
+      console.log(error);
+      if (error.status == 400) {
+        var errorMsg = JSON.parse(error.body)["Error"];
+        if (errorMsg)
+          this.setState({errorMsg: errorMsg});
+      }
+      return ;
+    }
+    console.log(json);
+    if (json){
+      // if 200
+      this.setState({showConfirmation: true});
+    }
   },
   popScreen: function(){
     this.props.popScreen();
@@ -132,7 +146,7 @@ var SignUpScreen = React.createClass({
               </TouchableOpacity>
 
               <Text style={[styles.descriptionText, styles.extraText]}>
-                {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
+                {this.state.signup_note}
               </Text>
             </View>)}
           </View>
