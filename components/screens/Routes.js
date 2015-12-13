@@ -79,6 +79,13 @@ class Routes {
         title: "",
         enablePagination: false,
       },
+      {
+        name: "myOffers",
+        id: 11,
+        getComponent: () => require("../screens/MyOffersScreen.js"),
+        title: "My Offers",
+        enablePagination: false,
+      },
     ];
   }
 

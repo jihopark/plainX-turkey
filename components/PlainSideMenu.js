@@ -40,7 +40,8 @@ var PlainSideMenu = React.createClass({
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri:"makeOffer"});
   },
   pushMyOfferScreen: function(){
-
+    this.toggleSideMenu();
+    this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "myOffers"});
   },
   pushLoginScreen: function() {
     this.toggleSideMenu();
