@@ -15,6 +15,10 @@ var DateMixin =  {
       return time.format("h:mm a");
     return time.format("MMM Do");
   },
+  getDateFormat: function(date) {
+    var time = moment(date*1000);
+    return time.format("MMM Do YY");
+  },
 }
 
 module.exports = DateMixin;
