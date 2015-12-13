@@ -131,14 +131,14 @@ var LoginScreen = React.createClass({
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-          <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
+          <View style={[styles.container, {paddingTop: 30-this.state.keyboardSpace}]}>
             <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
             <TouchableOpacity onPress={this.onSignUp}>
               <Text style={styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
               </Text>
             </TouchableOpacity>
-            <View style={{marginTop: 70, alignItems: 'center'}}>
+            <View style={styles.textInputContainer}>
               <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
               <PlainTextInput
                   icon={require("../../assets/emailicon.png")}
@@ -154,7 +154,7 @@ var LoginScreen = React.createClass({
                   value={this.state.password} />
             </View>
 
-            <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
+            <Text style={[styles.descriptionText, styles.extraText]}>
               {"*If you have forgotten your password,\nplease email "}
               <Text style={{color: '#33cc66'}}>info@plainexchange.xyz</Text>
               {" to reset it."}
@@ -186,26 +186,23 @@ var styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'transparent',
   },
-  textContainer: {
-    width: 200,
-    height: 40,
-    flexDirection: 'column',
-    padding: 3,
-    borderWidth: 1,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderBottomColor: '#33cc66',
+  textInputContainer: {
+    marginTop: 20,
     alignItems: 'center',
   },
   logo:{
-    width:180,
-    height:75,
+    width:144,
+    height:60,
   },
   descriptionText: {
     marginTop: 20,
     fontSize: 15,
     color: '#333333',
+  },
+  extraText: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginLeft: 10, marginRight: 10,
   },
   errorMsg: {
     color: '#ff3366',

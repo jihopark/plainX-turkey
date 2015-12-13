@@ -114,9 +114,10 @@ var PlainNavigator = React.createClass({
     RightButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
       var routeName = routes.getCurrentRoute().name;
-      var isMessageRelatedScreen = routeName == "conversations" || routeName == "conversationRoom"
+      var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
+      var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
       console.log(navigator.props.messageCount);
-      return isMessageRelatedScreen ? null :
+      return shouldNotShowMsgIcon ? null :
         (<TouchableOpacity
           style={styles.navBarRightButton}
           onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>

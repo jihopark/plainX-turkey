@@ -9,6 +9,8 @@ var {
   StyleSheet,
   Image,
   TouchableOpacity,
+  LinkingIOS,
+  Platform,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -88,7 +90,7 @@ var SignUpScreen = React.createClass({
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-        <View style={[styles.container, {paddingTop: 80-this.state.keyboardSpace}]}>
+        <View style={[styles.container, {paddingTop: 30-this.state.keyboardSpace}]}>
             <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
             {this.state.showConfirmation ?
               (<Text style={[styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
@@ -100,7 +102,7 @@ var SignUpScreen = React.createClass({
                 </Text>
               </TouchableOpacity>
 
-              <View style={{marginTop: 70, alginItems:'center'}}>
+              <View style={styles.textInputContainer}>
                 <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
                 <PlainTextInput
                     icon={require("../../assets/emailicon.png")}
@@ -122,7 +124,14 @@ var SignUpScreen = React.createClass({
                     value={this.state.passwordConfirm} />
               </View>
 
-              <Text style={[styles.descriptionText, {fontSize: 12, textAlign: 'center'}]}>
+              <TouchableOpacity onPress={() => (Platform.OS == 'ios' ? LinkingIOS.openURL("http://plainexchange.xyz/terms") : null)}>
+                <Text style={[styles.descriptionText, styles.extraText]}>
+                  {"By signing up, you are agreeing to\n "}
+                  <Text style={{color: '#33cc66'}}>our terms and conditions</Text>
+                </Text>
+              </TouchableOpacity>
+
+              <Text style={[styles.descriptionText, styles.extraText]}>
                 {"*Our service is currently open to HKUST & HKU only.\nPlease register with a valid email from those institutions."}
               </Text>
             </View>)}
@@ -156,27 +165,24 @@ var styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'transparent',
   },
-  textContainer: {
-    width: 200,
-    height: 40,
-    flexDirection: 'column',
-    padding: 3,
-    borderWidth: 1,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: 'transparent',
-    borderBottomColor: '#33cc66',
-    alignItems: 'center',
+  textInputContainer: {
+    marginTop: 10,
+    alignItems:'center',
   },
   logo:{
-    width:180,
-    height:75,
+    width:144,
+    height:60,
     resizeMode: 'stretch',
   },
   descriptionText: {
-    marginTop: 20,
+    marginTop: 10,
     fontSize: 15,
     color: '#333333',
+  },
+  extraText: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginLeft: 10, marginRight: 10,
   },
   errorMsg: {
     color: '#ff3366',
