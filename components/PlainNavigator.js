@@ -165,6 +165,7 @@ var PlainNavigator = React.createClass({
         friction: 0.5,
       }
     ).start();
+    this.setState({shouldBounceCount: false});
   },
   setLogoutState: function() {
     this.setState({user:null});
