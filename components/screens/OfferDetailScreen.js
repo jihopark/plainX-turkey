@@ -18,7 +18,7 @@ var update = require('react-addons-update');
 var actionButtonStates = {"connected": "CONNECTED!",
                         "connecting": "Loading",
                         "not_connected": "CONNECT TO THIS OFFER",
-                        "self": "self",
+                        "self": "REMOVE OFFER",
                         "error": "SOMETHING WENT WRONG"};
 
 var OfferDetailScreen = React.createClass({
@@ -66,9 +66,44 @@ var OfferDetailScreen = React.createClass({
       this.setOfferState("connected");
     }
   },
+  onRemoveOffer: function(){
+    const DELETE_ENDPOINT = "offer";
+    var url = this.props.api_domain + DELETE_ENDPOINT;
+    var bodyParams = this.getStringToParams(this.props.params);
+    console.log(url);
+
+    var request = {
+      method: 'delete',
+      headers: {
+        'X-Session': this.loginToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyParams),
+    };
+    this.props.setNetworkActivityIndicator(true);
+    this.setOfferState("connecting");
+    RestKit.send(url, request, this.handleRemoveRequest);
+  },
+  handleRemoveRequest: function(error, json) {
+    this.props.setNetworkActivityIndicator(false);
+    if (error) {
+      console.log(error);
+      console.log("ERROR");
+      this.setOfferState("error");
+      return ;
+    }
+    if (json) {
+      console.log("SUCCESS");
+      console.log(json["ConversationId"]);
+      this.props.popScreen();
+    }
+  },
   getOfferState: function() {
     var meta = this.state.data["Meta"];
     if (meta){
+      if (meta["isOwnOffer"])
+        return "self";
       if (meta["isConnected"]){
         return "connected";
       }
@@ -101,15 +136,20 @@ var OfferDetailScreen = React.createClass({
       onEndReached={this.loadMore}
       />);
 
+    var isOwnOffer = this.state.data["Meta"] ? this.state.data["Meta"]["isOwnOffer"] : null;
     var makeOfferButton = (<ActionButton
                             text={actionButtonStates[this.getOfferState()]}
                             onPress={this.onConnectOffer}
                             enabled={this.getOfferState() == "not_connected"} />);
-
+    var removeOfferButton = (<ActionButton
+                            text={actionButtonStates[this.getOfferState()]}
+                            onPress={this.onRemoveOffer}
+                            backgroundColor={"#ee586e"}
+                            enabled={true} />);
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
-        {this.getOfferState() != "self" ? makeOfferButton : null}
+        {this.getOfferState() != "self" ? makeOfferButton : removeOfferButton}
       </View>
     );
   }

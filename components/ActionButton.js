@@ -12,8 +12,9 @@ var {
 var ActionButton = React.createClass({
   displayName: 'ActionButton',
   render: function() {
+    var bgColor = this.props.backgroundColor || '#33cc66';
     return (
-      <TouchableOpacity style={styles.container} onPress={this.props.enabled ? this.props.onPress : null}>
+      <TouchableOpacity style={[styles.container, {backgroundColor: bgColor}]} onPress={this.props.enabled ? this.props.onPress : null}>
         {this.props.text == "Loading" && Platform.OS == 'ios' ?
           (<ActivityIndicatorIOS size='small' color='white' />)
           :
@@ -27,7 +28,6 @@ var ActionButton = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    backgroundColor: '#33cc66',
     overflow:'hidden',
     paddingTop:20,
     paddingBottom:20,
