@@ -216,7 +216,11 @@ var ConversationRoomScreen = React.createClass({
         {header}
         {listView}
         <View style={[styles.sendContainer, {marginBottom: this.state.keyboardSpace}]} >
-          <TextInput style={styles.msgInput} onChangeText={this.onChangeMsgInput} value={this.state.msgInput} />
+          <TextInput
+            placeholder={"Type here"}
+            style={styles.msgInput}
+            onChangeText={this.onChangeMsgInput}
+            value={this.state.msgInput} />
           {sendButton}
         </View>
       </View>
@@ -232,6 +236,7 @@ var styles = StyleSheet.create({
     flex: 6,
     height: 35,
     alignSelf: 'center',
+    marginLeft: 10,
   },
   sendButton: {
     flex:1,

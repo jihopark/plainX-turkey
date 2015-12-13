@@ -15,23 +15,36 @@ var Message = React.createClass({
   displayName: "MessageCard",
   mixins: [DateMixin],
   render: function() {
-    var isMessage = this.props.data["Type"] == 'message';
-    var isSelf = this.props.data["IsSelf"];
+    var message;
+    switch (this.props.data["Type"]) {
+      case 'message':
+        var isSelf = this.props.data["IsSelf"];
+        message = (<View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
+          <Text style={[styles.messageText,
+              (isSelf ?
+                styles.selfText : styles.otherText)]}>
+            {this.props.data["Text"]}
+          </Text>
+          <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
+            {this.getMessageTimestampFormat(this.props.data["Created"])}
+          </Text>
+        </View>);
+        break;
+      case 'note':
+        message = (<View style={{flexDirection:'column'}}>
+          <Text style={[styles.messageText, styles.noteText]}>
+            {this.props.data["Text"]}
+          </Text>
+          <Text style={[styles.dateText, styles.noteSubText]}>
+            {"Only shown to you"}
+          </Text>
+        </View>);
+        break;
+    }
+
     return (
       <View style={styles.container}>
-        {isMessage ?
-          (<View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-            <Text style={[styles.messageText,
-                (isSelf ?
-                  styles.selfText : styles.otherText)]}>
-              {this.props.data["Text"]}
-            </Text>
-            <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-              {this.getMessageTimestampFormat(this.props.data["Created"])}
-            </Text>
-          </View>)
-        : null}
-
+        {message}
       </View>
     );
   }
@@ -72,6 +85,16 @@ var styles = StyleSheet.create({
     overflow: 'hidden',
     marginLeft: 5,
     marginRight: 5,
+  },
+  noteText: {
+    textAlign:'center',
+    color: '#33cc66',
+    borderColor: '#33cc66',
+    borderWidth: 1,
+  },
+  noteSubText: {
+    marginTop: 5, marginBottom: 5,
+    textAlign:'right'
   },
   dateText: {
     color: '#333',
