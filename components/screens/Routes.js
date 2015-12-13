@@ -140,7 +140,7 @@ class Routes {
     var paramStrings = queryString.split("&");
     for (var i=0; i<paramStrings.length-1; i++) {
       var split = paramStrings[i].split("=");
-      if (split[0]=="screenName")
+      if (split[0]=="Title")
         return split[1];
     }
     return null;

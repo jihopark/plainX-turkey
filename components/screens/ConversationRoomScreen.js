@@ -176,6 +176,10 @@ var ConversationRoomScreen = React.createClass({
   onChangeMsgInput: function(value) {
     this.setState({msgInput: value});
   },
+  onPressHeader: function() {
+    var params = {"Id": this.state.data["Meta"]["Offer"]["Id"]};
+    this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+this.getParamsToString(params))});
+  },
   renderScreen: function() {
     var cardObservers = { };
 
@@ -186,9 +190,21 @@ var ConversationRoomScreen = React.createClass({
       cards={this.state.data["Cards"]}
       onEndReached={this.loadMore}
       />);
+    var offer = this.state.data ? this.state.data["Meta"]["Offer"] : null;
+    var header = ( offer ?
+
+    (<TouchableOpacity
+      style={{paddingTop: 15, paddingBottom: 15, backgroundColor: 'white'}}
+      onPress={this.onPressHeader}>
+      <Text style={styles.offerSummary}>
+      {offer["Sell"]} {offer["AmountSell"]} to {offer["Buy"]} {offer["AmountBuy"]}
+      <Text style={styles.moreInfo}>{"\ntap for more details"}</Text>
+      </Text>
+    </TouchableOpacity>) : null);
 
     return (
       <View style={[this.screenCommonStyle.container, styles.container]}>
+        {header}
         {listView}
         <View style={[styles.sendContainer, , {marginBottom: this.state.keyboardSpace}]} >
           <TextInput style={styles.msgInput} onChangeText={this.onChangeMsgInput} value={this.state.msgInput} />
@@ -222,6 +238,17 @@ var styles = StyleSheet.create({
     backgroundColor: '#eee',
     height:45,
   },
+  offerSummary: {
+    paddingTop: 3, paddingBottom: 3,
+    textAlign: 'center',
+    backgroundColor: 'white',
+    fontSize: 18,
+    color: '#33cc66',
+  },
+  moreInfo: {
+    color:"#333",
+    fontSize: 12,
+  }
 });
 
 module.exports = ConversationRoomScreen;
