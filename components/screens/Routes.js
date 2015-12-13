@@ -138,7 +138,7 @@ class Routes {
     var queryString = this.getCurrentRouteParams();
     var params = {};
     var paramStrings = queryString.split("&");
-    for (var i=0; i<paramStrings.length-1; i++) {
+    for (var i=0; i<paramStrings.length; i++) {
       var split = paramStrings[i].split("=");
       if (split[0]=="Title")
         return split[1];
