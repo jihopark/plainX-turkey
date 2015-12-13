@@ -9,6 +9,7 @@ var {
   TextInput,
   TouchableOpacity,
   AppStateIOS,
+  ActivityIndicatorIOS,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -31,6 +32,7 @@ var ConversationRoomScreen = React.createClass({
       shouldPoll: false,
       appState: AppStateIOS.currentState,
       msgInput: "",
+      sending: false,
     };
   },
   componentDidMount: function() {
@@ -65,7 +67,7 @@ var ConversationRoomScreen = React.createClass({
     return true;
   },
   getConversationId: function() {
-    return this.getStringToParams(this.props.params)["id"];
+    return this.getStringToParams(this.props.params)["Id"];
   },
   getJSON: function(params) {
     var wrappedPromise = {};
@@ -159,9 +161,11 @@ var ConversationRoomScreen = React.createClass({
       body: JSON.stringify(params),
     };
     this.props.setNetworkActivityIndicator(true);
+    this.setState({sending:true});
     RestKit.send(url, request, this.handleSendMsgRequest);
   },
   handleSendMsgRequest: function(error, json){
+    this.setState({sending:false});
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
@@ -201,16 +205,19 @@ var ConversationRoomScreen = React.createClass({
       <Text style={styles.moreInfo}>{"\ntap for more details"}</Text>
       </Text>
     </TouchableOpacity>) : null);
-
+    var sendButton = this.state.sending ?
+    (<ActivityIndicatorIOS size='small' color="#33cc66" />)
+    :
+      (<TouchableOpacity onPress={this.onSend}>
+        <Text style={styles.sendButton} >Send</Text>
+      </TouchableOpacity>);
     return (
       <View style={[this.screenCommonStyle.container, styles.container]}>
         {header}
         {listView}
-        <View style={[styles.sendContainer, , {marginBottom: this.state.keyboardSpace}]} >
+        <View style={[styles.sendContainer, {marginBottom: this.state.keyboardSpace}]} >
           <TextInput style={styles.msgInput} onChangeText={this.onChangeMsgInput} value={this.state.msgInput} />
-          <TouchableOpacity onPress={this.onSend}>
-            <Text style={styles.sendButton} >Send</Text>
-          </TouchableOpacity>
+          {sendButton}
         </View>
       </View>
     );
@@ -230,13 +237,13 @@ var styles = StyleSheet.create({
     flex:1,
     color:'#33cc66',
     fontWeight:'bold',
-    marginRight: 5,
   },
   sendContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: '#eee',
     height:45,
+    paddingRight: 10,
   },
   offerSummary: {
     paddingTop: 3, paddingBottom: 3,
