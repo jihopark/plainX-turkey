@@ -185,7 +185,7 @@ var ScreenMixin =  {
   getStringToParams: function(queryString) {
     var params = {};
     var paramStrings = queryString.split("&");
-    for (var i=0; i<paramStrings.length-1; i++) {
+    for (var i=0; i<paramStrings.length; i++) {
       var split = paramStrings[i].split("=");
       params[split[0]] = this.isNumeric(split[1]) ? this.parseNumber(split[1]+"") : split[1];
     }

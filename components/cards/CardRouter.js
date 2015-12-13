@@ -15,6 +15,7 @@ var CardRouter = {
     "OfferSummary": () => require('../cards/OfferSummary.js'),
     "UserConversationItem": () => require('../cards/UserConversationItem.js'),
     "Message": () => require('../cards/Message.js'),
+    "Feedback": () => require('../cards/Feedback.js'),
     "Header": () => require('../cards/Header.js'),
     "Empty": () => require('../cards/Empty.js'),
     "Error": () => require('../cards/Error.js'),
@@ -26,7 +27,7 @@ var CardRouter = {
     else return this.registeredCards[name]();
   },
   isConversationCard: function(name) {
-    return name.indexOf("Conversation")!= -1 || name.indexOf("Message")!= -1;
+    return name.indexOf("Conversation")!= -1 || name.indexOf("Message")!= -1 || name.indexOf("Feedback")!= -1;
   }
 };
 

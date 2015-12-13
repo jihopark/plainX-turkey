@@ -67,7 +67,8 @@ var ConversationRoomScreen = React.createClass({
     return true;
   },
   getConversationId: function() {
-    return this.getStringToParams(this.props.params)["Id"];
+    console.log(this.props.params);
+    return this.getStringToParams(this.props.params)["Id"] || this.getStringToParams(this.props.params)["id"];
   },
   getJSON: function(params) {
     var wrappedPromise = {};
@@ -184,9 +185,34 @@ var ConversationRoomScreen = React.createClass({
     var params = {"Id": this.state.data["Meta"]["Offer"]["Id"]};
     this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+this.getParamsToString(params))});
   },
+  feedbackCardOnNext: function(event) {
+    //option detail
+    console.log(event);
+    const url = this.props.api_domain + "conversation/feedback?Id="+this.getConversationId();
+    console.log(url);
+    var request = {
+      method: 'post',
+      headers: {
+        'X-Session': this.loginToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    };
+    this.props.setNetworkActivityIndicator(true);
+    RestKit.send(url, request, this.handleFeedbackRequest);
+  },
+  handleFeedbackRequest: function(error, json) {
+    this.props.setNetworkActivityIndicator(false);
+    if (error) {
+      console.log(error);
+      return ;
+    }
+    console.log(json);
+  },
   renderScreen: function() {
     var cardObservers = { };
-
+    cardObservers["Feedback"] = this.feedbackCardOnNext;
     var listView = (<PlainListView
       hasBackgroundColor={true}
       invertList={true}

@@ -31,7 +31,7 @@ var Message = React.createClass({
         </View>);
         break;
       case 'note':
-        message = (<View style={{flexDirection:'column'}}>
+        message = (<View style={{flexDirection:'column', margin: 10}}>
           <Text style={[styles.messageText, styles.noteText]}>
             {this.props.data["Text"]}
           </Text>
