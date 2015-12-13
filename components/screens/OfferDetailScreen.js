@@ -62,8 +62,8 @@ var OfferDetailScreen = React.createClass({
     }
     if (json) {
       console.log("SUCCESS");
-      console.log(json["ConversationId"]);
       this.setOfferState("connected");
+      this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+json["ConversationId"])});
     }
   },
   onRemoveOffer: function(){
