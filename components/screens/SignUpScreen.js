@@ -101,20 +101,23 @@ var SignUpScreen = React.createClass({
     this.props.popScreen();
   },
   renderScreen: function() {
+    var margin = 30-this.state.keyboardSpace;
+
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-        <View style={[styles.container, {paddingTop: 30-this.state.keyboardSpace}]}>
-            <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
+        <View style={[styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
+            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>) : null}
             {this.state.showConfirmation ?
               (<Text style={[styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
               :
             (<View style={{flex:1, alignItems: 'center', flexDirection: 'column'}}>
-                <TouchableOpacity onPress={this.props.popScreen}>
+              {margin > 0 ?
+              (<TouchableOpacity onPress={this.props.popScreen}>
                 <Text style={styles.descriptionText}>
                   {"Already have an account?"} <Text style={{color: '#33cc66'}}>{"Login Here!"}</Text>
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity>) : null}
 
               <View style={styles.textInputContainer}>
                 <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>

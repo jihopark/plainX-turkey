@@ -128,11 +128,12 @@ var LoginScreen = React.createClass({
     this.setState({password: text});
   },
   renderScreen: function() {
+    var margin = 30-this.state.keyboardSpace;
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
-          <View style={[styles.container, {paddingTop: 30-this.state.keyboardSpace}]}>
-            <Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>
+          <View style={[styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
+            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>) : null}
             <TouchableOpacity onPress={this.onSignUp}>
               <Text style={styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
