@@ -49,7 +49,6 @@ var body = React.createClass({
     if (!permission.alert) {
       console.log("REQUESTING PERMISSION BECAUSE U DON'T HAVE ONE");
       PushNotificationIOS.requestPermissions();
-      PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
     console.log("ADD NOTIFICATION LISTENER");
     PushNotificationIOS.addEventListener("notification", this.onNotification);
@@ -72,19 +71,29 @@ var body = React.createClass({
   },
   onRegister: function(deviceToken) {
     console.log("ON REGISTER");
-    console.log("DEVICETOKEN" + deviceToken);
+    //  PushNotificationIOS.setApplicationIconBadgeNumber(0);
     this.saveDeviceToken(deviceToken);
-    var request = {
-      method: 'post',
-      headers:{
-        'X-Session': "",
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({"Token": deviceToken}),
-    };
-    var url = API_DOMAIN + "user/token";
-    RestKit.send(url, request, (error, json)=> {console.log(error); console.log(json); });
+    this.sendDeviceToken(deviceToken);
+  },
+  sendDeviceToken: function(deviceToken) {
+    this.loadTokenIfAny()
+      .then(function(loginToken){
+        console.log("LOGINTOKEN IS " + loginToken);
+        console.log("SENDING DEVICE TOKEN " + deviceToken);
+        if (loginToken == null) loginToken = "";
+        var request = {
+          method: 'post',
+          headers:{
+            'X-Session': loginToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({"Token": deviceToken}),
+        };
+        var url = API_DOMAIN + "user/token";
+        RestKit.send(url, request, (error, json)=> {console.log(error); console.log(json); });
+      })
+      .done();
   },
   updateMessageCount: function(token) {
     var request = {
