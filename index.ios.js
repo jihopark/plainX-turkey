@@ -44,16 +44,18 @@ var body = React.createClass({
     }
   },
   onCheckPermission: function(permission) {
+    console.log("ON CHECK PERMISSION");
     console.log("Permission alert:" + permission.alert + " badge:" + permission.badge + " sound:" + permission.sound)
     if (!permission.alert) {
-      console.log("Request Permission");
+      console.log("REQUESTING PERMISSION BECAUSE U DON'T HAVE ONE");
       PushNotificationIOS.requestPermissions();
       PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
-    console.log("PushNotification add listener");
+    console.log("ADD NOTIFICATION LISTENER");
     PushNotificationIOS.addEventListener("notification", this.onNotification);
   },
   onNotification: function(event) {
+    console.log("ON NOTIFICATION");
     console.log(event);
     var state = AppStateIOS.currentState;
     if (state!='active' && event["_data"]["uri"]){
@@ -69,6 +71,7 @@ var body = React.createClass({
     }
   },
   onRegister: function(deviceToken) {
+    console.log("ON REGISTER");
     console.log("DEVICETOKEN" + deviceToken);
     this.saveDeviceToken(deviceToken);
     var request = {
@@ -107,8 +110,8 @@ var body = React.createClass({
     }
   },
   componentDidMount: function() {
-    PushNotificationIOS.checkPermissions(this.onCheckPermission);
     PushNotificationIOS.addEventListener("register", this.onRegister);
+    PushNotificationIOS.checkPermissions(this.onCheckPermission);
   },
   componentWillUnmount: function() {
     PushNotificationIOS.removeEventListener('notification', this.onNotification);
