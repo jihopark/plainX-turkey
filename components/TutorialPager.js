@@ -36,7 +36,7 @@ var TutorialPager = React.createClass({
         <View style={{backgroundColor: 'white',}}>
           <TouchableOpacity onPress={this.props.closeTutorial}>
             <Image
-              source={require('../assets/cross.png')}
+              source={require('image!cross')}
               style={{alignSelf:'flex-end', width:20, height:20, marginRight: 10, marginTop: 10, marginBottom: 5}}/>
           </TouchableOpacity>
         </View>

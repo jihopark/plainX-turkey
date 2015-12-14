@@ -105,9 +105,9 @@ var SignUpScreen = React.createClass({
 
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
-        <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
+        <Image source={require('image!BG2')} style={styles.backgroundImage}>
         <View style={[styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>) : null}
+            {margin > 0 ? (<Image source={require('image!logo_lg')} style={styles.logo}/>) : null}
             {this.state.showConfirmation ?
               (<Text style={[styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
               :
@@ -122,19 +122,19 @@ var SignUpScreen = React.createClass({
               <View style={styles.textInputContainer}>
                 <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
                 <PlainTextInput
-                    icon={require("../../assets/emailicon.png")}
+                    icon={require("image!emailicon")}
                     placeholder={"Email"}
                     keyboardType={"email-address"}
                     onChangeText={this.onChangeEmail}
                     value={this.state.email} />
                 <PlainTextInput
-                    icon={require("../../assets/passwordicon.png")}
+                    icon={require("image!passwordicon")}
                     placeholder={"Password"}
                     secureTextEntry={true}
                     onChangeText={this.onChangePassword}
                     value={this.state.password} />
                 <PlainTextInput
-                    icon={require("../../assets/passwordicon.png")}
+                    icon={require("image!passwordicon")}
                     placeholder={"Password Confirmation"}
                     secureTextEntry={true}
                     onChangeText={this.onChangePasswordConfirm}

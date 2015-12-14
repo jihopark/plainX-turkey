@@ -38,7 +38,7 @@ var UserConversationItem = React.createClass({
           }
         }>
         <View style={{flexDirection:'row'}}>
-          <Image source={require('../../assets/usericon_green.png')} style={styles.userIcon} />
+          <Image source={require('image!usericon_green')} style={styles.userIcon} />
           <View>
             {this.getOfferSummaryText(this.props.data["Offer"])}
             <Text style={[this.props.cardCommonStyles.title, styles.name, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>

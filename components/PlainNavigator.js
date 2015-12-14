@@ -73,14 +73,14 @@ var PlainNavigator = React.createClass({
       return routes.getCurrentRoute().title ?
       (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
       :
-      (<Image style={styles.navBarTitleImage} source={require('../assets/logo.png')} />);
+      (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
     },
     LeftButton: (route, navigator, index, navState) => {
       var routes = new Routes(route.uri);
       if (routes.getDepth() == 1) {
         var button = (
           <Image style={styles.navBarIcon}
-            source={require("../assets/menuicon.png")} /> );
+            source={require("image!menuicon")} /> );
         return (
           <TouchableOpacity
             onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
@@ -95,7 +95,7 @@ var PlainNavigator = React.createClass({
               style={styles.navBarLeftButton}
               onPress={() => navigator.pop()}>
               <Image style={styles.navBarIcon}
-                source={require('../assets/backicon.png')} />
+                source={require('image!backicon')} />
             </TouchableOpacity>);
         }
       }
@@ -112,7 +112,7 @@ var PlainNavigator = React.createClass({
           style={styles.navBarRightButton}
           onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
             <Image style={[styles.navBarIcon, styles.messageIcon]}
-              source={require("../assets/msgicon.png")} />
+              source={require("image!msgicon")} />
             {navigator.props.messageCount > 0 ?
               (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
                 <Text style={styles.messageCount}>

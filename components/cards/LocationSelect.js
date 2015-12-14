@@ -24,7 +24,7 @@ var LocationCheckBox = React.createClass({
     return (
       <View style={styles.selection}>
         <View style={styles.checkbox}>
-          <Image style={checkmarkStyle} source={require('../../assets/checkmark.png')} />
+          <Image style={checkmarkStyle} source={require('image!checkmark')} />
         </View>
         <Text style={styles.locationName}>{this.props.name}</Text>
       </View>
@@ -76,7 +76,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap:'wrap',
     marginTop: 10,
-    marginBottom: 10,    
+    marginBottom: 10,
     justifyContent: 'space-around',
   },
   selection: {

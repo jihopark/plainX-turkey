@@ -20,7 +20,7 @@ var CurrencyAmount = React.createClass({
             {this.props.data["Sell"]+"\n"+this.props.data["AmountSell"]}</Text>
         </View>
         <View style={styles.centerContainer}>
-          <Image style={styles.center} source={require('../../assets/plane.png')}/>
+          <Image style={styles.center} source={require('image!plane')}/>
         </View>
         <View style={styles.sideContainer}>
           <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>

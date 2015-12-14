@@ -18,10 +18,10 @@ var Divider = require('../Divider.js');
 var DateFormat = React.createClass({
   displayName: "DateFormat",
   render: function() {
-    var triangle = require('../../assets/triangle.png');
+    var triangle = require('image!triangle');
     return (
       <View style={styles.dateformatContainer}>
-        <Image source={require('../../assets/calendar.png')}
+        <Image source={require('image!calendar')}
           style={styles.calendarIcon} />
         <View style={[{width: 45}, styles.textContainer]}>
           <Text style={styles.dateformatText}>{(this.props.date.getMonth()+1)}</Text>
@@ -101,7 +101,7 @@ var ExpirySelect = React.createClass({
      (
       <View style={{alignItems:'center', flexDirection:'column'}}>
         <TouchableOpacity style={{alignSelf: 'flex-end', flexDirection: 'row', marginRight: 10,}} onPress={this.closeDatePicker}>
-          <Image source={require('../../assets/checkmark.png')}
+          <Image source={require('image!checkmark')}
                   style={styles.doneButtonIcon}/>
           <Text style={styles.doneButtonText}>Close</Text>
         </TouchableOpacity>

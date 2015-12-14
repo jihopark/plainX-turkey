@@ -131,9 +131,9 @@ var LoginScreen = React.createClass({
     var margin = 30-this.state.keyboardSpace;
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
-        <Image source={require('../../assets/BG2.png')} style={styles.backgroundImage}>
+        <Image source={require('image!BG2')} style={styles.backgroundImage}>
           <View style={[styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={styles.logo}/>) : null}
+            {margin > 0 ? (<Image source={require('image!logo_lg')} style={styles.logo}/>) : null}
             <TouchableOpacity onPress={this.onSignUp}>
               <Text style={styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
@@ -142,13 +142,13 @@ var LoginScreen = React.createClass({
             <View style={styles.textInputContainer}>
               <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
               <PlainTextInput
-                  icon={require("../../assets/emailicon.png")}
+                  icon={require("image!emailicon")}
                   placeholder={"Email"}
                   keyboardType={"email-address"}
                   onChangeText={this.onChangeEmail}
                   value={this.state.email} />
               <PlainTextInput
-                  icon={require("../../assets/passwordicon.png")}
+                  icon={require("image!passwordicon")}
                   placeholder={"Password"}
                   secureTextEntry={true}
                   onChangeText={this.onChangePassword}

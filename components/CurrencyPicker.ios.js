@@ -36,14 +36,14 @@ var CurrencyPicker = React.createClass({
           <TouchableOpacity
             style={styles.button}
             onPress={this.props.dismissPicker}>
-            <Image source={require('../assets/cross.png')}
+            <Image source={require('image!cross')}
                     style={styles.icon}/>
             <Text style={styles.text} >Close</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={this.props.onPick}>
-            <Image source={require('../assets/checkmark.png')}
+            <Image source={require('image!checkmark')}
                     style={styles.icon}/>
             <Text style={styles.text} >Done</Text>
           </TouchableOpacity>

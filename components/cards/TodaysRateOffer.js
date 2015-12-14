@@ -14,7 +14,7 @@ var TodaysRateOffer = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
-        <Image style={styles.icon} source={require('../../assets/dollaricon.png')} />
+        <Image style={styles.icon} source={require('image!dollaricon')} />
         {this.props.data["TodaysRate"] ? (
           <View style={styles.textContainer}>
             <Text style={[this.props.cardCommonStyles.offerTitle, styles.center]}>{this.props.data["TodaysRateDescription"]}</Text>
