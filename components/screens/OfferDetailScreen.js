@@ -5,7 +5,6 @@ var React = require('react-native');
 var {
   View,
   StyleSheet,
-  Platform,
   Text,
 } = React;
 
@@ -13,6 +12,8 @@ var PlainListView = require('../PlainListView.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
+var ShouldLoginAlert = require('../ShouldLoginAlert.js');
+
 var update = require('react-addons-update');
 
 var actionButtonStates = {"connected": "CONNECTED!",
@@ -56,8 +57,13 @@ var OfferDetailScreen = React.createClass({
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
-      console.log("ERROR");
-      this.setOfferState("error");
+      if (error.status == 401) {
+        ShouldLoginAlert.showAlert("You need to login to connect to an offer",
+          () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
+        this.setOfferState("not_connected");
+      }
+      else
+        this.setOfferState("error");
       return ;
     }
     if (json) {
@@ -89,7 +95,6 @@ var OfferDetailScreen = React.createClass({
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
-      console.log("ERROR");
       this.setOfferState("error");
       return ;
     }
@@ -107,17 +112,24 @@ var OfferDetailScreen = React.createClass({
       if (meta["isConnected"]){
         return "connected";
       }
+      else if (meta["error"])
+          return "error";
       else if (meta["isOwnOffer"])
         return "self";
       else if (meta["isConnecting"])
           return "connecting";
-      else if (meta["error"])
-        return "error";
+
     }
     return "not_connected";
   },
   setOfferState: function(value) {
     switch(value) {
+      case "not_connected":
+        var data = update(this.state.data, {"Meta": {"isConnecting": {$set:false}}});
+        data = update(data, {"Meta": {"error": {$set:false}}});
+        data = update(data, {"Meta": {"isConnecting": {$set:false}}});
+        this.setState({data: data});
+        break;
       case "connected":
         this.setState({data: update(this.state.data, {"Meta": {"isConnected": {$set:true}}})});
         break;
