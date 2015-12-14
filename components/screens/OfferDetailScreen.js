@@ -161,7 +161,7 @@ var OfferDetailScreen = React.createClass({
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
-        {this.getOfferState() != "self" ? makeOfferButton : removeOfferButton}
+        {this.getOfferState() != "self" ? makeOfferButton : null}
       </View>
     );
   }
