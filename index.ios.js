@@ -118,13 +118,19 @@ var body = React.createClass({
       }
     }
   },
+  onError: function(message, key){
+    console.log('An error occurred: ', message);
+    console.log('An error occurred key: ', key);
+  },
   componentDidMount: function() {
     PushNotificationIOS.addEventListener("register", this.onRegister);
+    PushNotificationIOS.addEventListener('error', this.onError);
     PushNotificationIOS.checkPermissions(this.onCheckPermission);
   },
   componentWillUnmount: function() {
     PushNotificationIOS.removeEventListener('notification', this.onNotification);
     PushNotificationIOS.removeEventListener("register", this.onRegister);
+    PushNotificationIOS.removeEventListener('error', this.onError);
   },
   render: function() {
     return (

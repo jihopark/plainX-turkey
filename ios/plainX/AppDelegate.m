@@ -39,10 +39,15 @@ currentInstallation.channels = @[ @"global" ];
 [RCTPushNotificationManager application:application didReceiveRemoteNotification:notification];
 }
 
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+  [RCTPushNotificationManager application:application didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-  
+
   //For Parse
   // Initialize Parse.
   [Parse setApplicationId:@"AbGNATEXLxsdDAPalV5Qlh8uncqdzo44Gm8som0S"
@@ -97,11 +102,11 @@ currentInstallation.channels = @[ @"global" ];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  
+
   //For Crashlytics
   [Fabric with:@[[Crashlytics class]]];
-  
-  
+
+
   return YES;
 }
 
