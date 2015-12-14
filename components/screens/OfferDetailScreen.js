@@ -59,7 +59,7 @@ var OfferDetailScreen = React.createClass({
       console.log(error);
       if (error.status == 401) {
         ShouldLoginAlert.showAlert("You need to login to connect to an offer",
-          () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
+          () => this.props.replaceScreen({uri: this.props.routes.addRoute('login')}));
         this.setOfferState("not_connected");
       }
       else
