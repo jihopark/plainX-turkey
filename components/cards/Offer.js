@@ -43,7 +43,7 @@ var styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    height: 40,
+    alignItems: 'center',
   },
   centerContainer: {
     flex: 2,
@@ -52,7 +52,6 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 5,
     marginRight: 5,
-
   },
   center: {
     marginTop: 3,

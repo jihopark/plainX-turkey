@@ -9,6 +9,10 @@ var {
 
 var CurrencyAmountTextInput = React.createClass({
   displayName: 'CurrencyAmountTextInput',
+  formatNumber: function(n) {
+    var f = parseFloat(n);
+    return f ? (Math.round(f * 100) / 100)+"" : f;
+  },
   render: function() {
     return (
       <View style={styles.container}>
@@ -17,7 +21,7 @@ var CurrencyAmountTextInput = React.createClass({
                 (this.props.value.length > 5 ? {fontSize: 20} : {})]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
-          value={this.props.value}
+          value={this.formatNumber(this.props.value)}
           keyboardType={"numeric"}
           clearTextOnFocus={true}
           returnKeyType={'done'}
