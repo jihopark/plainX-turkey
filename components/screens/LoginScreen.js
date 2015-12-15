@@ -48,6 +48,7 @@ var LoginScreen = React.createClass({
     this.setState({enableLoginButton: false});
     var email = this.state.email;
     var pwd = ""+this.state.password;
+
     this.props.setNetworkActivityIndicator(true);
     var url = this.props.api_domain + "login";
     var request = {
@@ -65,6 +66,7 @@ var LoginScreen = React.createClass({
   },
   handleRequest: function(error, json){
     this.props.setNetworkActivityIndicator(false);
+    this.setState({enableLoginButton: true});
 
     if (error){
       if (error.status == 400) {
