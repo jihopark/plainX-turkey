@@ -9,6 +9,7 @@ var {
   View,
   AsyncStorage,
   StyleSheet,
+  AlertIOS,
 } = React;
 
 //This mixin is to define common functions for Screen Components.
@@ -111,14 +112,28 @@ var ScreenMixin =  {
 
     }
   },
+  onPressErrorDialog: function() {
+    this.props.popScreen();
+  },
   handleInitialRequest: function(error, json){
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log("ERROR");
+      console.log("ERRORabc");
       console.log(error.status);
       if (error.status == 500 || error.status == 400 || error.status == 404) {
-        console.log(error);
         var text = JSON.parse(error.body)["Error"];
+        console.log(text);
+        if (this.props.routes.getDepth() > 1) {
+          console.log("ALERT");
+          AlertIOS.alert(
+            'Error',
+            text,
+            [
+              {text: 'OK', onPress: this.onPressErrorDialog},
+            ]
+          );
+          return ;
+        }
         this.setState({data: {"Page":0, "HasNext": false,
                          "Cards": [{"UUID": "1", "Name": "Error", "Merged": "", "Data": {"Text": text}}]}});
       }
