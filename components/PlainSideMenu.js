@@ -67,9 +67,11 @@ var PlainSideMenu = React.createClass({
     }
   },
   render: function() {
-    var commonMenus = (<View><MenuItem text={"FAQ"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/faq")} />
-    <MenuItem text={"TERMS & CONDITIONS"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/terms")} />
-    <MenuItem text={"ABOUT US"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz")} /></View>);
+    var commonMenus = (<View>
+        <MenuItem text={"ABOUT US"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz")} /></View>);
+
+    //<MenuItem text={"FAQ"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/faq")} />
+    //<MenuItem text={"TERMS & CONDITIONS"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/terms")} />
 
     var loginUserMenu = (
       <View style={{flexDirection: 'column', flex:1}}>
