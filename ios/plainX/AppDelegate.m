@@ -78,8 +78,8 @@ currentInstallation.channels = @[ @"global" ];
    * on the same Wi-Fi network.
    */
 
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-
+  //jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+  jsCodeLocation = [NSURL URLWithString:@"http://10.89.137.229:8081/index.ios.bundle?platform=ios&dev=true"];
   /**
    * OPTION 2
    * Load from pre-bundled file on disk. To re-generate the static bundle
@@ -90,7 +90,7 @@ currentInstallation.channels = @[ @"global" ];
    * see http://facebook.github.io/react-native/docs/runningondevice.html
    */
 
-   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  // jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"plainX"
