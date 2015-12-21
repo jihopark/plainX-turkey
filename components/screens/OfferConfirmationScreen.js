@@ -7,8 +7,9 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var BaseScreen = require('./BaseScreen.js');
 
+var ParameterUtils = require('../utils/ParameterUtils.js');
 var ActionButton = require('../ActionButton.js');
 var RestKit = require('react-native-rest-kit');
 
@@ -18,19 +19,19 @@ var actionButtonStates = { "default": "FINISH",
                         "error": "SOMETHING WENT WRONG"};
 
 
-var OfferConfirmationScreen = React.createClass({
-  mixins: [ScreenMixin],
-  displayName: "OfferConfirmationScreen",
-  endPoint: 'offer/confirm',
-  getInitialState: function() {
-    return {
-      buttonState: "default",
-      data: null,
-    };
-  },
-  submitOffer: function(){
+class OfferConfirmationScreen extends BaseScreen{
+  constructor(props){
+    super(props);
+    this.endPoint = 'offer/confirm';
+    this.state.buttonState = "default";
+    this.submitOffer = this.submitOffer.bind(this);
+    this.handleRequest = this.handleRequest.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
+  submitOffer(){
     var url = this.props.api_domain + "offer";
-    var params = this.getStringToParams(this.props.params);
+    var params = ParameterUtils.getStringToParams(this.props.params);
     var request = {
       method: 'post',
       headers: {
@@ -43,8 +44,9 @@ var OfferConfirmationScreen = React.createClass({
     this.props.setNetworkActivityIndicator(true);
     this.setState({buttonState:"loading"});
     RestKit.send(url, request, this.handleRequest);
-  },
-  handleRequest: function(error, json) {
+  }
+
+  handleRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
@@ -58,8 +60,9 @@ var OfferConfirmationScreen = React.createClass({
       var routes = [{uri: 'offerSubmitted'}];
       this.props.immediatelyResetRouteStack(routes);
     }
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
     return (
       <View style={this.screenCommonStyle.container}>
         <PlainListView
@@ -72,7 +75,7 @@ var OfferConfirmationScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 
 module.exports = OfferConfirmationScreen;

@@ -11,23 +11,20 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var CurrencyAmountSelectCardMixin = require('./cardMixins/CurrencyAmountSelectCardMixin.js');
-var LocationSelectCardMixin = require('./cardMixins/LocationSelectCardMixin.js');
-var ExpirySelectCardMixin = require('./cardMixins/ExpirySelectCardMixin.js');
-
+var BaseScreen = require('./BaseScreen.js');
+var ParameterUtils = require('../utils/ParameterUtils.js');
 var ActionButton = require('../ActionButton.js');
 
-var MakeOfferScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencyAmountSelectCardMixin, ExpirySelectCardMixin, LocationSelectCardMixin],
-  displayName: "MakeOfferScreen",
-  endPoint: 'offer/make',
-  getInitialState: function() {
-    return {
-      data: null,
-    };
-  },
-  getRequestParams: function() {
+class MakeOfferScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = 'offer/make';
+    this.getRequestParams = this.getRequestParams.bind(this);
+    this.onPressNextButton = this.onPressNextButton.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
+  getRequestParams() {
     var locationInputValid = false;
     var amountInputValid = false;
     var currencyInputValid = false;
@@ -58,11 +55,13 @@ var MakeOfferScreen = React.createClass({
       }
     }
     return locationInputValid && amountInputValid && currencyInputValid ? params : null;
-  },
-  onPressNextButton: function() {
-    this.props.pushScreen({uri: this.props.routes.addRoute('offerConfirm?'+this.getParamsToString(this.getRequestParams()))});
-  },
-  renderScreen: function() {
+  }
+
+  onPressNextButton() {
+    this.props.pushScreen({uri: this.props.routes.addRoute('offerConfirm?'+ParameterUtils.getParamsToString(this.getRequestParams()))});
+  }
+
+  renderScreen() {
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
     cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
@@ -87,7 +86,7 @@ var MakeOfferScreen = React.createClass({
       </ScrollView>
     );
   }
-});
+}
 
 
 module.exports = MakeOfferScreen;

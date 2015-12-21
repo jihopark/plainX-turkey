@@ -9,22 +9,23 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var BaseScreen = require('./BaseScreen.js');
+var ParameterUtils = require('../utils/ParameterUtils.js');
 
-var ConversationsScreen = React.createClass({
-  mixins: [ScreenMixin],
-  displayName: "ConversationsScreen",
-  endPoint: "user/conversations",
-  getInitialState: function() {
-    return {
-      data: null,
-    };
-  },
-  getConversation: function(event) {
+class ConversationsScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = "user/conversations";
+    this.getConversation = this.getConversation.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
+  getConversation(event) {
     var params = {"Id": event["Id"], "Title": event["ScreenName"]};
-    this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+this.getParamsToString(params))});
-  },
-  renderScreen: function() {
+    this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+ParameterUtils.getParamsToString(params))});
+  }
+
+  renderScreen() {
     var cardObservers = { };
     cardObservers["UserConversationItem"] = this.getConversation;
     var listView = (<PlainListView
@@ -38,7 +39,7 @@ var ConversationsScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 
 module.exports = ConversationsScreen;

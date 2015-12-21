@@ -13,8 +13,7 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var KeyboardSpaceMixin = require('./componentMixins/KeyboardSpaceMixin.js');
+var BaseSessionScreen = require('./BaseSessionScreen.js');
 
 var PlainTextInput = require('../PlainTextInput.js');
 var RestKit = require('react-native-rest-kit');
@@ -22,18 +21,26 @@ var md5 = require('md5');
 var ActionButton = require('../ActionButton.js');
 
 
-var LoginScreen = React.createClass({
-  mixins: [ScreenMixin, KeyboardSpaceMixin],
-  displayName: "LoginScreen",
-  getInitialState: function() {
-    return {
+class LoginScreen extends BaseSessionScreen{
+  constructor(props) {
+    super(props);
+    this.state = {
       password: "",
       email: "",
       data: [],
       keyboardSpace: 0,
       enableLoginButton: true,
     };
-  },
+    this.saveToken = this.saveToken.bind(this);
+    this.onLogin = this.onLogin.bind(this);
+    this.handleRequest = this.handleRequest.bind(this);
+    this.getDeviceToken = this.getDeviceToken.bind(this);
+    this.getDeviceTokenFromStorage = this.getDeviceTokenFromStorage.bind(this);
+    this.saveDeviceTokenToServer = this.saveDeviceTokenToServer.bind(this);
+    this.onPressSignUp = this.onPressSignUp.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
   async saveToken(token) {
     try {
       await AsyncStorage.setItem("SESSION", token);
@@ -43,8 +50,9 @@ var LoginScreen = React.createClass({
     }
     this.props.setNetworkActivityIndicator(false);
     return token;
-  },
-  onLogin: function(){
+  }
+
+  onLogin(){
     this.setState({enableLoginButton: false});
     var email = this.state.email;
     var pwd = ""+this.state.password;
@@ -63,8 +71,9 @@ var LoginScreen = React.createClass({
       })
     };
     RestKit.send(url, request, this.handleRequest);
-  },
-  handleRequest: function(error, json){
+  }
+
+  handleRequest(error, json){
     this.props.setNetworkActivityIndicator(false);
     this.setState({enableLoginButton: true});
 
@@ -81,12 +90,14 @@ var LoginScreen = React.createClass({
       console.log(json["Session"]);
       this.saveToken(json["Session"]).then(this.getDeviceToken);
     }
-  },
-  getDeviceToken: function(loginToken){
+  }
+
+  getDeviceToken(loginToken){
     if (loginToken){
       this.getDeviceTokenFromStorage(loginToken).then(this.saveDeviceTokenToServer).done();
     }
-  },
+  }
+
   async getDeviceTokenFromStorage(loginToken){
     try {
       var value = await AsyncStorage.getItem("DEVICE_TOKEN");
@@ -95,8 +106,9 @@ var LoginScreen = React.createClass({
       console.log("Error Retreving LoginToken");
       return null;
     }
-  },
-  saveDeviceTokenToServer: function(tokens){
+  }
+
+  saveDeviceTokenToServer(tokens){
     if (tokens) {
       this.setState({enableLoginButton: true});
       console.log("DEVICE_TOKEN " + tokens["deviceToken"]);
@@ -119,30 +131,26 @@ var LoginScreen = React.createClass({
     else{
       console.log("Cannot load deviceToken..");
     }
-  },
-  onSignUp: function(){
+  }
+
+  onPressSignUp(){
     this.props.pushScreen({uri: this.props.routes.addRoute('signup')});
-  },
-  onChangeEmail: function(text) {
-    this.setState({email: text});
-  },
-  onChangePassword: function(text) {
-    this.setState({password: text});
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
     var margin = 30-this.state.keyboardSpace;
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
-        <Image source={require('image!BG2')} style={styles.backgroundImage}>
-          <View style={[styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('image!logo_lg')} style={styles.logo}/>) : null}
-            <TouchableOpacity onPress={this.onSignUp}>
-              <Text style={styles.descriptionText}>
+        <Image source={require('image!BG2')} style={this.styles.backgroundImage}>
+          <View style={[this.styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
+            {margin > 0 ? (<Image source={require('image!logo_lg')} style={this.styles.logo}/>) : null}
+            <TouchableOpacity onPress={this.onPressSignUp}>
+              <Text style={this.styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
               </Text>
             </TouchableOpacity>
-            <View style={styles.textInputContainer}>
-              <Text style={styles.errorMsg}>{this.state.errorMsg || ""}</Text>
+            <View style={this.styles.textInputContainer}>
+              <Text style={this.styles.errorMsg}>{this.state.errorMsg || ""}</Text>
               <PlainTextInput
                   icon={require("image!emailicon")}
                   placeholder={"Email"}
@@ -157,7 +165,7 @@ var LoginScreen = React.createClass({
                   value={this.state.password} />
             </View>
 
-            <Text style={[styles.descriptionText, styles.extraText]}>
+            <Text style={[this.styles.descriptionText, this.styles.extraText]}>
               {"*If you have forgotten your password,\nplease email "}
               <Text style={{color: '#33cc66'}}>info@plainexchange.xyz</Text>
               {" to reset it."}
@@ -173,45 +181,6 @@ var LoginScreen = React.createClass({
       </ScrollView>
     );
   }
-});
-
-var styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    paddingTop: 80,
-    flex:1,
-    alignItems: 'center',
-    flexDirection: 'column',
-    backgroundColor: 'transparent',
-  },
-  textInputContainer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  logo:{
-    width:144,
-    height:60,
-  },
-  descriptionText: {
-    marginTop: 20,
-    fontSize: 15,
-    color: '#333333',
-  },
-  extraText: {
-    fontSize: 12,
-    textAlign: 'center',
-    marginLeft: 10, marginRight: 10,
-  },
-  errorMsg: {
-    color: '#ff3366',
-    fontSize: 15,
-  },
-});
-
+}
 
 module.exports = LoginScreen;

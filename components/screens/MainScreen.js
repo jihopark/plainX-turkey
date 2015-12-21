@@ -11,24 +11,23 @@ var {
 } = React;
 
 var Routes = require('../screens/Routes.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var CurrencySelectCardMixin = require('./cardMixins/CurrencySelectCardMixin.js');
-var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
-var MenuButtonMixin = require('./componentMixins/MenuButtonMixin.js');
+var BaseScreen = require('./BaseScreen.js');
 
 var TutorialPager = require('../TutorialPager.js');
 var PlainListView = require('../PlainListView.js');
 
-var MainScreen = React.createClass({
-  mixins: [ScreenMixin, CurrencySelectCardMixin, OfferCardMixin, MenuButtonMixin],
-  displayName: "MainScreen",
-  endPoint: "main",
-  getInitialState: function() {
-    return {
-      data: null,
-      showTutorial: false,
-    }
-  },
+class MainScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = "main";
+    this.state.showTutorial= false;
+    this.checkIfFirstExec = this.checkIfFirstExec.bind(this);
+    this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+    this.pushConversationsScreen = this.pushConversationsScreen.bind(this);
+    this.closeTutorial = this.closeTutorial.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
   async checkIfFirstExec(){
     try {
       var keys = await AsyncStorage.getAllKeys();
@@ -42,8 +41,9 @@ var MainScreen = React.createClass({
       console.log("Error Retreving checkIfFirstLogin");
       return false;
     }
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
     if (nextState["data"] && nextState["showTutorial"] == false) {
       this.checkIfFirstExec().then((isFirstExec) => {
         if (isFirstExec) {
@@ -52,14 +52,17 @@ var MainScreen = React.createClass({
       }).done();
     }
     return true;
-  },
-  pushConversationsScreen: function(event) {
+  }
+
+  pushConversationsScreen(event) {
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
-  },
-  closeTutorial: function() {
+  }
+
+  closeTutorial() {
     this.setState({showTutorial: false});
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
     this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
     this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
 
@@ -82,6 +85,6 @@ var MainScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 module.exports = MainScreen;

@@ -22,36 +22,46 @@ var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var RestKit = require('react-native-rest-kit');
 
-var routesMap;
-
-var PlainNavigator = React.createClass({
-  getDefaultProps: () => {
-    return {
-      sideMenuSubject: new Rx.Subject(),
-    };
-  },
-  getInitialState: function() {
-    return {
+class PlainNavigator extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
       user: null,
       messageBounceValue: new Animated.Value(0),
       shouldBounceCount: true,
       isSideMenuOpen: false,
     };
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
+
+    this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.getInitialRouteStack = this.getInitialRouteStack.bind(this);
+    this.setNetworkActivityIndicator = this.setNetworkActivityIndicator.bind(this);
+    this.updateInfo = this.updateInfo.bind(this);
+    this.updateUserInfo = this.updateUserInfo.bind(this);
+    this.bounceMessage = this.bounceMessage.bind(this);
+    this.setLogoutState = this.setLogoutState.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.getNavBarRouter = this.getNavBarRouter.bind(this);
+    this.leftNavBarButtonSubject = new Rx.Subject();
+    this.rightNavBarButtonSubject = new Rx.Subject();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
     if (nextProps["uri"] != this.props.uri) {
       this.shouldRerender = true;
     }
     if (nextProps["messageCount"]>0 && nextProps["messageCount"]!= this.props.messageCount)
       this.setState({shouldBounceCount: true});
     return true;
-  },
-  componentDidUpdate: function() {
+  }
+
+  componentDidUpdate() {
     if (this.state.shouldBounceCount)
       this.bounceMessage();
-  },
+  }
+
   //To Load all necessary screens from the uri
-  getInitialRouteStack: (uri) => {
+  getInitialRouteStack(uri){
     var initialRoutesStack = [];
     var routes = new Routes(uri);
     var length = routes.getDepth();
@@ -60,69 +70,75 @@ var PlainNavigator = React.createClass({
       routes = routes.getPreviousRoutes();
     }
     return initialRoutesStack.reverse();
-  },
-  setNetworkActivityIndicator: function(value) {
+  }
+
+  setNetworkActivityIndicator(value) {
     if (Platform.OS === 'ios')
       StatusBarIOS.setNetworkActivityIndicatorVisible(value);
-  },
-  navBarRouter: {
-    Title: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      var screenNameParam = routes.getScreenNameInParamsIfAny();
+  }
 
-      return routes.getCurrentRoute().title ?
-      (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
-      :
-      (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
-    },
-    LeftButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      if (routes.getDepth() == 1) {
-        var button = (
-          <Image style={styles.navBarIcon}
-            source={require("image!menuicon")} /> );
-        return (
-          <TouchableOpacity
-            onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
-            style={styles.navBarLeftButton}>
-            {button}
-          </TouchableOpacity>);
-      }
-      else {
-        if (routes.hasBack()) {
+  getNavBarRouter() {
+    return {
+      Title: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+        var screenNameParam = routes.getScreenNameInParamsIfAny();
+
+        return routes.getCurrentRoute().title ?
+        (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
+        :
+        (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
+      },
+      LeftButton: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+        if (routes.getDepth() == 1) {
+          var button = (
+            <Image style={styles.navBarIcon}
+              source={require("image!menuicon")} /> );
           return (
             <TouchableOpacity
-              style={styles.navBarLeftButton}
-              onPress={() => navigator.pop()}>
-              <Image style={styles.navBarIcon}
-                source={require('image!backicon')} />
+              onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
+              style={styles.navBarLeftButton}>
+              {button}
             </TouchableOpacity>);
         }
+        else {
+          if (routes.hasBack()) {
+            return (
+              <TouchableOpacity
+                style={styles.navBarLeftButton}
+                onPress={() => navigator.pop()}>
+                <Image style={styles.navBarIcon}
+                  source={require('image!backicon')} />
+              </TouchableOpacity>);
+          }
+        }
+        return null;
+      },
+      RightButton: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+        var routeName = routes.getCurrentRoute().name;
+        var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
+        var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
+        console.log(navigator.props.messageCount);
+        return shouldNotShowMsgIcon ? null :
+          (<TouchableOpacity
+            style={styles.navBarRightButton}
+            onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
+              <Image style={[styles.navBarIcon, styles.messageIcon]}
+                source={require("image!msgicon")} />
+              {navigator.props.messageCount > 0 ?
+                (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
+                  <Text style={styles.messageCount}>
+                    {navigator.props.messageCount}
+                  </Text>
+                </Animated.View>) : null}
+            </TouchableOpacity>);
       }
-      return null;
-    },
-    RightButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      var routeName = routes.getCurrentRoute().name;
-      var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
-      var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
-      console.log(navigator.props.messageCount);
-      return shouldNotShowMsgIcon ? null :
-        (<TouchableOpacity
-          style={styles.navBarRightButton}
-          onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
-            <Image style={[styles.navBarIcon, styles.messageIcon]}
-              source={require("image!msgicon")} />
-            {navigator.props.messageCount > 0 ?
-              (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
-                <Text style={styles.messageCount}>
-                  {navigator.props.messageCount}
-                </Text>
-              </Animated.View>) : null}
-          </TouchableOpacity>);
-    }
-  },
-  updateInfo: function(token) {
+    };
+  }
+
+
+  updateInfo(token) {
     var request = {
       method: 'get',
       headers:{ 'X-Session': token, }
@@ -134,8 +150,9 @@ var PlainNavigator = React.createClass({
       RestKit.send(url, request, this.updateUserInfo);
     }
     this.props.updateMessageCount(token);
-  },
-  updateUserInfo: function(error, json) {
+  }
+
+  updateUserInfo(error, json) {
     if (error) {
       console.log("Error loading UserInfo")
       console.log(error);
@@ -145,8 +162,9 @@ var PlainNavigator = React.createClass({
       console.log("Update User info " + json);
       this.setState({user: json});
     }
-  },
-  bounceMessage: function() {
+  }
+
+  bounceMessage() {
     this.state.messageBounceValue.setValue(1.1);
     Animated.spring(
       this.state.messageBounceValue,
@@ -156,11 +174,13 @@ var PlainNavigator = React.createClass({
       }
     ).start();
     this.setState({shouldBounceCount: false});
-  },
-  setLogoutState: function() {
+  }
+
+  setLogoutState() {
     this.setState({user:null});
-  },
-  renderScene: function(route, navigator) {
+  }
+
+  renderScene(route, navigator) {
     var routes = new Routes(route.uri);
     if (this.shouldRerender && this.props.uri != route.uri) {
       this.shouldRerender = false;
@@ -205,10 +225,9 @@ var PlainNavigator = React.createClass({
       );
     }
     return null;
-  },
-  leftNavBarButtonSubject: new Rx.Subject(),
-  rightNavBarButtonSubject: new Rx.Subject(),
-  render: function() {
+  }
+
+  render() {
     return (
       <SideMenu
           onChange={(isOpen) => this.setState({isSideMenuOpen: isOpen})}
@@ -231,13 +250,17 @@ var PlainNavigator = React.createClass({
           navigationBar={
             <Navigator.NavigationBar
               style={styles.navBar}
-              routeMapper={this.navBarRouter}/>
+              routeMapper={this.getNavBarRouter()}/>
           }
         />
       </SideMenu>
     );
   }
-});
+}
+
+PlainNavigator.defaultProps = {
+    sideMenuSubject: new Rx.Subject(),
+};
 
 var styles = StyleSheet.create({
   navBar: {

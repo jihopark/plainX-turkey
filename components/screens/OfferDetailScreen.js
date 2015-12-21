@@ -9,10 +9,11 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var BaseScreen = require('./BaseScreen.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
 var ShouldLoginAlert = require('../ShouldLoginAlert.js');
+var ParameterUtils = require('../utils/ParameterUtils.js');
 
 var update = require('react-addons-update');
 
@@ -22,20 +23,24 @@ var actionButtonStates = {"connected": "CONNECTED!",
                         "self": "REMOVE OFFER",
                         "error": "SOMETHING WENT WRONG"};
 
-var OfferDetailScreen = React.createClass({
-  mixins: [ScreenMixin],
-  displayName: "OfferDetailScreen",
-  endPoint: "offer/details",
-  getInitialState: function() {
-    return {
-      data: null
-    };
-  },
-  onConnectOffer: function() {
+class OfferDetailScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = 'offer/details';
+    this.onConnectOffer = this.onConnectOffer.bind(this);
+    this.handleConnectRequest = this.handleConnectRequest.bind(this);
+    this.onRemoveOffer = this.onRemoveOffer.bind(this);
+    this.handleRemoveRequest = this.handleRemoveRequest.bind(this);
+    this.getOfferState = this.getOfferState.bind(this);
+    this.setOfferState = this.setOfferState.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
+  onConnectOffer() {
     console.log("CONNECT");
     const CONNECT_ENDPOINT = "offer/connect"
     var url = this.props.api_domain + CONNECT_ENDPOINT;
-    var bodyParams = this.getStringToParams(this.props.params);
+    var bodyParams = ParameterUtils.getStringToParams(this.props.params);
     console.log(url);
     console.log("LOGINTOKEN");
     console.log(this.loginToken);
@@ -52,12 +57,14 @@ var OfferDetailScreen = React.createClass({
     this.props.setNetworkActivityIndicator(true);
     this.setOfferState("connecting");
     RestKit.send(url, request, this.handleConnectRequest);
-  },
-  handleConnectRequest: function(error, json) {
+  }
+
+  handleConnectRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
       if (error.status == 401) {
+        // TODO: Should not replace but push LoginScreen
         ShouldLoginAlert.showAlert("You need to login to connect to an offer",
           () => this.props.replaceScreen({uri: this.props.routes.addRoute('login')}));
         this.setOfferState("not_connected");
@@ -71,8 +78,9 @@ var OfferDetailScreen = React.createClass({
       this.setOfferState("connected");
       this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+json["ConversationId"])});
     }
-  },
-  onRemoveOffer: function(){
+  }
+
+  onRemoveOffer(){
     const DELETE_ENDPOINT = "offer";
     var url = this.props.api_domain + DELETE_ENDPOINT;
     var bodyParams = this.getStringToParams(this.props.params);
@@ -90,8 +98,9 @@ var OfferDetailScreen = React.createClass({
     this.props.setNetworkActivityIndicator(true);
     this.setOfferState("connecting");
     RestKit.send(url, request, this.handleRemoveRequest);
-  },
-  handleRemoveRequest: function(error, json) {
+  }
+
+  handleRemoveRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
       console.log(error);
@@ -103,8 +112,9 @@ var OfferDetailScreen = React.createClass({
       console.log(json["ConversationId"]);
       this.props.popScreen();
     }
-  },
-  getOfferState: function() {
+  }
+
+  getOfferState() {
     var meta = this.state.data["Meta"];
     if (meta){
       if (meta["isOwnOffer"])
@@ -121,8 +131,10 @@ var OfferDetailScreen = React.createClass({
 
     }
     return "not_connected";
-  },
-  setOfferState: function(value) {
+  }
+
+  // TODO : Offer State in Store
+  setOfferState(value) {
     switch(value) {
       case "not_connected":
         var data = update(this.state.data, {"Meta": {"isConnecting": {$set:false}}});
@@ -139,8 +151,9 @@ var OfferDetailScreen = React.createClass({
       case "connecting":
         this.setState({data: update(this.state.data, {"Meta": {"isConnecting": {$set:true}}})});
     }
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
     var cardObservers = { };
     var listView = (<PlainListView
       cardObservers={cardObservers}
@@ -165,6 +178,6 @@ var OfferDetailScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 module.exports = OfferDetailScreen;

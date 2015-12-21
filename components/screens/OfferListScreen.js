@@ -10,26 +10,25 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
+var BaseScreen = require('./BaseScreen.js');
 var ScreenMixin = require('./componentMixins/ScreenMixin.js');
 var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 
 var ActionButton = require('../ActionButton.js');
 
-var OfferListScreen = React.createClass({
-  mixins: [ScreenMixin, OfferCardMixin],
-  displayName: "OfferListScreen",
-  endPoint: "offer/list",
-  getInitialState: function() {
-    return {
-      showActionButton: true,
+class OfferListScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = "offer/list";
+    this.state.showActionButton = true;
+    this.onPressActionButton = this.onPressActionButton.bind(this);
+  }
 
-      data: null
-    };
-  },
-  onPress: function() {
+  onPressActionButton() {
     this.props.pushScreen({uri: this.props.routes.addRoute('makeOffer?'+this.props.params)});
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
 
@@ -41,9 +40,8 @@ var OfferListScreen = React.createClass({
 
     var makeOfferButton = (<ActionButton
                             text={"MAKE OFFER"}
-                            onPress={this.onPress}
+                            onPress={this.onPressActionButton}
                             enabled={true} />);
-
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
@@ -51,6 +49,6 @@ var OfferListScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 module.exports = OfferListScreen;
