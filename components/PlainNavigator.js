@@ -21,6 +21,9 @@ var SideMenu = require('react-native-side-menu');
 var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var RestKit = require('react-native-rest-kit');
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("PlainNavigator");
+
 
 class PlainNavigator extends React.Component {
   constructor(props){
@@ -36,8 +39,8 @@ class PlainNavigator extends React.Component {
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.getInitialRouteStack = this.getInitialRouteStack.bind(this);
     this.setNetworkActivityIndicator = this.setNetworkActivityIndicator.bind(this);
-    this.updateInfo = this.updateInfo.bind(this);
-    this.updateUserInfo = this.updateUserInfo.bind(this);
+    //this.updateInfo = this.updateInfo.bind(this);
+    //this.updateUserInfo = this.updateUserInfo.bind(this);
     this.bounceMessage = this.bounceMessage.bind(this);
     this.setLogoutState = this.setLogoutState.bind(this);
     this.renderScene = this.renderScene.bind(this);
@@ -119,7 +122,7 @@ class PlainNavigator extends React.Component {
         var routeName = routes.getCurrentRoute().name;
         var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
         var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
-        console.log(navigator.props.messageCount);
+
         return shouldNotShowMsgIcon ? null :
           (<TouchableOpacity
             style={styles.navBarRightButton}
@@ -135,33 +138,6 @@ class PlainNavigator extends React.Component {
             </TouchableOpacity>);
       }
     };
-  }
-
-
-  updateInfo(token) {
-    var request = {
-      method: 'get',
-      headers:{ 'X-Session': token, }
-    };
-
-    if (!this.state.user){
-      console.log("UPDATE USER INFO");
-      var url = this.props.API_DOMAIN + "user/me";
-      RestKit.send(url, request, this.updateUserInfo);
-    }
-    this.props.updateMessageCount(token);
-  }
-
-  updateUserInfo(error, json) {
-    if (error) {
-      console.log("Error loading UserInfo")
-      console.log(error);
-      return ;
-    }
-    if (json) {
-      console.log("Update User info " + json);
-      this.setState({user: json});
-    }
   }
 
   bounceMessage() {
@@ -218,9 +194,14 @@ class PlainNavigator extends React.Component {
             replaceScreen={navigator.replace}
             immediatelyResetRouteStack={navigator.immediatelyResetRouteStack}
             api_domain={this.props.API_DOMAIN}
-            updateInfo={this.updateInfo}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
-            params={routes.getCurrentRouteParams()} />
+            params={routes.getCurrentRouteParams()}
+
+            //From AppContainer
+            updateMessageCount={this.props.updateMessageCount}
+            loginToken={this.props.loginToken}
+            deviceToken={this.props.deviceToken}
+            />
         </View>
       );
     }
@@ -234,8 +215,7 @@ class PlainNavigator extends React.Component {
           menu={
           <PlainSideMenu
             isOpen={this.state.isSideMenuOpen}
-            sideMenuSubject={this.props.sideMenuSubject}
-            user={this.state.user} />}
+            sideMenuSubject={this.props.sideMenuSubject} />}
             touchToClose={true}>
         <Navigator
           setLogoutState={this.setLogoutState}

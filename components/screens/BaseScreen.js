@@ -8,6 +8,9 @@ var RestKit = require('react-native-rest-kit');
 var KeyboardEvents = require('react-native-keyboardevents');
 var KeyboardEventEmitter = KeyboardEvents.Emitter;
 
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("BaseScreen");
+
 var {
   View,
   AsyncStorage,
@@ -29,11 +32,9 @@ class BaseScreen extends React.Component {
     };
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
-    this.loginToken = null;
     this.loadMore = this.loadMore.bind(this);
     this.mutateCardStateData = this.mutateCardStateData.bind(this);
     this.getCardDataState = this.getCardDataState.bind(this);
-    this.loadTokenIfAny = this.loadTokenIfAny.bind(this);
     this.loadScreen = this.loadScreen.bind(this);
     this.checkEndPointInParams = this.checkEndPointInParams.bind(this);
     this.fetchData = this.fetchData.bind(this);
@@ -57,7 +58,7 @@ class BaseScreen extends React.Component {
   loadMore() {
     if (this.state.data["HasNext"]) {
       console.log("Fetch Data " + (this.state.data["Page"]+1));
-      this.fetchData(this.loginToken, (this.state.data["Page"]+1));
+      this.fetchData(this.props.loginToken, (this.state.data["Page"]+1));
     }
   }
 
@@ -79,41 +80,23 @@ class BaseScreen extends React.Component {
     }
   }
 
-  async loadTokenIfAny(){
-    if (this.loginToken) return this.loginToken;
-    try {
-      var value = await AsyncStorage.getItem("SESSION");
-      console.log("User Is Logged In");
-      this.loginToken = value;
-      return value;
-    } catch (error) {
-      console.log("Error Retreving LoginToken");
-      return null;
-    }
-  }
-
   componentDidMount() {
     this.loadScreen();
+    this.props.updateMessageCount();
     KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
     KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
   }
 
   componentWillUnmount() {
-    this.loadTokenIfAny().then((value) => {
-      this.props.updateInfo(value);
-    });
+    this.props.updateMessageCount();
     KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
     KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
   }
 
   loadScreen() {
     var enablePagination = this.props.enablePagination;
-    this.loadTokenIfAny().then((value) => {
-      this.props.updateInfo(value);
-      console.log("PAGINATION");
-      console.log(this.props.enablePagination);
-      this.fetchData(value, this.props.enablePagination ? 1 : 0);
-    }).done();
+    P.log("loadScreen", "Load Screen with Token " + this.props.loginToken);
+    this.fetchData(this.props.loginToken, this.props.enablePagination ? 1 : 0);
   }
 
   render() {
@@ -186,6 +169,7 @@ class BaseScreen extends React.Component {
 
     // if normal response 200
     console.log(json);
+    // TODO: Flux Action
     this.setState({
       data: json,
     });
@@ -213,6 +197,7 @@ class BaseScreen extends React.Component {
       data = update(data, {"HasNext": {$set : json["HasNext"] }})
       data = update(data, {"Page": {$set : json["Page"] }})
 
+      // TODO: Flux Action
       this.setState({
         data: data
       });
@@ -229,6 +214,7 @@ class BaseScreen extends React.Component {
   }
 
   currencySelectCardOnNext(event) {
+    // TODO: Flux Action
     switch (event["Target"]){
       case "Button":
         var params = {"Sell": event["Sell"], "Buy": event["Buy"]};
@@ -272,6 +258,8 @@ class BaseScreen extends React.Component {
   }
 
   currencyAmountSelectCardOnNext(event) {
+    // TODO: Flux Action
+
     function roundUpNumber(number) {
       return ""+(Math.round(number*100)/100);
     }
@@ -324,10 +312,12 @@ class BaseScreen extends React.Component {
 
   //ExpiryDateSelect
   expirySelectCardonNext(event) {
+    // TODO: Flux Action
     this.setState({data:this.mutateCardStateData(this.state.data, event["id"], "Expiry", event["Expiry"])});
   }
 
   locationSelectonNext(event) {
+    // TODO: Flux Action
     var update = require('react-addons-update');
 
     var cards = this.state.data["Cards"];
@@ -344,7 +334,7 @@ class BaseScreen extends React.Component {
     if (frames.end)
       this.setState({keyboardSpace: frames.end.height});
   }
-  
+
   resetKeyboardSpace() {
     this.setState({keyboardSpace: 0});
   }

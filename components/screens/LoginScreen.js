@@ -14,11 +14,15 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var BaseSessionScreen = require('./BaseSessionScreen.js');
+var SessionActions = require('../../actions/SessionActions');
 
 var PlainTextInput = require('../PlainTextInput.js');
 var RestKit = require('react-native-rest-kit');
 var md5 = require('md5');
 var ActionButton = require('../ActionButton.js');
+
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("LoginScreen");
 
 
 class LoginScreen extends BaseSessionScreen{
@@ -31,25 +35,12 @@ class LoginScreen extends BaseSessionScreen{
       keyboardSpace: 0,
       enableLoginButton: true,
     };
-    this.saveToken = this.saveToken.bind(this);
+    this.saveLoginToken = this.saveLoginToken.bind(this);
     this.onLogin = this.onLogin.bind(this);
     this.handleRequest = this.handleRequest.bind(this);
-    this.getDeviceToken = this.getDeviceToken.bind(this);
-    this.getDeviceTokenFromStorage = this.getDeviceTokenFromStorage.bind(this);
     this.saveDeviceTokenToServer = this.saveDeviceTokenToServer.bind(this);
     this.onPressSignUp = this.onPressSignUp.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
-  }
-
-  async saveToken(token) {
-    try {
-      await AsyncStorage.setItem("SESSION", token);
-      console.log("SAVED");
-    } catch (error) {
-      this.setState({errorMsg: "Problem occured. Please try again."});
-    }
-    this.props.setNetworkActivityIndicator(false);
-    return token;
   }
 
   onLogin(){
@@ -70,6 +61,7 @@ class LoginScreen extends BaseSessionScreen{
         hashedpw: md5(pwd),
       })
     };
+    P.log("onLogin","Here");
     RestKit.send(url, request, this.handleRequest);
   }
 
@@ -87,50 +79,42 @@ class LoginScreen extends BaseSessionScreen{
     }
     // if 200
     if (json){
-      console.log(json["Session"]);
-      this.saveToken(json["Session"]).then(this.getDeviceToken);
+      P.log("handleRequest", "Success");
+      SessionActions.updateLoginToken(json["Session"]);
+      P.log("handleRequest",json["Session"]);
+      this.saveLoginToken(json["Session"]).then(this.saveDeviceTokenToServer);
     }
   }
 
-  getDeviceToken(loginToken){
-    if (loginToken){
-      this.getDeviceTokenFromStorage(loginToken).then(this.saveDeviceTokenToServer).done();
-    }
-  }
-
-  async getDeviceTokenFromStorage(loginToken){
+  async saveLoginToken(token) {
     try {
-      var value = await AsyncStorage.getItem("DEVICE_TOKEN");
-      return {"loginToken": loginToken, "deviceToken": value};
+      await AsyncStorage.setItem("SESSION", token);
+      P.log("saveLoginToken", token);
     } catch (error) {
-      console.log("Error Retreving LoginToken");
-      return null;
+      this.setState({errorMsg: "Problem occured. Please try again."});
     }
+    this.props.setNetworkActivityIndicator(false);
+    return token;
   }
 
-  saveDeviceTokenToServer(tokens){
-    if (tokens) {
-      this.setState({enableLoginButton: true});
-      console.log("DEVICE_TOKEN " + tokens["deviceToken"]);
+  saveDeviceTokenToServer(loginToken){
+    this.setState({enableLoginButton: true});
+    P.log("saveDeviceTokenToServer", "DEVICE_TOKEN " + this.props.deviceToken);
 
-      var request = {
-        method: 'post',
-        headers:{
-          'X-Session': tokens["loginToken"],
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({"Token": tokens["deviceToken"]}),
-      };
-      var url = this.props.api_domain + "user/token";
-      RestKit.send(url, request, function(error, json){
-        console.log("SENT DEVICE TOKEN TO SERVER");
-      });
-      this.props.popScreen();
-    }
-    else{
-      console.log("Cannot load deviceToken..");
-    }
+    var request = {
+      method: 'post',
+      headers:{
+        'X-Session': loginToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({"Token": this.props.deviceToken}),
+    };
+    var url = this.props.api_domain + "user/token";
+    RestKit.send(url, request, function(error, json){
+      P.log("saveDeviceTokenToServer", "SENT DEVICE TOKEN TO SERVER");
+    });
+    this.props.popScreen();
   }
 
   onPressSignUp(){
