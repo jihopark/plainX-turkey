@@ -8,6 +8,7 @@ var RestKit = require('react-native-rest-kit');
 var KeyboardEvents = require('react-native-keyboardevents');
 var KeyboardEventEmitter = KeyboardEvents.Emitter;
 
+var SessionActions = require('../../actions/SessionActions');
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("BaseScreen");
 
@@ -160,6 +161,8 @@ class BaseScreen extends React.Component {
                          "Cards": [{"UUID": "1", "Name": "Error", "Merged": "", "Data": {"Text": text}}]}});
       }
       else if (error.status == 401){
+        if (this.props.loginToken)
+          SessionActions.logOut(this.props.loginToken, this.props.deviceToken);
         this.props.replaceScreen({uri:this.props.routes.addRoute('login')});
       }
       return ;
@@ -183,8 +186,10 @@ class BaseScreen extends React.Component {
       //  this.setState({data: {"Page":0, "HasNext": false,
       //                   "Cards": [{"UUID": "1", "Name": "Error", "Merged": ""}]}});
       }
-      else if (error.status == 400){
-
+      else if (error.status == 401){
+        if (this.props.loginToken)
+          SessionActions.logOut(this.props.loginToken, this.props.deviceToken);
+          this.props.replaceScreen({uri:this.props.routes.addRoute('login')});
       }
       return ;
     }

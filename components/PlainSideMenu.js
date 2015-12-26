@@ -58,7 +58,12 @@ var PlainSideMenu = React.createClass({
 
   shouldComponentUpdate: function(nextProps, nextState) {
     if (nextState["loginToken"]) {
-      if (nextState["user"] == null || Object.keys(nextState["user"]).length == 0) {
+      if (nextState["user"] == -1 && this.state.user!=-1) {
+        P.log("shouldComponentUpdate", "Logout should be called");
+        SessionActions.logOut(this.state.loginToken, this.state.deviceToken);
+      }
+      else if (nextState["user"] == null) {
+        P.log("shouldComponentUpdate", "updateUser called");
         SessionActions.updateUser(nextState["loginToken"]);
       }
     }

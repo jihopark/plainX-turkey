@@ -20,7 +20,7 @@ class SessionStore {
 
   onLogOut() {
     this.loginToken = "";
-    this.user = {};
+    this.user = null;
   }
 
   onUpdateUri(uri) {

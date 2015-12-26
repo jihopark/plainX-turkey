@@ -72,7 +72,7 @@ class SessionActions {
   updateUser(token) {
     P.log("updateUser", token);
     return (dispatch) => {
-      var user = {};
+      var user = -1;
       if (token) {
         var request = {
           method: 'get',
@@ -82,18 +82,18 @@ class SessionActions {
         var url = API_DOMAIN + "user/me";
         RestKit.send(url, request, function(error, json) {
           if (error) {
-            P.log("getUser", error)
-            return ;
+            P.log("getUser", error);
+            if (error.status == 401){
+              P.log("getUser", "dispatch -1");
+              return dispatch(-1);
+            }
           }
           if (json) {
             P.log("getUser", json);
             user = json;
+            return dispatch(user);
           }
-          return dispatch(user);
         });
-      }
-      else{
-        return dispatch(user);
       }
     };
   }

@@ -116,7 +116,10 @@ class AppContainer extends React.Component{
   handleMessageCount(error, json) {
     //TODO : Need to Test
     if (error) {
-      P.log("handleMessageCount", error)
+      P.log("handleMessageCount", error);
+      if (error.status == 401) {
+        logOut(this.state.loginToken, this.state.deviceToken);
+      }
       return ;
     }
     if (json) {
