@@ -51,11 +51,11 @@ var PlainListView = React.createClass({
   renderCards: function(card) {
     card = this.props.getCard(card["UUID"]);
 
-    var observer;
+/*    var observer;
     //find if there is cardObserver to pass
     if (this.needsTobeObserved(card["Name"])) {
       observer = this.props.cardObservers[card["Name"]];
-    }
+    }*/
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);
     if (CardComponent == null)
@@ -69,8 +69,10 @@ var PlainListView = React.createClass({
           cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
           key={card["UUID"]}
-          observer={observer}
+      //    observer={observer}
+          name={card["Name"]}
           data={card["Data"]}
+          handleClick={this.props.handleClick}
           getOffer={this.props.getOffer}
           getConversation={this.props.getConversation}
           />

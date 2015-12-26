@@ -38,6 +38,7 @@ class BaseScreen extends React.Component {
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
     this.createListView = this.createListView.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
@@ -115,9 +116,19 @@ class BaseScreen extends React.Component {
       getCard={this.props.getCard}
       getOffer={this.props.getOffer}
       getConversation={this.props.getConversation}
-      cardObservers={cardObservers}
+    //  cardObservers={cardObservers}
+      handleClick={this.handleClick}
       onEndReached={pagination ? this.loadMore : null}
       cards={this.state.data["Cards"]}/>);
+  }
+
+  handleClick(cardName, data){
+    P.log("handleClick", cardName);
+    switch(cardName){
+      case "Offer":
+        this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString({"Id": data["OfferId"]}))});
+        break;
+    }
   }
 
   loadScreen() {
@@ -240,10 +251,6 @@ class BaseScreen extends React.Component {
   }
 
   //Card Events
-  offerCardonNext(event) {
-    this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString({"Id": event["Id"]}))});
-  }
-
   currencySelectCardOnNext(event) {
     // TODO: Flux Action
     switch (event["Target"]){

@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx')
 
 var {
   Text,
@@ -13,28 +12,31 @@ var {
 
 var Offer = React.createClass({
   displayName: "OfferCard",
+  onPressCard: function() {
+    this.props.handleClick(this.props.name, this.props.data);
+  },
   render: function() {
-    var subject = new Rx.Subject();
-    if (this.props.observer) {
-      subject.subscribe(this.props.observer);
-    }
-    return (
-      <TouchableOpacity style={{flex:1}} onPress={() => subject.onNext({"Id": this.props.data["Id"]})}>
+    var id = this.props.data["OfferId"];
+    var offer = this.props.getOffer(id);
+
+    return offer ? (
+      <TouchableOpacity style={{flex:1}}
+        onPress={this.onPressCard}>
         <View style={styles.container}>
           <View style={styles.sideContainer}>
             <Text style={[this.props.cardCommonStyles.currency, styles.leftCurrency]}>
-              {this.props.data["Sell"]+"\n"+this.props.data["AmountSell"]}</Text>
+              {offer["Sell"]+"\n"+offer["AmountSell"]}</Text>
           </View>
           <View style={styles.centerContainer}>
             <Image style={styles.center} source={require('image!plane')}/>
           </View>
           <View style={styles.sideContainer}>
             <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>
-              {this.props.data["Buy"]+"\n"+this.props.data["AmountBuy"]}</Text>
+              {offer["Buy"]+"\n"+offer["AmountBuy"]}</Text>
           </View>
         </View>
       </TouchableOpacity>
-    );
+    ) : null;
   }
 });
 

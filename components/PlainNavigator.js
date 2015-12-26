@@ -89,12 +89,10 @@ class PlainNavigator extends React.Component {
   }
 
   getConversation(id) {
-    P.log("getConversation", id);
     return this.state.conversations[id];
   }
 
   getOffer(id) {
-    P.log("getOffers", id);
     return this.state.offers[id];
   }
 
