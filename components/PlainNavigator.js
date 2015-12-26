@@ -21,28 +21,32 @@ var SideMenu = require('react-native-side-menu');
 var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var RestKit = require('react-native-rest-kit');
+
 var PlainLog = require('../PlainLog.js');
 var P = new PlainLog("PlainNavigator");
 
+var PlainDataStore = require('../stores/PlainDataStore.js');
+var PlainActions = require('../actions/PlainActions.js');
 
 class PlainNavigator extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      user: null,
-      messageBounceValue: new Animated.Value(0),
-      shouldBounceCount: true,
-      isSideMenuOpen: false,
-    };
+    this.state = PlainDataStore.getState();
+    this.state.messageBounceValue = new Animated.Value(0);
+    this.state.shouldBounceCount = true;
+    this.state.isSideMenuOpen = false;
 
+    this.componentDidMount = this.componentDidMount.bind(this);
     this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+
+    this.onChangeState = this.onChangeState.bind(this);
+    this.getCards = this.getCards.bind(this);
+
     this.getInitialRouteStack = this.getInitialRouteStack.bind(this);
     this.setNetworkActivityIndicator = this.setNetworkActivityIndicator.bind(this);
-    //this.updateInfo = this.updateInfo.bind(this);
-    //this.updateUserInfo = this.updateUserInfo.bind(this);
     this.bounceMessage = this.bounceMessage.bind(this);
-    this.setLogoutState = this.setLogoutState.bind(this);
     this.renderScene = this.renderScene.bind(this);
     this.getNavBarRouter = this.getNavBarRouter.bind(this);
     this.leftNavBarButtonSubject = new Rx.Subject();
@@ -58,9 +62,28 @@ class PlainNavigator extends React.Component {
     return true;
   }
 
+  componentDidMount() {
+    PlainDataStore.listen(this.onChangeState);
+  }
+
   componentDidUpdate() {
     if (this.state.shouldBounceCount)
       this.bounceMessage();
+  }
+
+  componentWillUnmount() {
+    PlainDataStore.unlisten(this.onChangeState);
+  }
+
+  onChangeState(state) {
+    state.messageBounceValue = this.state.messageBounceValue;
+    state.shouldBounceCount = this.state.shouldBounceCount;
+    state.isSideMenuOpen =  this.state.isSideMenuOpen;
+    this.setState(state);
+  }
+
+  getCards(cardIDs) {
+    P.log("getCards",cardIDs);
   }
 
   //To Load all necessary screens from the uri
@@ -152,10 +175,6 @@ class PlainNavigator extends React.Component {
     this.setState({shouldBounceCount: false});
   }
 
-  setLogoutState() {
-    this.setState({user:null});
-  }
-
   renderScene(route, navigator) {
     var routes = new Routes(route.uri);
     if (this.shouldRerender && this.props.uri != route.uri) {
@@ -171,9 +190,6 @@ class PlainNavigator extends React.Component {
           switch (event.type) {
             case "pushScreen":
               navigator.push({uri: routes.addRoute(event.uri)});
-              break;
-            case "logout":
-              navigator.props.setLogoutState();
               break;
           }
         });
@@ -196,6 +212,8 @@ class PlainNavigator extends React.Component {
             api_domain={this.props.API_DOMAIN}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()}
+
+            getCards={this.getCards}
 
             //From AppContainer
             updateMessageCount={this.props.updateMessageCount}

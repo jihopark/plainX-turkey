@@ -9,6 +9,8 @@ var KeyboardEvents = require('react-native-keyboardevents');
 var KeyboardEventEmitter = KeyboardEvents.Emitter;
 
 var SessionActions = require('../../actions/SessionActions');
+var PlainActions = require('../../actions/PlainActions');
+
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("BaseScreen");
 
@@ -31,6 +33,9 @@ class BaseScreen extends React.Component {
     this.state = {
       data: null,
     };
+
+    this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
+
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.loadMore = this.loadMore.bind(this);
@@ -92,6 +97,10 @@ class BaseScreen extends React.Component {
     this.props.updateMessageCount();
     KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
     KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
+    if (this.state.data){
+      P.log("componentWillUnmount", "Remove Cards");
+      PlainActions.removeCards(this.state.data["Cards"]);
+    }
   }
 
   loadScreen() {
@@ -142,12 +151,12 @@ class BaseScreen extends React.Component {
   handleInitialRequest(error, json){
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log("ERRORabc");
+      P.log("handleInitialRequest", "Error occured");
       if (error.status == 500 || error.status == 400 || error.status == 404) {
         var text = JSON.parse(error.body)["Error"];
-        console.log(this.props.routes.getDepth());
+        P.log("handleInitialRequest", "Route Depth:"+this.props.routes.getDepth());
         if (this.props.routes.getDepth() > 1) {
-          console.log("ALERT");
+          P.log("handleInitialRequest", "Alert Called");
           AlertIOS.alert(
             'Error',
             text,
@@ -167,15 +176,11 @@ class BaseScreen extends React.Component {
       }
       return ;
     }
-    if (json == undefined)
-      return ;
-
-    // if normal response 200
-    console.log(json);
-    // TODO: Flux Action
-    this.setState({
-      data: json,
-    });
+    if (json){
+      P.log("handleInitialRequest", "200");
+      this.pushScreenDataToStore(json);
+      this.setState({data: json});
+    }
   }
 
   handleAddMoreRequest(error, json){
@@ -197,16 +202,20 @@ class BaseScreen extends React.Component {
     if (json == undefined)
       return ;
     if (this.state.data != null && this.state.data["Page"] < json["Page"]) {
-      console.log(json);
       var data = update(this.state.data, {"Cards": {$push : json["Cards"] }})
       data = update(data, {"HasNext": {$set : json["HasNext"] }})
       data = update(data, {"Page": {$set : json["Page"] }})
 
-      // TODO: Flux Action
+      this.pushScreenDataToStore(json);
       this.setState({
         data: data
       });
     }
+  }
+
+  pushScreenDataToStore(data){
+    PlainActions.updateScreenData(
+      data["Offers"], data["Conversations"], data["Cards"]);
   }
 
   toggleSideMenu(event) {
