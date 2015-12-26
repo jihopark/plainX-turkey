@@ -23,15 +23,13 @@ class OfferSubmittedScreen extends BaseScreen{
   onPressActionButton(){
     this.props.replaceScreen({uri: 'main'});
   }
-  
+
   renderScreen() {
     this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
-
+    var listView = this.createListView(cardObservers, false);
     return (
       <View style={this.screenCommonStyle.container}>
-        <PlainListView
-          cardObservers={{}}
-          cards={this.state.data["Cards"]}/>
+        {listView}
         <ActionButton
           text={"OKAY"}
           onPress={this.onPressActionButton}

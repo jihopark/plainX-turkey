@@ -70,9 +70,8 @@ class MakeOfferScreen extends BaseScreen{
 
     var requestParams = this.getRequestParams();
 
-    var listView = (<PlainListView
-      cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}/>);
+    var listView = this.createListView(cardObservers);
+
 
     var finishButton = (<ActionButton
       text={"NEXT"}

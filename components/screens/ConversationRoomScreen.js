@@ -252,6 +252,9 @@ class ConversationRoomScreen extends BaseScreen{
     var listView = (<PlainListView
       hasBackgroundColor={true}
       invertList={true}
+      getCard={this.props.getCard}
+      getOffer={this.props.getOffer}
+      getConversation={this.props.getConversation}
       cardObservers={cardObservers}
       cards={this.state.data["Cards"]}
       onEndReached={this.loadMore}

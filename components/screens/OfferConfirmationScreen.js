@@ -63,11 +63,10 @@ class OfferConfirmationScreen extends BaseScreen{
   }
 
   renderScreen() {
+    var listView = createListView({});
     return (
       <View style={this.screenCommonStyle.container}>
-        <PlainListView
-          cardObservers={{}}
-          cards={this.state.data["Cards"]}/>
+        {listView}
         <ActionButton
           text={actionButtonStates[this.state.buttonState]}
           onPress={this.submitOffer}

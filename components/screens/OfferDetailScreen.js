@@ -155,11 +155,8 @@ class OfferDetailScreen extends BaseScreen{
 
   renderScreen() {
     var cardObservers = { };
-    var listView = (<PlainListView
-      cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}
-      onEndReached={this.loadMore}
-      />);
+    var listView = this.createListView(cardObservers, true);
+
 
     var isOwnOffer = this.state.data["Meta"] ? this.state.data["Meta"]["isOwnOffer"] : null;
     var makeOfferButton = (<ActionButton

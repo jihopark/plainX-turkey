@@ -32,11 +32,7 @@ class OfferListScreen extends BaseScreen{
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
 
-    var listView = (<PlainListView
-      cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}
-      onEndReached={this.loadMore}
-      />);
+    var listView = this.createListView(cardObservers, true);
 
     var makeOfferButton = (<ActionButton
                             text={"MAKE OFFER"}

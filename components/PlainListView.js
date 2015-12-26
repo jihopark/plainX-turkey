@@ -6,6 +6,10 @@ var Rx = require('rx');
 var CardRouter = require('./cards/CardRouter.js');
 var Divider = require('./Divider.js');
 
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("PlainListView");
+
+
 var {
   ListView,
   StyleSheet,
@@ -45,6 +49,8 @@ var PlainListView = React.createClass({
     }
   },
   renderCards: function(card) {
+    card = this.props.getCard(card["UUID"]);
+
     var observer;
     //find if there is cardObserver to pass
     if (this.needsTobeObserved(card["Name"])) {
@@ -64,7 +70,10 @@ var PlainListView = React.createClass({
           id={card["UUID"]}
           key={card["UUID"]}
           observer={observer}
-          data={card["Data"]}/>
+          data={card["Data"]}
+          getOffer={this.props.getOffer}
+          getConversation={this.props.getConversation}
+          />
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
           <Divider margin={styles.mergedCardDivider} /> : null}
       </View>

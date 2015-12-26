@@ -27,13 +27,11 @@ class MyOffersScreen extends BaseScreen{
     var cardObservers = { };
     cardObservers["Offer"] = this.offerCardonNext;
 
+    var listView = this.createListView(cardObservers, true);
+
     return (
       <View style={this.screenCommonStyle.container}>
-        <PlainListView
-          cardObservers={cardObservers}
-          cards={this.state.data["Cards"]}
-          onEndReached={this.loadMore}
-          />
+        {listView}
         <ActionButton
           text={"ADD NEW OFFER"}
           onPress={this.onPressMakeOffer}

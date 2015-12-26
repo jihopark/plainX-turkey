@@ -28,11 +28,8 @@ class ConversationsScreen extends BaseScreen{
   renderScreen() {
     var cardObservers = { };
     cardObservers["UserConversationItem"] = this.getConversation;
-    var listView = (<PlainListView
-      cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}
-      onEndReached={this.loadMore}
-      />);
+    var listView = this.createListView(cardObservers, true);
+
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}

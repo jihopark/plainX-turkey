@@ -42,7 +42,9 @@ class PlainNavigator extends React.Component {
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
 
     this.onChangeState = this.onChangeState.bind(this);
-    this.getCards = this.getCards.bind(this);
+    this.getCard = this.getCard.bind(this);
+    this.getOffer = this.getOffer.bind(this);
+    this.getConversation = this.getConversation.bind(this);
 
     this.getInitialRouteStack = this.getInitialRouteStack.bind(this);
     this.setNetworkActivityIndicator = this.setNetworkActivityIndicator.bind(this);
@@ -82,8 +84,18 @@ class PlainNavigator extends React.Component {
     this.setState(state);
   }
 
-  getCards(cardIDs) {
-    P.log("getCards",cardIDs);
+  getCard(uuid) {
+    return this.state.cards[uuid];
+  }
+
+  getConversation(id) {
+    P.log("getConversation", id);
+    return this.state.conversations[id];
+  }
+
+  getOffer(id) {
+    P.log("getOffers", id);
+    return this.state.offers[id];
   }
 
   //To Load all necessary screens from the uri
@@ -213,7 +225,9 @@ class PlainNavigator extends React.Component {
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
             params={routes.getCurrentRouteParams()}
 
-            getCards={this.getCards}
+            getCard={this.getCard}
+            getConversation={this.getConversation}
+            getOffer={this.getOffer}
 
             //From AppContainer
             updateMessageCount={this.props.updateMessageCount}

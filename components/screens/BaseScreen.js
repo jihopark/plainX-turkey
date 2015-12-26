@@ -8,6 +8,8 @@ var RestKit = require('react-native-rest-kit');
 var KeyboardEvents = require('react-native-keyboardevents');
 var KeyboardEventEmitter = KeyboardEvents.Emitter;
 
+var PlainListView = require('../PlainListView.js');
+
 var SessionActions = require('../../actions/SessionActions');
 var PlainActions = require('../../actions/PlainActions');
 
@@ -35,6 +37,7 @@ class BaseScreen extends React.Component {
     };
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
+    this.createListView = this.createListView.bind(this);
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
@@ -101,6 +104,20 @@ class BaseScreen extends React.Component {
       P.log("componentWillUnmount", "Remove Cards");
       PlainActions.removeCards(this.state.data["Cards"]);
     }
+  }
+
+  createListView(cardObservers){
+    createListView(cardObservers, false);
+  }
+
+  createListView(cardObservers, pagination){
+    return (<PlainListView
+      getCard={this.props.getCard}
+      getOffer={this.props.getOffer}
+      getConversation={this.props.getConversation}
+      cardObservers={cardObservers}
+      onEndReached={pagination ? this.loadMore : null}
+      cards={this.state.data["Cards"]}/>);
   }
 
   loadScreen() {

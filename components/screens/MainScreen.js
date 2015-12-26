@@ -70,10 +70,7 @@ class MainScreen extends BaseScreen{
     cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
     cardObservers["Offer"] = this.offerCardonNext;
 
-    var listView = (
-      <PlainListView
-        cardObservers={cardObservers}
-        cards={this.state.data["Cards"]}/>);
+    var listView = this.createListView(cardObservers);
 
     return (
       <View style={this.screenCommonStyle.container}>
