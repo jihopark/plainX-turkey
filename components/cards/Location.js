@@ -12,9 +12,11 @@ var {
 var Location = React.createClass({
   displayName: "LocationCard",
   render: function() {
-    var locations = this.props.data["Locations"];
+    var offer = this.props.getOffer(this.props.data["OfferId"]);
+    var locations = offer["Locations"];
     var offerOptionStyle = this.props.cardCommonStyles.offerOptions;
-    var locationViews = Object.keys(this.props.data["Locations"]).map(
+
+    var locationViews = Object.keys(locations).map(
       function(location){
         return (locations[location]["IsSelected"] ?
           (<Text style={offerOptionStyle}>{location}</Text>)

@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx')
 
 var {
   Text,
@@ -13,21 +12,24 @@ var {
 var CurrencyAmount = React.createClass({
   displayName: "CurrencyAmountCard",
   render: function() {
-    return (
+    var offer = this.props.getOffer(this.props.data["OfferId"]);
+    return offer ?
+      (
       <View style={styles.container}>
         <View style={styles.sideContainer}>
           <Text style={[this.props.cardCommonStyles.currency, styles.leftCurrency]}>
-            {this.props.data["Sell"]+"\n"+this.props.data["AmountSell"]}</Text>
+            {offer["Sell"]+"\n"+offer["AmountSell"]}</Text>
         </View>
         <View style={styles.centerContainer}>
           <Image style={styles.center} source={require('image!plane')}/>
         </View>
         <View style={styles.sideContainer}>
           <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>
-            {this.props.data["Buy"]+"\n"+this.props.data["AmountBuy"]}</Text>
+            {offer["Buy"]+"\n"+offer["AmountBuy"]}</Text>
         </View>
       </View>
-    );
+    )
+    : null;
   }
 });
 

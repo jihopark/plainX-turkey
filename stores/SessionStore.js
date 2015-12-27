@@ -9,7 +9,7 @@ class SessionStore {
     this.deviceToken = null;
     this.messageCount = 0;
     this.user = null
-    this.uri = 'main/makeOffer';
+    this.uri = 'main';
 
     this.bindActions(SessionActions);
   }
