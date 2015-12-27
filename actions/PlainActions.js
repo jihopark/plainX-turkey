@@ -13,6 +13,10 @@ class PlainActions {
     return cards;
   }
 
+  updateCardData(uuid, keySet, valueSet){
+    return {uuid, keySet, valueSet};
+  }
+
   removeCards(cards) {
     return cards;
   }

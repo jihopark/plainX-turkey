@@ -43,8 +43,6 @@ class BaseScreen extends React.Component {
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.loadMore = this.loadMore.bind(this);
-    this.mutateCardStateData = this.mutateCardStateData.bind(this);
-    this.getCardDataState = this.getCardDataState.bind(this);
     this.loadScreen = this.loadScreen.bind(this);
     this.checkEndPointInParams = this.checkEndPointInParams.bind(this);
     this.fetchData = this.fetchData.bind(this);
@@ -52,14 +50,6 @@ class BaseScreen extends React.Component {
     this.handleInitialRequest = this.handleInitialRequest.bind(this);
     this.handleAddMoreRequest = this.handleAddMoreRequest.bind(this);
     this.toggleSideMenu = this.toggleSideMenu.bind(this);
-
-    this.offerCardonNext = this.offerCardonNext.bind(this);
-    this.currencySelectCardOnNext = this.currencySelectCardOnNext.bind(this);
-    this.clearAll = this.clearAll.bind(this);
-    this.getRateFromCurrencyList = this.getRateFromCurrencyList.bind(this);
-    this.currencyAmountSelectCardOnNext = this.currencyAmountSelectCardOnNext.bind(this);
-    this.expirySelectCardonNext = this.expirySelectCardonNext.bind(this);
-    this.locationSelectonNext = this.locationSelectonNext.bind(this);
 
     this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
     this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
@@ -69,24 +59,6 @@ class BaseScreen extends React.Component {
     if (this.state.data["HasNext"]) {
       console.log("Fetch Data " + (this.state.data["Page"]+1));
       this.fetchData(this.props.loginToken, (this.state.data["Page"]+1));
-    }
-  }
-
-  mutateCardStateData(data, id, key, value) {
-    var cards = data["Cards"];
-    for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["UUID"] == id) {
-        return update(data, {"Cards": {[i]: {"Data": {[key]: {$set: value}}}}});
-      }
-    }
-  }
-
-  getCardDataState(id) {
-    var cards = this.state.data["Cards"];
-    for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["UUID"] == id) {
-        return cards[i]["UUID"];
-      }
     }
   }
 
@@ -127,6 +99,9 @@ class BaseScreen extends React.Component {
     switch(cardName){
       case "Offer":
         this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString({"Id": data["OfferId"]}))});
+        break;
+      case "CurrencySelect":
+        this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+ParameterUtils.getParamsToString(data))});
         break;
     }
   }
@@ -250,124 +225,7 @@ class BaseScreen extends React.Component {
     this.context.menuActions.toggle();
   }
 
-  //Card Events
-  currencySelectCardOnNext(event) {
-    // TODO: Flux Action
-    switch (event["Target"]){
-      case "Button":
-        var params = {"Sell": event["Sell"], "Buy": event["Buy"]};
-        this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+ParameterUtils.getParamsToString(params))});
-        break;
-      case "Buy":
-      case "Sell":
-        this.setState({data: this.mutateCardStateData(this.state.data, event["id"], event["Target"], event[event["Target"]])});
-        break;
-    }
-  }
-
-  //CurrencyAmountSelect Card Events
-
-  getRateFromCurrencyList(id) {
-    var cards = this.state.data["Cards"];
-    for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["UUID"] == id) {
-        var sell = cards[i]["Data"]["Sell"];
-        var buy = cards[i]["Data"]["Buy"];
-
-        var rate = 1;
-        var list = cards[i]["Data"]["CurrencyList"];
-        for (var j=0, numCurr = list.length; j< numCurr; j++) {
-          if (list[j]["Code"] == sell)
-            rate *= list[j]["Rate"];
-          else if (list[j]["Code"] == buy)
-            rate /= list[j]["Rate"];
-        }
-        return rate;
-      }
-    }
-  }
-
-  clearAll(id) {
-    var data = this.mutateCardStateData(this.state.data, id, "AmountSell", '');
-    data = this.mutateCardStateData(data, id, "AmountBuy", '');
-    data = this.mutateCardStateData(data, id, "SellRate", '');
-    data = this.mutateCardStateData(data, id, "BuyRate", '');
-    return data;
-  }
-
-  currencyAmountSelectCardOnNext(event) {
-    // TODO: Flux Action
-
-    function roundUpNumber(number) {
-      return ""+(Math.round(number*100)/100);
-    }
-
-    var data;
-    switch(event["Target"]){
-      case "Next":
-        console.log("NEXT");
-        break;
-      case "AmountSell":
-        if (!event[event["Target"]]) {
-          data = this.clearAll(event["id"]);
-        }
-        else {
-          var rate = this.getRateFromCurrencyList(event["id"]);
-          console.log("HEY");
-          console.log(rate);
-          data = this.mutateCardStateData(this.state.data, event["id"], "AmountSell", event[event["Target"]]);
-          data = this.mutateCardStateData(data, event["id"], "AmountBuy", roundUpNumber(event[event["Target"]]/rate));
-          data = this.mutateCardStateData(data, event["id"], "BuyRate", roundUpNumber(1/rate));
-          data = this.mutateCardStateData(data, event["id"], "SellRate", "");
-        }
-        this.setState({data: data});
-        break;
-      case "AmountBuy":
-        if (!event[event["Target"]]) {
-          console.log("EMPTY");
-          data = this.clearAll(event["id"]);
-        }
-        else {
-          var rate = this.getRateFromCurrencyList(event["id"]);
-          data = this.mutateCardStateData(this.state.data, event["id"], "AmountBuy", event[event["Target"]]);
-          data = this.mutateCardStateData(data, event["id"], "AmountSell", roundUpNumber(event[event["Target"]]*rate));
-          data = this.mutateCardStateData(data, event["id"], "SellRate", roundUpNumber(rate));
-          data = this.mutateCardStateData(data, event["id"], "BuyRate", "");
-        }
-        this.setState({data: data});
-        break;
-      case "PressSell":
-      case "PressBuy":
-        //Remove numbers if change of currency.
-        data = this.clearAll(event["id"]);
-        this.setState({ data: data });
-        break;
-      case "Buy":
-      case "Sell":
-        this.setState({data: this.mutateCardStateData(this.state.data, event["id"], event["Target"], event[event["Target"]])});
-    }
-  }
-
-  //ExpiryDateSelect
-  expirySelectCardonNext(event) {
-    // TODO: Flux Action
-    this.setState({data:this.mutateCardStateData(this.state.data, event["id"], "Expiry", event["Expiry"])});
-  }
-
-  locationSelectonNext(event) {
-    // TODO: Flux Action
-    var update = require('react-addons-update');
-
-    var cards = this.state.data["Cards"];
-    for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["UUID"] == event["id"]) {
-        this.setState({data: update(this.state.data, {"Cards": {[i]: {"Data": { "Locations": { [event["Location"]]: {"IsSelected": {$set: event["IsSelected"]}}}}}}})});
-      }
-    }
-  }
-
   //KeyboardEvent
-
   updateKeyboardSpace(frames) {
     if (frames.end)
       this.setState({keyboardSpace: frames.end.height});

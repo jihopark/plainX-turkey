@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx');
 
 var {
   View,
@@ -14,6 +13,7 @@ var {
 var CurrencySelectText = require('../CurrencySelectText.js');
 var CardButton = require('../CardButton.js');
 var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+var PlainActions = require('../../actions/PlainActions.js');
 
 var CurrencySelect = React.createClass({
   displayName: "CurrencySelectCard",
@@ -40,43 +40,32 @@ var CurrencySelect = React.createClass({
   onBuyPickerValueChange: function(value) {
     this.setState({selectedBuyCurrency: value});
   },
+  onPickSellPicker: function(){
+    this.dismissPicker();
+    PlainActions.updateCardData(this.props.id, "Sell", this.state.selectedSellCurrency);
+  },
+  onPickBuyPicker: function(){
+    this.dismissPicker();
+    PlainActions.updateCardData(this.props.id, "Buy", this.state.selectedBuyCurrency);
+  },
+  onPressNextButton: function() {
+    this.props.handleClick(this.props.name,
+      {"Sell": this.props.data["Sell"], "Buy": this.props.data["Buy"]});
+  },
   render: function() {
-    var subject = new Rx.Subject();
-    if (this.props.observer) {
-      subject.subscribe(this.props.observer);
-    }
-    var id = this.props.id;
-    var currencyList = this.props.data["CurrencyList"];
-    var next = {"id": id, "CurrencyList":currencyList};
-    var sell = this.props.data["Sell"];
-    var buy = this.props.data["Buy"];
-    var sellPick = this.state.selectedSellCurrency;
-    var buyPick = this.state.selectedBuyCurrency;
-    var dismiss = this.dismissPicker;
-
     var sellPicker = this.state.showSellCurrencyPicker ?
       (<CurrencyPicker
         currentCurrency={this.state.selectedSellCurrency}
-        currencyList={currencyList}
-        onPick={function(){
-          next["Target"] = "Sell";
-          next["Sell"] = sellPick;
-          dismiss();
-          subject.onNext(next);
-        }}
+        currencyList={this.props.data["CurrencyList"]}
+        onPick={this.onPickSellPicker}
         onPickerValueChange={this.onSellPickerValueChange}
         dismissPicker={this.dismissPicker} />) : null;
 
     var buyPicker = this.state.showBuyCurrencyPicker ?
       (<CurrencyPicker
-        onPick={function(){
-          next["Target"] = "Buy";
-          next["Buy"] = buyPick;
-          dismiss();
-          subject.onNext(next);
-        }}
+        onPick={this.onPickBuyPicker}
         currentCurrency={this.state.selectedBuyCurrency}
-        currencyList={currencyList}
+        currencyList={this.props.data["CurrencyList"]}
         onPickerValueChange={this.onBuyPickerValueChange}
         dismissPicker={this.dismissPicker} />) : null;
 
@@ -92,7 +81,7 @@ var CurrencySelect = React.createClass({
             <CurrencySelectText
               selected={this.state.showSellCurrencyPicker}
               iconStyle={this.props.cardCommonStyles.triangleIconStyle}
-              text={sell}/>
+              text={this.props.data["Sell"]}/>
           </TouchableOpacity>
 
           <Text style={this.props.cardCommonStyles.titles, styles.to}>
@@ -103,19 +92,14 @@ var CurrencySelect = React.createClass({
             <CurrencySelectText
               selected={this.state.showBuyCurrencyPicker}
               iconStyle={this.props.cardCommonStyles.triangleIconStyle}
-              text={buy}/>
+              text={this.props.data["Buy"]}/>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={function(event) {
-          next["Target"] = "Button";
-          next["Sell"] = sell;
-          next["Buy"] = buy;
-          subject.onNext(next);
-        }}>
+        <TouchableOpacity onPress={this.onPressNextButton}>
           <CardButton text={"FIND OFFERS"} />
         </TouchableOpacity>
-        {buy != "HKD" && sell != "HKD" ?
+        {this.props.data["Buy"] != "HKD" && this.props.data["Sell"] != "HKD" ?
         (<Text style={[this.props.cardCommonStyles.headings, {marginTop: 10,}]}>
             {"*Your chances of match will be\nhigher if it involves Hong Kong Dollars."}
           </Text>)

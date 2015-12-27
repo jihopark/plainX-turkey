@@ -50,6 +50,16 @@ class PlainDataStore {
     mergeArrayToMap(cards, this.cards);
   }
 
+  onUpdateCardData(params) {
+    if (Array.isArray(params.keySet)){
+      for (var i=0; i< params.keySet.length; i++)
+        this.cards[params.uuid]["Data"][params.keySet[i]] = params.valueSet[i];
+    }
+    else{
+      this.cards[params.uuid]["Data"][params.keySet] = params.valueSet;
+    }
+  }
+
   onRemoveCards(cards) {
     if (cards && cards.length > 0) {
       removeArrayFromMap(cards, this.cards);
