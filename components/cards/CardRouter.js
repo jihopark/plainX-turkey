@@ -26,6 +26,10 @@ var CardRouter = {
     if (Object.keys(this.registeredCards).indexOf(name) == -1) return null;
     else return this.registeredCards[name]();
   },
+  isOfferBaseCard: function(name) {
+    var offerBaseCards = ["Offer", "CurrencyAmount", "Location", "Expiry", "TodaysRateOffer"];
+    return offerBaseCards.indexOf(name)!= -1;
+  },
   isConversationCard: function(name) {
     return name.indexOf("Conversation")!= -1 || name.indexOf("Message")!= -1 || name.indexOf("Feedback")!= -1;
   }

@@ -47,6 +47,16 @@ var PlainListView = React.createClass({
         return styles.bottomCard;
     }
   },
+  validateCardData(card) {
+    if (CardRouter.isOfferBaseCard(card["Name"])) {
+      var offerId = card["Data"]["OfferId"];
+      return offerId && this.props.getOffer(offerId);
+    }
+    if (CardRouter.isConversationCard(card["Name"])) {
+      //TODO: Implement Conversation Card validation;
+    }
+    return true;
+  },
   renderCards: function(card) {
     card = this.props.getCard(card["UUID"]);
 
@@ -54,10 +64,9 @@ var PlainListView = React.createClass({
     var CardComponent = CardRouter.getComponent(card["Name"]);
     if (CardComponent == null)
       return null;
-
     var isConversationCard = CardRouter.isConversationCard(card["Name"]);
 
-    return (
+    return this.validateCardData(card) ? (
       <View style={isConversationCard ? null : [styles.cardContainer, this.getMarginStyle(card["Merged"])]}>
         <CardComponent
           cardCommonStyles={cardCommonStyles}
@@ -72,7 +81,7 @@ var PlainListView = React.createClass({
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
           <Divider margin={styles.mergedCardDivider} /> : null}
       </View>
-    );
+    ): null;
   },
   render: function() {
     var listView;
