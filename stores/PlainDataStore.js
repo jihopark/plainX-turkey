@@ -6,9 +6,9 @@ var P = new PlainLog("PlainDataStore");
 
 function mergeArrayToMap(array, map){
   for (var i=0, l=array.length ;i<l; i++) {
-    if (array[i]["Id"])
+    if (array[i]["Id"] || array[i]["Id"] == 0)
       map[array[i]["Id"]] = array[i];
-    else if (array[i]["UUID"])
+    else if (array[i]["UUID"] || array[i]["UUID"] == 0)
       map[array[i]["UUID"]] = array[i];
   }
   return map;
