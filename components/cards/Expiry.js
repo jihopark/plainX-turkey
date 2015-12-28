@@ -9,11 +9,10 @@ var {
   StyleSheet,
 } = React;
 
-var DateMixin = require('../screens/componentMixins/DateMixin.js');
+var DateUtils = require('../utils/DateUtils.js');
 
 var Expiry = React.createClass({
   displayName: "ExpiryCard",
-  mixins: [DateMixin],
   render: function() {
     var offer = this.props.getOffer(this.props.data["OfferId"]);
     return (
@@ -21,7 +20,7 @@ var Expiry = React.createClass({
         <Image style={styles.icon} source={require('image!calendaricon_gray')} />
         <Text style={this.props.cardCommonStyles.offerTitle}>{this.props.data["TitleText"]}</Text>
         <Text style={this.props.cardCommonStyles.offerOptions}>
-          {offer["Expires"] == -1 ? "None" : this.getDateFormat(new Date(offer["Expires"])) }
+          {offer["Expires"] == -1 ? "None" : DateUtils.getDateFormat(new Date(offer["Expires"])) }
         </Text>
       </View>
     );

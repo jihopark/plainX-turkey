@@ -3,7 +3,7 @@
 var React = require('react-native');
 var Rx = require('rx')
 
-var DateMixin = require('../screens/componentMixins/DateMixin.js');
+var DateUtils = require('../utils/DateUtils.js');
 
 var {
   Text,
@@ -15,7 +15,6 @@ var {
 
 var UserConversationItem = React.createClass({
   displayName: "UserConversationItemCard",
-  mixins: [DateMixin],
   getOfferSummaryText: function(offer) {
     return (<View style={{flexDirection: 'row'}}>
         <Text style={styles.offerSummary}>
@@ -49,7 +48,7 @@ var UserConversationItem = React.createClass({
             </Text>
           </View>
           <View style={{flex:1}}>
-            <Text style={[styles.dateText, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>{this.getConversationTimestampFormat(this.props.data["LastMessage"]["Created"])}</Text>
+            <Text style={[styles.dateText, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>{DateUtils.getConversationTimestampFormat(this.props.data["LastMessage"]["Created"])}</Text>
           </View>
         </View>
       </TouchableOpacity>
