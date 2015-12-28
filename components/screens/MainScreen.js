@@ -67,9 +67,6 @@ class MainScreen extends BaseScreen{
   }
 
   renderScreen() {
-    this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
-    this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
-
     var listView = this.createListView();
 
     return (

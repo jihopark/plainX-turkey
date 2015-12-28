@@ -41,6 +41,7 @@ class PlainNavigator extends React.Component {
     this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
 
+    this.toggleSideMenu = this.toggleSideMenu.bind(this);
     this.onChangeState = this.onChangeState.bind(this);
     this.getCard = this.getCard.bind(this);
     this.getOffer = this.getOffer.bind(this);
@@ -51,8 +52,7 @@ class PlainNavigator extends React.Component {
     this.bounceMessage = this.bounceMessage.bind(this);
     this.renderScene = this.renderScene.bind(this);
     this.getNavBarRouter = this.getNavBarRouter.bind(this);
-    this.leftNavBarButtonSubject = new Rx.Subject();
-    this.rightNavBarButtonSubject = new Rx.Subject();
+    this.sideMenuSubject = new Rx.Subject();
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -132,7 +132,7 @@ class PlainNavigator extends React.Component {
               source={require("image!menuicon")} /> );
           return (
             <TouchableOpacity
-              onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
+              onPress={() => navigator.props.toggleSideMenu() }
               style={styles.navBarLeftButton}>
               {button}
             </TouchableOpacity>);
@@ -159,7 +159,7 @@ class PlainNavigator extends React.Component {
         return shouldNotShowMsgIcon ? null :
           (<TouchableOpacity
             style={styles.navBarRightButton}
-            onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
+            onPress={() => navigator.push({uri: routes.addRoute('conversations')})}>
               <Image style={[styles.navBarIcon, styles.messageIcon]}
                 source={require("image!msgicon")} />
               {navigator.props.messageCount > 0 ?
@@ -196,13 +196,14 @@ class PlainNavigator extends React.Component {
     if (routes!= null) {
       if (!navigator.props.sideMenuSubject.hasObservers()) {
         var changeState =
-        navigator.props.sideMenuSubject.subscribe(function(event){
-          switch (event.type) {
-            case "pushScreen":
-              navigator.push({uri: routes.addRoute(event.uri)});
-              break;
-          }
-        });
+          navigator.props.sideMenuSubject.subscribe(function(event){
+            switch (event.type) {
+              case "pushScreen":
+                navigator.push({uri: routes.addRoute(event.uri)});
+              case "toggleSideMenu":
+                navigator.props.toggleSideMenu();
+            }
+          });
       }
 
       var Screen = routes.getCurrentRoute().getComponent();
@@ -210,10 +211,7 @@ class PlainNavigator extends React.Component {
         <View
           style={styles.scene} keyboardShouldPersistTaps={false}>
           <Screen
-            //subscribe to these subjects if need to receive left,right button events
             enablePagination={routes.getCurrentRoute().enablePagination}
-            leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-            rightNavBarButtonSubject={this.rightNavBarButtonSubject}
             routes={routes}
             pushScreen={navigator.push}
             popScreen={navigator.pop}
@@ -238,20 +236,22 @@ class PlainNavigator extends React.Component {
     return null;
   }
 
+  toggleSideMenu() {
+    this.setState({isSideMenuOpen: !this.state.isSideMenuOpen});
+  }
+
   render() {
     return (
       <SideMenu
           onChange={(isOpen) => this.setState({isSideMenuOpen: isOpen})}
+          isOpen={this.state.isSideMenuOpen}
           menu={
-          <PlainSideMenu
-            isOpen={this.state.isSideMenuOpen}
-            sideMenuSubject={this.props.sideMenuSubject} />}
-            touchToClose={true}>
+            <PlainSideMenu
+              isOpen={this.state.isSideMenuOpen}
+              sideMenuSubject={this.sideMenuSubject} />}>
         <Navigator
-          setLogoutState={this.setLogoutState}
-          sideMenuSubject={this.props.sideMenuSubject}
-          leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-          rightNavBarButtonSubject={this.rightNavBarButtonSubject}
+          toggleSideMenu={this.toggleSideMenu}
+          sideMenuSubject={this.sideMenuSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}
           renderScene={this.renderScene}
           messageCount={this.props.messageCount}
@@ -267,10 +267,6 @@ class PlainNavigator extends React.Component {
     );
   }
 }
-
-PlainNavigator.defaultProps = {
-    sideMenuSubject: new Rx.Subject(),
-};
 
 var styles = StyleSheet.create({
   navBar: {
@@ -296,9 +292,10 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
   },
   navBarLeftButton: {
-    marginLeft: 10,
-    marginTop: 12,
-    padding: 3,
+    paddingLeft: 13,
+    paddingTop: 15,
+    paddingBottom: 3,
+    paddingRight: 3,
   },
   navBarRightButton: {
     marginRight: 10,

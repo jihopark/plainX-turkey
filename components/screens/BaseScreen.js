@@ -49,7 +49,6 @@ class BaseScreen extends React.Component {
     this.onPressErrorDialog = this.onPressErrorDialog.bind(this);
     this.handleInitialRequest = this.handleInitialRequest.bind(this);
     this.handleAddMoreRequest = this.handleAddMoreRequest.bind(this);
-    this.toggleSideMenu = this.toggleSideMenu.bind(this);
 
     this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
     this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
@@ -220,10 +219,6 @@ class BaseScreen extends React.Component {
       data["Offers"], data["Conversations"], data["Cards"]);
   }
 
-  toggleSideMenu(event) {
-    this.context.menuActions.toggle();
-  }
-
   //KeyboardEvent
   updateKeyboardSpace(frames) {
     if (frames.end)
@@ -234,16 +229,5 @@ class BaseScreen extends React.Component {
     this.setState({keyboardSpace: 0});
   }
 }
-
-BaseScreen.propTypes = {
-  leftNavBarButton: React.PropTypes.object.isRequired,
-  rightNavBarButton: React.PropTypes.object.isRequired,
-  routes: React.PropTypes.object.isRequired,
-  pushScreen: React.PropTypes.func.isRequired,
-};
-
-BaseScreen.contextTypes = {
-  menuActions: React.PropTypes.object.isRequired,
-};
 
 module.exports = BaseScreen;

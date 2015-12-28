@@ -35,9 +35,6 @@ var MenuItem = React.createClass({
 
 var PlainSideMenu = React.createClass({
   displayName: 'PlainSideMenu',
-  contextTypes: {
-    menuActions: React.PropTypes.object.isRequired,
-  },
 
   getInitialState: function() {
     return SessionStore.getState();
@@ -52,7 +49,6 @@ var PlainSideMenu = React.createClass({
   },
 
   onChange(state) {
-    P.log("onChange", state);
     this.setState(state);
   },
 
@@ -70,23 +66,17 @@ var PlainSideMenu = React.createClass({
     return true;
   },
 
-  toggleSideMenu: function() {
-    this.context.menuActions.close();
-  },
   pushMakeOfferScreen: function() {
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri:"makeOffer"});
   },
   pushMyOfferScreen: function(){
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "myOffers"});
   },
   pushLoginScreen: function() {
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "login"});
   },
   pressLogout: function() {
-    this.toggleSideMenu();
+    this.props.sideMenuSubject.onNext({type: "toggleSideMenu"});
     SessionActions.logOut(this.state.loginToken, this.state.deviceToken);
   },
 
