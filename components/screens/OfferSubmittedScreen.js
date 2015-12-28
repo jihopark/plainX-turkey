@@ -26,7 +26,7 @@ class OfferSubmittedScreen extends BaseScreen{
 
   renderScreen() {
     this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
-    var listView = this.createListView(cardObservers, false);
+    var listView = this.createListView({}, false);
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}

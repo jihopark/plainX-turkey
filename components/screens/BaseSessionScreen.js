@@ -17,10 +17,6 @@ class BaseSessionScreen extends BaseScreen{
     this.styles = styles;
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    //this.componentDidMount = this.componentDidMount.bind(this);
-    //this.componentWillUnmount = this.componentWillUnmount.bind(this);
-    //this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
-    //this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
   }
 
   onChangeEmail(text) {

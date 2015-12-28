@@ -8,7 +8,6 @@ var {
   Text,
 } = React;
 
-var PlainListView = require('../PlainListView.js');
 var BaseScreen = require('./BaseScreen.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
@@ -16,6 +15,9 @@ var ShouldLoginAlert = require('../ShouldLoginAlert.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
 
 var update = require('react-addons-update');
+
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("OfferDetailScreen");
 
 var actionButtonStates = {"connected": "CONNECTED!",
                         "connecting": "Loading",
@@ -37,13 +39,10 @@ class OfferDetailScreen extends BaseScreen{
   }
 
   onConnectOffer() {
-    console.log("CONNECT");
     const CONNECT_ENDPOINT = "offer/connect"
     var url = this.props.api_domain + CONNECT_ENDPOINT;
     var bodyParams = ParameterUtils.getStringToParams(this.props.params);
-    console.log(url);
-    console.log("LOGINTOKEN");
-    console.log(this.loginToken);
+    P.log("onConnectOffer", url);
 
     var request = {
       method: 'post',
@@ -62,7 +61,7 @@ class OfferDetailScreen extends BaseScreen{
   handleConnectRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
+      P.log("handleConnectRequest/error", error);
       if (error.status == 401) {
         // TODO: Should not replace but push LoginScreen
         ShouldLoginAlert.showAlert("You need to login to connect to an offer",
@@ -74,7 +73,7 @@ class OfferDetailScreen extends BaseScreen{
       return ;
     }
     if (json) {
-      console.log("SUCCESS");
+      P.log("handleConnectRequest/success", json);
       this.setOfferState("connected");
       this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+json["ConversationId"])});
     }
@@ -84,7 +83,7 @@ class OfferDetailScreen extends BaseScreen{
     const DELETE_ENDPOINT = "offer";
     var url = this.props.api_domain + DELETE_ENDPOINT;
     var bodyParams = this.getStringToParams(this.props.params);
-    console.log(url);
+    P.log("onRemoveOffer", url);
 
     var request = {
       method: 'delete',
@@ -103,13 +102,12 @@ class OfferDetailScreen extends BaseScreen{
   handleRemoveRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
+      P.log("handleRemoveRequest/error", error);
       this.setOfferState("error");
       return ;
     }
     if (json) {
-      console.log("SUCCESS");
-      console.log(json["ConversationId"]);
+      P.log("handleRemoveRequest/success", json);
       this.props.popScreen();
     }
   }
@@ -154,8 +152,7 @@ class OfferDetailScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var cardObservers = { };
-    var listView = this.createListView(cardObservers, true);
+    var listView = this.createListView(true);
 
 
     var isOwnOffer = this.state.data["Meta"] ? this.state.data["Meta"]["isOwnOffer"] : null;

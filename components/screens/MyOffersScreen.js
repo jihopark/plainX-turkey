@@ -7,8 +7,6 @@ var {
   StyleSheet,
 } = React;
 
-var PlainListView = require('../PlainListView.js');
-
 var BaseScreen = require('./BaseScreen.js');
 var ActionButton = require('../ActionButton.js');
 
@@ -24,10 +22,7 @@ class MyOffersScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var cardObservers = { };
-    cardObservers["Offer"] = this.offerCardonNext;
-
-    var listView = this.createListView(cardObservers, true);
+    var listView = this.createListView(true);
 
     return (
       <View style={this.screenCommonStyle.container}>

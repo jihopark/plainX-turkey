@@ -10,10 +10,13 @@ var {
   ScrollView,
 } = React;
 
-var PlainListView = require('../PlainListView.js');
 var BaseScreen = require('./BaseScreen.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
 var ActionButton = require('../ActionButton.js');
+
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("MakeOfferScreen");
+
 
 class MakeOfferScreen extends BaseScreen{
   constructor(props) {
@@ -32,28 +35,33 @@ class MakeOfferScreen extends BaseScreen{
 
     var cards = this.state.data["Cards"];
     for (var i=0, numCards = cards.length ; i<numCards; i++) {
-      if (cards[i]["Name"] == "CurrencyAmountSelect") {
-        currencyInputValid = cards[i]["Data"]["Sell"] != cards[i]["Data"]["Buy"];
-        amountInputValid = cards[i]["Data"]["AmountSell"]!='' && cards[i]["Data"]["AmountSell"]!='0' &&
-                      cards[i]["Data"]["AmountBuy"]!='' && cards[i]["Data"]["AmountBuy"]!='0'
-        params["Buy"] = cards[i]["Data"]["Buy"];
-        params["Sell"] = cards[i]["Data"]["Sell"];
-        params["AmountSell"] = cards[i]["Data"]["AmountSell"];
-        params["AmountBuy"] = cards[i]["Data"]["AmountBuy"];
-      }
-      else if (cards[i]["Name"] == "LocationSelect") {
-        for (var location in cards[i]["Data"]["Locations"]) {
-          if (cards[i]["Data"]["Locations"][location]["IsSelected"]) {
-            locationInputValid = true;
-            params["Locations"] = params["Locations"] || [];
-            params["Locations"].push(location);
+      var card = this.props.getCard(cards[i]["UUID"]);
+      var data = card["Data"];
+      switch (card["Name"]) {
+        case "CurrencyAmountSelect":
+          currencyInputValid = data["Sell"] != data["Buy"];
+          amountInputValid = data["AmountSell"]!='' && data["AmountSell"]!='0' &&
+                        data["AmountBuy"]!='' && data["AmountBuy"]!='0'
+          params["Buy"] = data["Buy"];
+          params["Sell"] = data["Sell"];
+          params["AmountSell"] = data["AmountSell"];
+          params["AmountBuy"] = data["AmountBuy"];
+          break;
+        case "LocationSelect":
+          for (var location in data["Locations"]) {
+            if (data["Locations"][location]["IsSelected"]) {
+              locationInputValid = true;
+              params["Locations"] = params["Locations"] || [];
+              params["Locations"].push(location);
+            }
           }
-        }
-      }
-      else if (cards[i]["Name"] == "ExpirySelect") {
-        params["Expiry"] = cards[i]["Data"]["Expiry"];
+          break;
+        case "ExpirySelect":
+          params["Expiry"] = cards[i]["Data"]["Expiry"];
+          break;
       }
     }
+    P.log("getRequestParams", params);
     return locationInputValid && amountInputValid && currencyInputValid ? params : null;
   }
 
@@ -62,15 +70,9 @@ class MakeOfferScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var cardObservers = { };
-    cardObservers["Offer"] = this.offerCardonNext;
-    cardObservers["CurrencyAmountSelect"] = this.currencyAmountSelectCardOnNext;
-    cardObservers["ExpirySelect"] = this.expirySelectCardonNext;
-    cardObservers["LocationSelect"] = this.locationSelectonNext;
-
     var requestParams = this.getRequestParams();
 
-    var listView = this.createListView(cardObservers);
+    var listView = this.createListView();
 
 
     var finishButton = (<ActionButton

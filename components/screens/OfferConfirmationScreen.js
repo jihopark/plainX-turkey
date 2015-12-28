@@ -6,12 +6,15 @@ var {
   View,
 } = React;
 
-var PlainListView = require('../PlainListView.js');
 var BaseScreen = require('./BaseScreen.js');
 
 var ParameterUtils = require('../utils/ParameterUtils.js');
 var ActionButton = require('../ActionButton.js');
 var RestKit = require('react-native-rest-kit');
+
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("OfferConfirmationScreen");
+
 
 var actionButtonStates = { "default": "FINISH",
                         "loading": "Loading",
@@ -35,12 +38,12 @@ class OfferConfirmationScreen extends BaseScreen{
     var request = {
       method: 'post',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json'},
       body: JSON.stringify(params),
     };
-    console.log(params);
+    P.log("submitOffer",params);
     this.props.setNetworkActivityIndicator(true);
     this.setState({buttonState:"loading"});
     RestKit.send(url, request, this.handleRequest);
@@ -49,13 +52,12 @@ class OfferConfirmationScreen extends BaseScreen{
   handleRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
-      console.log("ERROR");
+      P.log("handleRequest/Error", error);
       this.setState({buttonState:"error"});
       return ;
     }
     if (json) {
-      console.log("SUCCESS"+json);
+      P.log("handleRequest/Success",json);
       this.setState({buttonState:"done"});
       var routes = [{uri: 'offerSubmitted'}];
       this.props.immediatelyResetRouteStack(routes);
@@ -63,7 +65,7 @@ class OfferConfirmationScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var listView = createListView({});
+    var listView = this.createListView();
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}

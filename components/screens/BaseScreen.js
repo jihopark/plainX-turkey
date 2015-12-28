@@ -79,16 +79,15 @@ class BaseScreen extends React.Component {
     }
   }
 
-  createListView(cardObservers){
-    createListView(cardObservers, false);
+  createListView(){
+    createListView(false);
   }
 
-  createListView(cardObservers, pagination){
+  createListView(pagination){
     return (<PlainListView
       getCard={this.props.getCard}
       getOffer={this.props.getOffer}
       getConversation={this.props.getConversation}
-    //  cardObservers={cardObservers}
       handleClick={this.handleClick}
       onEndReached={pagination ? this.loadMore : null}
       cards={this.state.data["Cards"]}/>);

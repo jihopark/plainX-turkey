@@ -11,8 +11,6 @@ var {
 
 var PlainListView = require('../PlainListView.js');
 var BaseScreen = require('./BaseScreen.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var OfferCardMixin = require('./cardMixins/OfferCardMixin.js');
 
 var ActionButton = require('../ActionButton.js');
 
@@ -29,10 +27,7 @@ class OfferListScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var cardObservers = { };
-    cardObservers["Offer"] = this.offerCardonNext;
-
-    var listView = this.createListView(cardObservers, true);
+    var listView = this.createListView(true);
 
     var makeOfferButton = (<ActionButton
                             text={"MAKE OFFER"}

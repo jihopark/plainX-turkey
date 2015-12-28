@@ -16,6 +16,10 @@ var BaseScreen = require('./BaseScreen.js');
 var TutorialPager = require('../TutorialPager.js');
 var PlainListView = require('../PlainListView.js');
 
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("MainScreen");
+
+
 class MainScreen extends BaseScreen{
   constructor(props) {
     super(props);
@@ -38,7 +42,7 @@ class MainScreen extends BaseScreen{
       else
         return false;
     } catch (error) {
-      console.log("Error Retreving checkIfFirstLogin");
+      P.log("checkIfFirstExec", "Error Retreving checkIfFirstLogin");
       return false;
     }
   }
@@ -66,11 +70,7 @@ class MainScreen extends BaseScreen{
     this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
     this.props.rightNavBarButtonSubject.subscribe(this.pushConversationsScreen);
 
-    var cardObservers = { }
-    cardObservers["CurrencySelect"] = this.currencySelectCardOnNext;
-    cardObservers["Offer"] = this.offerCardonNext;
-
-    var listView = this.createListView(cardObservers);
+    var listView = this.createListView();
 
     return (
       <View style={this.screenCommonStyle.container}>
