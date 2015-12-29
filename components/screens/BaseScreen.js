@@ -132,11 +132,10 @@ class BaseScreen extends React.Component {
 
   fetchData(token, page) {
     var endPoint = this.endPoint || this.checkEndPointInParams();
-    console.log(endPoint);
     if (endPoint){
       this.props.setNetworkActivityIndicator(true);
       var url = this.props.api_domain + endPoint + "?" + this.props.params + "&Page=" + page;
-      console.log(url);
+      P.log("fetchScreen", url);
 
       var request = token ?
       {

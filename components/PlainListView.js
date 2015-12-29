@@ -50,7 +50,7 @@ var PlainListView = React.createClass({
   validateCardData(card) {
     if (CardRouter.isOfferBaseCard(card["Name"])) {
       var offerId = card["Data"]["OfferId"];
-      return offerId && this.props.getOffer(offerId);
+      return (offerId || offerId == 0) && this.props.getOffer(offerId);
     }
     if (CardRouter.isConversationCard(card["Name"])) {
       //TODO: Implement Conversation Card validation;

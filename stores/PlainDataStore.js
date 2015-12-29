@@ -16,9 +16,9 @@ function mergeArrayToMap(array, map){
 
 function removeArrayFromMap(array, map){
   for (var i=0, l=array.length ;i<l; i++) {
-    if (array[i]["Id"] && map[array[i]["Id"]])
+    if ((array[i]["Id"] || array[i]["Id"] == 0) && map[array[i]["Id"]])
       delete map[array[i]["Id"]];
-    else if (array[i]["UUID"] && map[array[i]["UUID"]])
+    else if ((array[i]["UUID"] || array[i]["UUID"]==0) && map[array[i]["UUID"]])
       delete map[array[i]["UUID"]];
   }
   return map;
