@@ -57,6 +57,10 @@ class SessionActions {
     }
   }
 
+  updateScreenName(name){
+    return name;
+  }
+
   updateLoginToken(token) {
     return token;
   }

@@ -22,6 +22,7 @@ var ParameterUtils = require('../utils/ParameterUtils.js');
 var RestKit = require('react-native-rest-kit');
 var update = require('react-addons-update');
 var PlainActions = require('../../actions/PlainActions.js');
+var SessionActions = require('../../actions/SessionActions.js');
 
 var MAX_WAITING_TIME = 60000;// in ms
 
@@ -89,10 +90,20 @@ class ConversationRoomScreen extends BaseScreen{
     if (nextState["data"] && nextState["shouldPoll"] == false && nextState["appState"] == 'active') {
       if (this.isMount) this.setState({shouldPoll: true});
       P.log("shouldComponentUpdate", "Start Polling");
+      this.loadScreenNameFromConversation();
       this.poll();
       return false;
     }
     return true;
+  }
+
+  loadScreenNameFromConversation(){
+    var conversation = this.props.getConversation(this.getConversationId());
+    if (!conversation || !conversation["Users"][0])
+      return ;
+    var screenName = conversation["Users"][0]["Email"];
+
+    SessionActions.updateScreenName(screenName);
   }
 
   getConversationId() {

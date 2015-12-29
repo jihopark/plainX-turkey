@@ -117,10 +117,9 @@ class PlainNavigator extends React.Component {
     return {
       Title: (route, navigator, index, navState) => {
         var routes = new Routes(route.uri);
-        var screenNameParam = routes.getScreenNameInParamsIfAny();
 
         return routes.getCurrentRoute().title ?
-        (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
+        (<Text style={[styles.navBarText, styles.navBarTitleText]}>{navigator.props.screenName ? navigator.props.screenName : routes.getCurrentRoute().title}</Text>)
         :
         (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
       },
@@ -252,6 +251,7 @@ class PlainNavigator extends React.Component {
               isOpen={this.state.isSideMenuOpen}
               sideMenuSubject={this.sideMenuSubject} />}>
         <Navigator
+          screenName={this.props.screenName}
           toggleSideMenu={this.toggleSideMenu}
           sideMenuSubject={this.sideMenuSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}

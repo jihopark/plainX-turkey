@@ -10,8 +10,13 @@ class SessionStore {
     this.messageCount = 0;
     this.user = null
     this.uri = 'main';
+    this.screenName = "";
 
     this.bindActions(SessionActions);
+  }
+
+  onUpdateScreenName(name) {
+    this.screenName = name;
   }
 
   onUpdateLoginToken(token) {

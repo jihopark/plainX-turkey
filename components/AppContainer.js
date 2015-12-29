@@ -143,6 +143,7 @@ class AppContainer extends React.Component{
           user={this.state.user}
           messageCount={this.state.messageCount}
           updateMessageCount={this.updateMessageCount}
+          screenName={this.state.screenName}
           uri={this.state.uri}
           />
       )
