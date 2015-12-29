@@ -11,30 +11,26 @@ var {
 var BaseScreen = require('./BaseScreen.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
-var ShouldLoginAlert = require('../ShouldLoginAlert.js');
+var AlertUtil = require('../utils/AlertUtil.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
-
 var update = require('react-addons-update');
+var PlainActions = require('../../actions/PlainActions.js');
 
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("OfferDetailScreen");
 
-var actionButtonStates = {"connected": "CONNECTED!",
-                        "connecting": "Loading",
-                        "not_connected": "CONNECT TO THIS OFFER",
-                        "self": "REMOVE OFFER",
-                        "error": "SOMETHING WENT WRONG"};
 
 class OfferDetailScreen extends BaseScreen{
   constructor(props) {
     super(props);
+    this.state.actionState = "not_connected";
+
     this.endPoint = 'offer/details';
     this.onConnectOffer = this.onConnectOffer.bind(this);
     this.handleConnectRequest = this.handleConnectRequest.bind(this);
+    this.onPressRemoveOffer = this.onPressRemoveOffer.bind(this);
     this.onRemoveOffer = this.onRemoveOffer.bind(this);
     this.handleRemoveRequest = this.handleRemoveRequest.bind(this);
-    this.getOfferState = this.getOfferState.bind(this);
-    this.setOfferState = this.setOfferState.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
   }
 
@@ -54,7 +50,7 @@ class OfferDetailScreen extends BaseScreen{
       body: JSON.stringify(bodyParams),
     };
     this.props.setNetworkActivityIndicator(true);
-    this.setOfferState("connecting");
+    this.setState({actionState: "loading"});
     RestKit.send(url, request, this.handleConnectRequest);
   }
 
@@ -63,39 +59,51 @@ class OfferDetailScreen extends BaseScreen{
     if (error) {
       P.log("handleConnectRequest/error", error);
       if (error.status == 401) {
-        // TODO: Should not replace but push LoginScreen
-        ShouldLoginAlert.showAlert("You need to login to connect to an offer",
+        AlertUtil.showAlert(AlertUtil.LOGIN_CONNECT_OFFER,
+          null,
           () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
-        this.setOfferState("not_connected");
+          this.setState({actionState: "not_connected"});
+      }
+      else if (error.status == 400) {
+        AlertUtil.showAlert(AlertUtil.CONNECTED_OFFER,
+          null,
+          () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
+          this.setState({actionState: "connected"});
       }
       else
-        this.setOfferState("error");
+        this.setState({actionState: "error"});
       return ;
     }
     if (json) {
       P.log("handleConnectRequest/success", json);
-      this.setOfferState("connected");
+      this.setState({actionState: "connected"});
       this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+json["ConversationId"])});
     }
+  }
+
+  onPressRemoveOffer() {
+    AlertUtil.showAlert(AlertUtil.REMOVE_OFFER,
+      this.onRemoveOffer,
+      null);
   }
 
   onRemoveOffer(){
     const DELETE_ENDPOINT = "offer";
     var url = this.props.api_domain + DELETE_ENDPOINT;
-    var bodyParams = this.getStringToParams(this.props.params);
+    var bodyParams = ParameterUtils.getStringToParams(this.props.params);
     P.log("onRemoveOffer", url);
 
     var request = {
       method: 'delete',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(bodyParams),
     };
     this.props.setNetworkActivityIndicator(true);
-    this.setOfferState("connecting");
+    this.setState({actionState: "loading"});
     RestKit.send(url, request, this.handleRemoveRequest);
   }
 
@@ -108,67 +116,33 @@ class OfferDetailScreen extends BaseScreen{
     }
     if (json) {
       P.log("handleRemoveRequest/success", json);
+      PlainActions.removeOffer(this.state.data["Offers"][0]["Id"]);
       this.props.popScreen();
     }
   }
 
-  getOfferState() {
-    var meta = this.state.data["Meta"];
-    if (meta){
-      if (meta["isOwnOffer"])
-        return "self";
-      if (meta["isConnected"]){
-        return "connected";
-      }
-      else if (meta["error"])
-          return "error";
-      else if (meta["isOwnOffer"])
-        return "self";
-      else if (meta["isConnecting"])
-          return "connecting";
-
-    }
-    return "not_connected";
-  }
-
-  // TODO : Offer State in Store
-  setOfferState(value) {
-    switch(value) {
-      case "not_connected":
-        var data = update(this.state.data, {"Meta": {"isConnecting": {$set:false}}});
-        data = update(data, {"Meta": {"error": {$set:false}}});
-        data = update(data, {"Meta": {"isConnecting": {$set:false}}});
-        this.setState({data: data});
-        break;
-      case "connected":
-        this.setState({data: update(this.state.data, {"Meta": {"isConnected": {$set:true}}})});
-        break;
-      case "error":
-        this.setState({data: update(this.state.data, {"Meta": {"error": {$set:true}}})});
-        break;
-      case "connecting":
-        this.setState({data: update(this.state.data, {"Meta": {"isConnecting": {$set:true}}})});
-    }
-  }
 
   renderScreen() {
     var listView = this.createListView(true);
+    var offer = this.props.getOffer(this.state.data["Offers"][0]["Id"]);
 
 
-    var isOwnOffer = this.state.data["Meta"] ? this.state.data["Meta"]["isOwnOffer"] : null;
+    var isOwnOffer = this.props.user && this.props.user["Id"] == offer["SellerId"];
+    P.log("renderScreen", "isOwnOffer" + isOwnOffer);
+
     var makeOfferButton = (<ActionButton
-                            text={actionButtonStates[this.getOfferState()]}
+                            actionState={this.state.actionState}
                             onPress={this.onConnectOffer}
-                            enabled={this.getOfferState() == "not_connected"} />);
+                            enabled={this.state.actionState != "loading"} />);
     var removeOfferButton = (<ActionButton
-                            text={actionButtonStates[this.getOfferState()]}
-                            onPress={this.onRemoveOffer}
+                            actionState={"self"}
+                            onPress={this.onPressRemoveOffer}
                             backgroundColor={"#ee586e"}
                             enabled={true} />);
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
-        {this.getOfferState() != "self" ? makeOfferButton : null}
+        {isOwnOffer ? removeOfferButton : makeOfferButton}
       </View>
     );
   }

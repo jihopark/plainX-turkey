@@ -140,6 +140,7 @@ class AppContainer extends React.Component{
           API_DOMAIN={API_DOMAIN}
           loginToken={this.state.loginToken}
           deviceToken={this.state.deviceToken}
+          user={this.state.user}
           messageCount={this.state.messageCount}
           updateMessageCount={this.updateMessageCount}
           uri={this.state.uri}

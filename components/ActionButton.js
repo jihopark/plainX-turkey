@@ -9,16 +9,23 @@ var {
   ActivityIndicatorIOS,
 } = React;
 
+
+var actionButtonStates = {"connected": "CONNECTED!",
+                        "loading": "Loading",
+                        "not_connected": "CONNECT TO THIS OFFER",
+                        "self": "REMOVE OFFER",
+                        "error": "SOMETHING WENT WRONG"};
+
 var ActionButton = React.createClass({
   displayName: 'ActionButton',
   render: function() {
     var bgColor = this.props.backgroundColor || '#33cc66';
     return (
       <TouchableOpacity style={[styles.container, {backgroundColor: bgColor}]} onPress={this.props.enabled ? this.props.onPress : null}>
-        {this.props.text == "Loading" && Platform.OS == 'ios' ?
+        {this.props.actionState == "loading" && Platform.OS == 'ios' ?
           (<ActivityIndicatorIOS size='small' color='white' />)
           :
-          (<Text style={styles.actionButton}>{this.props.text}</Text>)
+          (<Text style={styles.actionButton}>{this.props.text || actionButtonStates[this.props.actionState]}</Text>)
         }
 
       </TouchableOpacity>

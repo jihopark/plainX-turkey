@@ -207,6 +207,7 @@ class PlainNavigator extends React.Component {
       }
 
       var Screen = routes.getCurrentRoute().getComponent();
+
       return (
         <View
           style={styles.scene} keyboardShouldPersistTaps={false}>
@@ -229,6 +230,7 @@ class PlainNavigator extends React.Component {
             updateMessageCount={this.props.updateMessageCount}
             loginToken={this.props.loginToken}
             deviceToken={this.props.deviceToken}
+            user={this.props.user}
             />
         </View>
       );

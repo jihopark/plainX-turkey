@@ -78,18 +78,18 @@ class SessionActions {
           method: 'get',
           headers:{ 'X-Session': token, }
         };
-        P.log("getUser", "Fetching User from server");
+        P.log("updateUser", "Fetching User from server");
         var url = API_DOMAIN + "user/me";
         RestKit.send(url, request, function(error, json) {
           if (error) {
-            P.log("getUser", error);
+            P.log("updateUser", error);
             if (error.status == 401){
-              P.log("getUser", "dispatch -1");
+              P.log("updateUser", "dispatch -1");
               return dispatch(-1);
             }
           }
           if (json) {
-            P.log("getUser", json);
+            P.log("updateUser", json);
             user = json;
             return dispatch(user);
           }
