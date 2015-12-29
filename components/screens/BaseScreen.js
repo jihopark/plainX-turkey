@@ -101,6 +101,10 @@ class BaseScreen extends React.Component {
       case "CurrencySelect":
         this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+ParameterUtils.getParamsToString(data))});
         break;
+      case "UserConversationItem":
+        this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+ParameterUtils.getParamsToString({"Id": data["ConversationId"]}))});
+        break;
+
     }
   }
 

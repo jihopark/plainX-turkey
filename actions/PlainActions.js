@@ -33,6 +33,10 @@ class PlainActions {
     return conversations;
   }
 
+  updateConversation(id, key, value) {
+    return {id, key, value};
+  }
+
   removeConversation(conversation) {
     return conversation;
   }

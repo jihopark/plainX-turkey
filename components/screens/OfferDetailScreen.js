@@ -47,7 +47,7 @@ class OfferDetailScreen extends BaseScreen{
     var request = {
       method: 'post',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -65,7 +65,7 @@ class OfferDetailScreen extends BaseScreen{
       if (error.status == 401) {
         // TODO: Should not replace but push LoginScreen
         ShouldLoginAlert.showAlert("You need to login to connect to an offer",
-          () => this.props.replaceScreen({uri: this.props.routes.addRoute('login')}));
+          () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
         this.setOfferState("not_connected");
       }
       else

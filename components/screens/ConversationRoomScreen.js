@@ -2,6 +2,9 @@
 
 var React = require('react-native');
 
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("ConversationRoomScreen");
+
 var {
   View,
   StyleSheet,
@@ -18,6 +21,7 @@ var ParameterUtils = require('../utils/ParameterUtils.js');
 
 var RestKit = require('react-native-rest-kit');
 var update = require('react-addons-update');
+var PlainActions = require('../../actions/PlainActions.js');
 
 var MAX_WAITING_TIME = 60000;// in ms
 
@@ -55,36 +59,36 @@ class ConversationRoomScreen extends BaseScreen{
   componentDidMount() {
     super.componentDidMount();
     this.isMount = true;
-    console.log("Add Listener");
+    P.log("componentDidMount", "Add AppState Listener");
     AppStateIOS.addEventListener('change', this.handleAppStateChange);
   }
 
   componentWillUnmount() {
     super.componentDidMount();
     this.isMount = false;
-    console.log("Remove Listener");
+    P.log("componentWillUnmount", "Remove AppState Listener");
     AppStateIOS.removeEventListener('change', this.handleAppStateChange);
   }
 
   handleAppStateChange(appState) {
     if (appState != 'active') {
-      this.setState({shouldPoll: false, appState: appState});
+      if (this.isMount) this.setState({shouldPoll: false, appState: appState});
     }
     else {
-      this.setState({data: null, shouldPoll: true, appState: appState});
+      if (this.isMount) this.setState({data: null, shouldPoll: true, appState: appState});
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (!nextState["data"]) {
       this.loadScreen();
-      console.log("START POLLING AGAIN");
+      P.log("shouldComponentUpdate", "Start Polling again");
       this.poll();
       return true;
     }
     if (nextState["data"] && nextState["shouldPoll"] == false && nextState["appState"] == 'active') {
-      this.setState({shouldPoll: true});
-      console.log("START POLLING");
+      if (this.isMount) this.setState({shouldPoll: true});
+      P.log("shouldComponentUpdate", "Start Polling");
       this.poll();
       return false;
     }
@@ -92,7 +96,6 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   getConversationId() {
-    console.log(this.props.params);
     return ParameterUtils.getStringToParams(this.props.params)["Id"] || ParameterUtils.getStringToParams(this.props.params)["id"];
   }
 
@@ -106,11 +109,10 @@ class ConversationRoomScreen extends BaseScreen{
     wrappedPromise.catch = promise.catch.bind(promise);
     wrappedPromise.promise = promise;// e.g. if you want to provide somewhere only promise, without .resolve/.reject/.catch methods
 
-    console.log(params.url);
     fetch(params.url, {
       method: 'GET',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       }
@@ -150,84 +152,90 @@ class ConversationRoomScreen extends BaseScreen{
     var url = this.props.api_domain + "conversation/poll?id="
           + this.getConversationId();
 
-    console.log("POLL");
+    P.log("poll",url);
+
     this.getPollResults({
       url: url
     }).then(this.onMessage, this.onError);
   }
 
   onMessage(data) {// on success
-    console.log('Receive!!');
     if (data && data["Cards"].length > 0 && this.state.shouldPoll) {
-      console.log("here"+data["Cards"].length);
+      P.log("onMessage", data);
       var stateData = this.state.data;
+
+      var lastMsg = "";
+      var created;
+
       for (var i=0; i< data["Cards"].length; i++) {
-        console.log("add"+data["Cards"][i]);
         this.state.data["Cards"].push(data["Cards"][i]);
+        if (data["Cards"][i]["Name"] == "Message" && data["Cards"][i]["Data"]["Type"] == "message") {
+          lastMsg = data["Cards"][i];
+        }
       }
-      this.setState({data: this.state.data});
+      PlainActions.updateCards(data["Cards"]);
+      if (lastMsg) {
+        PlainActions.updateConversation(this.getConversationId(), "LastMessage", lastMsg);
+      }
+      if (this.isMount) this.setState({data: this.state.data});
     }
-    if (this.state.shouldPoll && this.isMounted)
+    if (this.state.shouldPoll && this.isMount)
       this.poll();
   }
 
   onError(error) {// on reject
-    console.log('onError!!!!!');
-    console.log(error);
-  //  if (error.state==undefined && this.state.shouldPoll && this.isMounted())
-  //    this.poll();
+
   }
 
   onSend() {
     var params = {"Id": this.getConversationId(),"Message": this.state.msgInput};
-    console.log(params);
+    P.log("onSend", params);
+
     const url = this.props.api_domain + "conversation/msg";
     var request = {
       method: 'post',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(params),
     };
     this.props.setNetworkActivityIndicator(true);
-    this.setState({sending:true});
+    if (this.isMount) this.setState({sending:true});
     RestKit.send(url, request, this.handleSendMsgRequest);
   }
 
   handleSendMsgRequest(error, json){
-    this.setState({sending:false});
+    if (this.isMount) this.setState({sending:false});
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
+      P.log("handleSendMsgRequest/error", error);
       return ;
     }
     if (json) {
-      console.log("SUCCESSFULLY SENT");
-      console.log(json);
-      this.setState({msgInput: ""});
+      P.log("handleSendMsgRequest/success", json);
+      if (this.isMount) this.setState({msgInput: ""});
     }
   }
 
   onChangeMsgInput(value) {
-    this.setState({msgInput: value});
+    if (this.isMount) this.setState({msgInput: value});
   }
 
   onPressHeader() {
-    var params = {"Id": this.state.data["Meta"]["Offer"]["Id"]};
-    this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+this.getParamsToString(params))});
+    var params = {"Id": this.state.data["Meta"]["OfferId"]};
+    this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString(params))});
   }
 
   feedbackCardOnNext(event) {
-    //option detail
-    console.log(event);
+    P.log("feedbackCardOnNext", event);
     const url = this.props.api_domain + "conversation/feedback?Id="+this.getConversationId();
-    console.log(url);
+    P.log("feedbackCardOnNext", url);
     var request = {
       method: 'post',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -240,15 +248,16 @@ class ConversationRoomScreen extends BaseScreen{
   handleFeedbackRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
+      P.log("handleFeedbackRequest/error", error);
       return ;
     }
-    console.log(json);
+    P.log("handleFeedbackRequest/success", json);
   }
 
   renderScreen() {
     var cardObservers = { };
     cardObservers["Feedback"] = this.feedbackCardOnNext;
+
     var listView = (<PlainListView
       hasBackgroundColor={true}
       invertList={true}
@@ -259,17 +268,19 @@ class ConversationRoomScreen extends BaseScreen{
       cards={this.state.data["Cards"]}
       onEndReached={this.loadMore}
       />);
-    var offer = this.state.data ? this.state.data["Meta"]["Offer"] : null;
-    var header = ( offer ?
 
-    (<TouchableOpacity
-      style={{paddingTop: 15, paddingBottom: 15, backgroundColor: 'white'}}
-      onPress={this.onPressHeader}>
-      <Text style={styles.offerSummary}>
-      {offer["Sell"]} {offer["AmountSell"]} to {offer["Buy"]} {offer["AmountBuy"]}
-      <Text style={styles.moreInfo}>{"\ntap for more details"}</Text>
-      </Text>
-    </TouchableOpacity>) : null);
+    var offer = this.props.getOffer(this.state.data ? this.state.data["Meta"]["OfferId"] : null);
+
+    var header = ( offer ?
+      (<TouchableOpacity
+        style={{paddingTop: 15, paddingBottom: 15, backgroundColor: 'white'}}
+        onPress={this.onPressHeader}>
+          <Text style={styles.offerSummary}>
+          {offer["Sell"]} {offer["AmountSell"]} to {offer["Buy"]} {offer["AmountBuy"]}
+          <Text style={styles.moreInfo}>{"\ntap for more details"}</Text>
+          </Text>
+      </TouchableOpacity>) : null);
+
     var sendButton = this.state.sending ?
     (<ActivityIndicatorIOS size='small' color="#33cc66" />)
     :

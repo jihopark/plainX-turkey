@@ -80,6 +80,11 @@ class PlainDataStore {
     mergeArrayToMap(conversations, this.conversations);
   }
 
+  onUpdateConversation(params) {
+    P.log("onUpdateConversation", params);
+    this.conversations[params.id][params.key] = params.value;
+  }
+
   removeConversations(conversations) {
     if (conversations && conversations.length > 0) {
       removeArrayFromMap(conversations, this.conversations);
