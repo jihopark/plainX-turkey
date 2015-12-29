@@ -77,6 +77,7 @@ var PlainListView = React.createClass({
           handleClick={this.props.handleClick}
           getOffer={this.props.getOffer}
           getConversation={this.props.getConversation}
+          user={this.props.user}
           />
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
           <Divider margin={styles.mergedCardDivider} /> : null}

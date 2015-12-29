@@ -88,6 +88,7 @@ class BaseScreen extends React.Component {
       getOffer={this.props.getOffer}
       getConversation={this.props.getConversation}
       handleClick={this.handleClick}
+      user={this.props.user}
       onEndReached={pagination ? this.loadMore : null}
       cards={this.state.data["Cards"]}/>);
   }
