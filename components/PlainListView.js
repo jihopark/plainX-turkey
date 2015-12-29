@@ -1,10 +1,13 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx');
 
 var CardRouter = require('./cards/CardRouter.js');
 var Divider = require('./Divider.js');
+
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("PlainListView");
+
 
 var {
   ListView,
@@ -44,31 +47,42 @@ var PlainListView = React.createClass({
         return styles.bottomCard;
     }
   },
-  renderCards: function(card) {
-    var observer;
-    //find if there is cardObserver to pass
-    if (this.needsTobeObserved(card["Name"])) {
-      observer = this.props.cardObservers[card["Name"]];
+  validateCardData(card) {
+    if (CardRouter.isOfferBaseCard(card["Name"])) {
+      var offerId = card["Data"]["OfferId"];
+      return (offerId || offerId == 0) && this.props.getOffer(offerId);
     }
+    if (CardRouter.isConversationCard(card["Name"])) {
+      //TODO: Implement Conversation Card validation;
+    }
+    return true;
+  },
+  renderCards: function(card) {
+    card = this.props.getCard(card["UUID"]);
+
     //find which card to render
     var CardComponent = CardRouter.getComponent(card["Name"]);
     if (CardComponent == null)
       return null;
-
     var isConversationCard = CardRouter.isConversationCard(card["Name"]);
 
-    return (
+    return this.validateCardData(card) ? (
       <View style={isConversationCard ? null : [styles.cardContainer, this.getMarginStyle(card["Merged"])]}>
         <CardComponent
           cardCommonStyles={cardCommonStyles}
           id={card["UUID"]}
           key={card["UUID"]}
-          observer={observer}
-          data={card["Data"]}/>
+          name={card["Name"]}
+          data={card["Data"]}
+          handleClick={this.props.handleClick}
+          getOffer={this.props.getOffer}
+          getConversation={this.props.getConversation}
+          user={this.props.user}
+          />
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
           <Divider margin={styles.mergedCardDivider} /> : null}
       </View>
-    );
+    ): null;
   },
   render: function() {
     var listView;

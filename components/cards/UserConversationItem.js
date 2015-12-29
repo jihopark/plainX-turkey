@@ -1,9 +1,8 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx')
 
-var DateMixin = require('../screens/componentMixins/DateMixin.js');
+var DateUtils = require('../utils/DateUtils.js');
 
 var {
   Text,
@@ -13,9 +12,11 @@ var {
   Image,
 } = React;
 
+var PlainActions = require('../../actions/PlainActions.js');
+
+
 var UserConversationItem = React.createClass({
   displayName: "UserConversationItemCard",
-  mixins: [DateMixin],
   getOfferSummaryText: function(offer) {
     return (<View style={{flexDirection: 'row'}}>
         <Text style={styles.offerSummary}>
@@ -23,33 +24,34 @@ var UserConversationItem = React.createClass({
         </Text>
       </View>);
   },
+  onPressCard: function(){
+    this.props.handleClick(this.props.name, this.props.data);
+    PlainActions.updateConversation(this.props.data["ConversationId"], "HasUnread", false);
+  },
   render: function() {
-    var subject = new Rx.Subject();
-    if (this.props.observer) {
-      subject.subscribe(this.props.observer);
-    }
+    var conversation = this.props.getConversation(this.props.data["ConversationId"]);
+    var offer = this.props.getOffer(conversation["OfferId"]);
+    console.log(conversation);
     return (
       <TouchableOpacity style={styles.container}
-        onPress={() => {
-            var param = {"Id": this.props.data["Id"]};
-            if (this.props.data["Users"][0]["Email"])
-              param["ScreenName"] = this.props.data["Users"][0]["Email"];
-            subject.onNext(param);
-          }
-        }>
+        onPress={this.onPressCard}>
         <View style={{flexDirection:'row'}}>
           <Image source={require('image!usericon_green')} style={styles.userIcon} />
           <View>
-            {this.getOfferSummaryText(this.props.data["Offer"])}
-            <Text style={[this.props.cardCommonStyles.title, styles.name, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
-              {this.props.data["Users"][0]["Email"]}
+            {this.getOfferSummaryText(offer)}
+            <Text style={[this.props.cardCommonStyles.title, styles.name, (conversation["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
+              {conversation["Users"][0] ? conversation["Users"][0]["Email"] : ""}
             </Text>
             <Text style={[this.props.cardCommonStyles.description, styles.lastMessage, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
-              {this.props.data["LastMessage"]["Text"]}
+              {conversation["LastMessage"] ? conversation["LastMessage"]["Text"] : ""}
             </Text>
           </View>
           <View style={{flex:1}}>
-            <Text style={[styles.dateText, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>{this.getConversationTimestampFormat(this.props.data["LastMessage"]["Created"])}</Text>
+            <Text style={[styles.dateText, (conversation["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
+              {conversation["LastMessage"] ?
+                DateUtils.getConversationTimestampFormat(conversation["LastMessage"]["Created"])
+                : ""}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>

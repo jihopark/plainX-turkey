@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx');
+var PlainActions = require('../../actions/PlainActions.js');
 
 var {
   View,
@@ -90,11 +90,7 @@ var ExpirySelect = React.createClass({
     this.setState({isDatePickerShown: false});
   },
   render: function() {
-    var subject = new Rx.Subject();
-    if (this.props.observer) {
-      subject.subscribe(this.props.observer);
-    }
-    var next = {"id": this.props.id};
+    var id = this.props.id;
     var date = new Date(this.props.data["Expiry"]*1000);
 
     var datePicker = Platform.OS === 'ios' ?
@@ -106,8 +102,7 @@ var ExpirySelect = React.createClass({
             mode="date"
             onDateChange={function(selectedDate){
               if (selectedDate >= new Date()) { //No past dates
-                next["Expiry"] = selectedDate.getTime()/1000;
-                subject.onNext(next);
+                PlainActions.updateCardData(id, "Expiry", selectedDate.getTime()/1000);
               }
             }}
           />
@@ -118,7 +113,7 @@ var ExpirySelect = React.createClass({
         </TouchableOpacity>
       </View>
     ) :
-    null; //for android
+    null; //TODO: for android
 
     return (
       <View>

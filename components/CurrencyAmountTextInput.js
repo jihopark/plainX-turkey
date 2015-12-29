@@ -14,14 +14,17 @@ var CurrencyAmountTextInput = React.createClass({
     return f ? (Math.round(f * 100) / 100)+"" : f;
   },
   render: function() {
+    var value = this.props.value ?
+       this.formatNumber(this.props.value) + (this.props.isCalculated ? "*" : "")
+       : "";
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.isCalculated ? null : styles.addUnderline]}>
         <TextInput
           style={[styles.currencyAmountTextInput, this.props.textStyle,
                 (this.props.value.length > 5 ? {fontSize: 20} : {})]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
-          value={this.formatNumber(this.props.value)}
+          value={value}
           keyboardType={"numeric"}
           clearTextOnFocus={true}
           returnKeyType={'done'}
@@ -37,16 +40,19 @@ var styles = StyleSheet.create({
     height: 40,
     flexDirection: 'column',
     padding: 3,
+    marginRight: 15,
+  },
+  addUnderline: {
     borderWidth: 1,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderTopColor: 'transparent',
     borderBottomColor: '#33cc66',
-    marginRight: 15,
   },
   currencyAmountTextInput: {
     width: 140,
     height: 30,
+    alignSelf: 'center',
   },
 });
 

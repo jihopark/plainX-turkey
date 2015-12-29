@@ -6,11 +6,15 @@ var {
   View,
 } = React;
 
-var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
+var BaseScreen = require('./BaseScreen.js');
 
+var ParameterUtils = require('../utils/ParameterUtils.js');
 var ActionButton = require('../ActionButton.js');
 var RestKit = require('react-native-rest-kit');
+
+var PlainLog = require('../../PlainLog.js');
+var P = new PlainLog("OfferConfirmationScreen");
+
 
 var actionButtonStates = { "default": "FINISH",
                         "loading": "Loading",
@@ -18,53 +22,53 @@ var actionButtonStates = { "default": "FINISH",
                         "error": "SOMETHING WENT WRONG"};
 
 
-var OfferConfirmationScreen = React.createClass({
-  mixins: [ScreenMixin],
-  displayName: "OfferConfirmationScreen",
-  endPoint: 'offer/confirm',
-  getInitialState: function() {
-    return {
-      buttonState: "default",
-      data: null,
-    };
-  },
-  submitOffer: function(){
+class OfferConfirmationScreen extends BaseScreen{
+  constructor(props){
+    super(props);
+    this.endPoint = 'offer/confirm';
+    this.state.buttonState = "default";
+    this.submitOffer = this.submitOffer.bind(this);
+    this.handleRequest = this.handleRequest.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
+
+  submitOffer(){
     var url = this.props.api_domain + "offer";
-    var params = this.getStringToParams(this.props.params);
+    var params = ParameterUtils.getStringToParams(this.props.params);
     var request = {
       method: 'post',
       headers: {
-        'X-Session': this.loginToken,
+        'X-Session': this.props.loginToken,
         'Accept': 'application/json',
         'Content-Type': 'application/json'},
       body: JSON.stringify(params),
     };
-    console.log(params);
+    P.log("submitOffer",params);
     this.props.setNetworkActivityIndicator(true);
     this.setState({buttonState:"loading"});
     RestKit.send(url, request, this.handleRequest);
-  },
-  handleRequest: function(error, json) {
+  }
+
+  handleRequest(error, json) {
     this.props.setNetworkActivityIndicator(false);
     if (error) {
-      console.log(error);
-      console.log("ERROR");
+      P.log("handleRequest/Error", error);
       this.setState({buttonState:"error"});
       return ;
     }
     if (json) {
-      console.log("SUCCESS"+json);
+      P.log("handleRequest/Success",json);
       this.setState({buttonState:"done"});
       var routes = [{uri: 'offerSubmitted'}];
       this.props.immediatelyResetRouteStack(routes);
     }
-  },
-  renderScreen: function() {
+  }
+
+  renderScreen() {
+    var listView = this.createListView();
     return (
       <View style={this.screenCommonStyle.container}>
-        <PlainListView
-          cardObservers={{}}
-          cards={this.state.data["Cards"]}/>
+        {listView}
         <ActionButton
           text={actionButtonStates[this.state.buttonState]}
           onPress={this.submitOffer}
@@ -72,7 +76,7 @@ var OfferConfirmationScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 
 module.exports = OfferConfirmationScreen;

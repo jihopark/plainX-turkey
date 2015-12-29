@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx');
+var PlainActions = require('../../actions/PlainActions.js');
 
 var {
   View,
@@ -35,20 +35,15 @@ var LocationCheckBox = React.createClass({
 var LocationSelect = React.createClass({
   displayName: "LocationSelectCard",
   render: function() {
-    var subject = new Rx.Subject();
-    if (this.props.observer) {
-      subject.subscribe(this.props.observer);
-    }
     var id = this.props.id;
-    var next = {"id": id};
     var locations = this.props.data["Locations"];
 
     var selections = Object.keys(this.props.data["Locations"]).map(function(location){
       return (
         <TouchableOpacity onPress={function(){
-          next["Location"] = location;
-          next["IsSelected"] = !locations[location]["IsSelected"];
-          subject.onNext(next);
+          var copy = JSON.parse(JSON.stringify(locations));
+          copy[location]["IsSelected"] = !copy[location]["IsSelected"];
+          PlainActions.updateCardData(id, "Locations", copy);
         }}>
           <LocationCheckBox name={location} selected={locations[location]["IsSelected"]}/>
         </TouchableOpacity>

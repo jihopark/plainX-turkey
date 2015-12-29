@@ -22,36 +22,82 @@ var PlainSideMenu = require('./PlainSideMenu.js');
 var NavigationTextButton = require('./NavigationTextButton.js');
 var RestKit = require('react-native-rest-kit');
 
-var routesMap;
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("PlainNavigator");
 
-var PlainNavigator = React.createClass({
-  getDefaultProps: () => {
-    return {
-      sideMenuSubject: new Rx.Subject(),
-    };
-  },
-  getInitialState: function() {
-    return {
-      user: null,
-      messageBounceValue: new Animated.Value(0),
-      shouldBounceCount: true,
-      isSideMenuOpen: false,
-    };
-  },
-  shouldComponentUpdate: function(nextProps, nextState) {
+var PlainDataStore = require('../stores/PlainDataStore.js');
+var PlainActions = require('../actions/PlainActions.js');
+
+class PlainNavigator extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = PlainDataStore.getState();
+    this.state.messageBounceValue = new Animated.Value(0);
+    this.state.shouldBounceCount = true;
+    this.state.isSideMenuOpen = false;
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+
+    this.toggleSideMenu = this.toggleSideMenu.bind(this);
+    this.onChangeState = this.onChangeState.bind(this);
+    this.getCard = this.getCard.bind(this);
+    this.getOffer = this.getOffer.bind(this);
+    this.getConversation = this.getConversation.bind(this);
+
+    this.getInitialRouteStack = this.getInitialRouteStack.bind(this);
+    this.setNetworkActivityIndicator = this.setNetworkActivityIndicator.bind(this);
+    this.bounceMessage = this.bounceMessage.bind(this);
+    this.renderScene = this.renderScene.bind(this);
+    this.getNavBarRouter = this.getNavBarRouter.bind(this);
+    this.sideMenuSubject = new Rx.Subject();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
     if (nextProps["uri"] != this.props.uri) {
       this.shouldRerender = true;
     }
     if (nextProps["messageCount"]>0 && nextProps["messageCount"]!= this.props.messageCount)
       this.setState({shouldBounceCount: true});
     return true;
-  },
-  componentDidUpdate: function() {
+  }
+
+  componentDidMount() {
+    PlainDataStore.listen(this.onChangeState);
+  }
+
+  componentDidUpdate() {
     if (this.state.shouldBounceCount)
       this.bounceMessage();
-  },
+  }
+
+  componentWillUnmount() {
+    PlainDataStore.unlisten(this.onChangeState);
+  }
+
+  onChangeState(state) {
+    state.messageBounceValue = this.state.messageBounceValue;
+    state.shouldBounceCount = this.state.shouldBounceCount;
+    state.isSideMenuOpen =  this.state.isSideMenuOpen;
+    this.setState(state);
+  }
+
+  getCard(uuid) {
+    return this.state.cards[uuid];
+  }
+
+  getConversation(id) {
+    return this.state.conversations[id];
+  }
+
+  getOffer(id) {
+    return this.state.offers[id];
+  }
+
   //To Load all necessary screens from the uri
-  getInitialRouteStack: (uri) => {
+  getInitialRouteStack(uri){
     var initialRoutesStack = [];
     var routes = new Routes(uri);
     var length = routes.getDepth();
@@ -60,93 +106,73 @@ var PlainNavigator = React.createClass({
       routes = routes.getPreviousRoutes();
     }
     return initialRoutesStack.reverse();
-  },
-  setNetworkActivityIndicator: function(value) {
+  }
+
+  setNetworkActivityIndicator(value) {
     if (Platform.OS === 'ios')
       StatusBarIOS.setNetworkActivityIndicatorVisible(value);
-  },
-  navBarRouter: {
-    Title: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      var screenNameParam = routes.getScreenNameInParamsIfAny();
+  }
 
-      return routes.getCurrentRoute().title ?
-      (<Text style={[styles.navBarText, styles.navBarTitleText]}>{screenNameParam ? screenNameParam : routes.getCurrentRoute().title}</Text>)
-      :
-      (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
-    },
-    LeftButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      if (routes.getDepth() == 1) {
-        var button = (
-          <Image style={styles.navBarIcon}
-            source={require("image!menuicon")} /> );
-        return (
-          <TouchableOpacity
-            onPress={() => navigator.props.leftNavBarButtonSubject.onNext(routes) }
-            style={styles.navBarLeftButton}>
-            {button}
-          </TouchableOpacity>);
-      }
-      else {
-        if (routes.hasBack()) {
+  getNavBarRouter() {
+    return {
+      Title: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+
+        return routes.getCurrentRoute().title ?
+        (<Text style={[styles.navBarText, styles.navBarTitleText]}>{navigator.props.screenName ? navigator.props.screenName : routes.getCurrentRoute().title}</Text>)
+        :
+        (<Image style={styles.navBarTitleImage} source={require('image!logo')} />);
+      },
+      LeftButton: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+        if (routes.getDepth() == 1) {
+          var button = (
+            <Image style={styles.navBarIcon}
+              source={require("image!menuicon")} /> );
           return (
             <TouchableOpacity
-              style={styles.navBarLeftButton}
-              onPress={() => navigator.pop()}>
-              <Image style={styles.navBarIcon}
-                source={require('image!backicon')} />
+              onPress={() => navigator.props.toggleSideMenu() }
+              style={styles.navBarLeftButton}>
+              {button}
             </TouchableOpacity>);
         }
-      }
-      return null;
-    },
-    RightButton: (route, navigator, index, navState) => {
-      var routes = new Routes(route.uri);
-      var routeName = routes.getCurrentRoute().name;
-      var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
-      var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
-      console.log(navigator.props.messageCount);
-      return shouldNotShowMsgIcon ? null :
-        (<TouchableOpacity
-          style={styles.navBarRightButton}
-          onPress={() => navigator.props.rightNavBarButtonSubject.onNext(routes)}>
-            <Image style={[styles.navBarIcon, styles.messageIcon]}
-              source={require("image!msgicon")} />
-            {navigator.props.messageCount > 0 ?
-              (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
-                <Text style={styles.messageCount}>
-                  {navigator.props.messageCount}
-                </Text>
-              </Animated.View>) : null}
-          </TouchableOpacity>);
-    }
-  },
-  updateInfo: function(token) {
-    var request = {
-      method: 'get',
-      headers:{ 'X-Session': token, }
-    };
+        else {
+          if (routes.hasBack()) {
+            return (
+              <TouchableOpacity
+                style={styles.navBarLeftButton}
+                onPress={() => navigator.pop()}>
+                <Image style={styles.navBarIcon}
+                  source={require('image!backicon')} />
+              </TouchableOpacity>);
+          }
+        }
+        return null;
+      },
+      RightButton: (route, navigator, index, navState) => {
+        var routes = new Routes(route.uri);
+        var routeName = routes.getCurrentRoute().name;
+        var messageIconScreenBlackList = ["conversations", "conversationRoom", "login", "signup"];
+        var shouldNotShowMsgIcon = messageIconScreenBlackList.indexOf(routeName) != -1;
 
-    if (!this.state.user){
-      console.log("UPDATE USER INFO");
-      var url = this.props.API_DOMAIN + "user/me";
-      RestKit.send(url, request, this.updateUserInfo);
-    }
-    this.props.updateMessageCount(token);
-  },
-  updateUserInfo: function(error, json) {
-    if (error) {
-      console.log("Error loading UserInfo")
-      console.log(error);
-      return ;
-    }
-    if (json) {
-      console.log("Update User info " + json);
-      this.setState({user: json});
-    }
-  },
-  bounceMessage: function() {
+        return shouldNotShowMsgIcon ? null :
+          (<TouchableOpacity
+            style={styles.navBarRightButton}
+            onPress={() => navigator.push({uri: routes.addRoute('conversations')})}>
+              <Image style={[styles.navBarIcon, styles.messageIcon]}
+                source={require("image!msgicon")} />
+              {navigator.props.messageCount > 0 ?
+                (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
+                  <Text style={styles.messageCount}>
+                    {navigator.props.messageCount}
+                  </Text>
+                </Animated.View>) : null}
+            </TouchableOpacity>);
+      }
+    };
+  }
+
+  bounceMessage() {
     this.state.messageBounceValue.setValue(1.1);
     Animated.spring(
       this.state.messageBounceValue,
@@ -156,11 +182,9 @@ var PlainNavigator = React.createClass({
       }
     ).start();
     this.setState({shouldBounceCount: false});
-  },
-  setLogoutState: function() {
-    this.setState({user:null});
-  },
-  renderScene: function(route, navigator) {
+  }
+
+  renderScene(route, navigator) {
     var routes = new Routes(route.uri);
     if (this.shouldRerender && this.props.uri != route.uri) {
       this.shouldRerender = false;
@@ -171,58 +195,65 @@ var PlainNavigator = React.createClass({
     if (routes!= null) {
       if (!navigator.props.sideMenuSubject.hasObservers()) {
         var changeState =
-        navigator.props.sideMenuSubject.subscribe(function(event){
-          switch (event.type) {
-            case "pushScreen":
-              navigator.push({uri: routes.addRoute(event.uri)});
-              break;
-            case "logout":
-              navigator.props.setLogoutState();
-              break;
-          }
-        });
+          navigator.props.sideMenuSubject.subscribe(function(event){
+            switch (event.type) {
+              case "pushScreen":
+                navigator.push({uri: routes.addRoute(event.uri)});
+              case "toggleSideMenu":
+                navigator.props.toggleSideMenu();
+            }
+          });
       }
 
       var Screen = routes.getCurrentRoute().getComponent();
+
       return (
         <View
           style={styles.scene} keyboardShouldPersistTaps={false}>
           <Screen
-            //subscribe to these subjects if need to receive left,right button events
             enablePagination={routes.getCurrentRoute().enablePagination}
-            leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-            rightNavBarButtonSubject={this.rightNavBarButtonSubject}
             routes={routes}
             pushScreen={navigator.push}
             popScreen={navigator.pop}
             replaceScreen={navigator.replace}
             immediatelyResetRouteStack={navigator.immediatelyResetRouteStack}
             api_domain={this.props.API_DOMAIN}
-            updateInfo={this.updateInfo}
             setNetworkActivityIndicator={this.setNetworkActivityIndicator}
-            params={routes.getCurrentRouteParams()} />
+            params={routes.getCurrentRouteParams()}
+
+            getCard={this.getCard}
+            getConversation={this.getConversation}
+            getOffer={this.getOffer}
+
+            //From AppContainer
+            updateMessageCount={this.props.updateMessageCount}
+            loginToken={this.props.loginToken}
+            deviceToken={this.props.deviceToken}
+            user={this.props.user}
+            />
         </View>
       );
     }
     return null;
-  },
-  leftNavBarButtonSubject: new Rx.Subject(),
-  rightNavBarButtonSubject: new Rx.Subject(),
-  render: function() {
+  }
+
+  toggleSideMenu() {
+    this.setState({isSideMenuOpen: !this.state.isSideMenuOpen});
+  }
+
+  render() {
     return (
       <SideMenu
           onChange={(isOpen) => this.setState({isSideMenuOpen: isOpen})}
+          isOpen={this.state.isSideMenuOpen}
           menu={
-          <PlainSideMenu
-            isOpen={this.state.isSideMenuOpen}
-            sideMenuSubject={this.props.sideMenuSubject}
-            user={this.state.user} />}
-            touchToClose={true}>
+            <PlainSideMenu
+              isOpen={this.state.isSideMenuOpen}
+              sideMenuSubject={this.sideMenuSubject} />}>
         <Navigator
-          setLogoutState={this.setLogoutState}
-          sideMenuSubject={this.props.sideMenuSubject}
-          leftNavBarButtonSubject={this.leftNavBarButtonSubject}
-          rightNavBarButtonSubject={this.rightNavBarButtonSubject}
+          screenName={this.props.screenName}
+          toggleSideMenu={this.toggleSideMenu}
+          sideMenuSubject={this.sideMenuSubject}
           initialRouteStack={this.getInitialRouteStack(this.props.uri)}
           renderScene={this.renderScene}
           messageCount={this.props.messageCount}
@@ -231,13 +262,13 @@ var PlainNavigator = React.createClass({
           navigationBar={
             <Navigator.NavigationBar
               style={styles.navBar}
-              routeMapper={this.navBarRouter}/>
+              routeMapper={this.getNavBarRouter()}/>
           }
         />
       </SideMenu>
     );
   }
-});
+}
 
 var styles = StyleSheet.create({
   navBar: {
@@ -263,9 +294,10 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
   },
   navBarLeftButton: {
-    marginLeft: 10,
-    marginTop: 12,
-    padding: 3,
+    paddingLeft: 13,
+    paddingTop: 15,
+    paddingBottom: 3,
+    paddingRight: 3,
   },
   navBarRightButton: {
     marginRight: 10,

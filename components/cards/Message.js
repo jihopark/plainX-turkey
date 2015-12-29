@@ -3,7 +3,7 @@
 var React = require('react-native');
 var Rx = require('rx')
 
-var DateMixin = require('../screens/componentMixins/DateMixin.js');
+var DateUtils = require('../utils/DateUtils.js');
 
 var {
   Text,
@@ -13,7 +13,6 @@ var {
 
 var Message = React.createClass({
   displayName: "MessageCard",
-  mixins: [DateMixin],
   render: function() {
     var message;
     switch (this.props.data["Type"]) {
@@ -26,7 +25,7 @@ var Message = React.createClass({
             {this.props.data["Text"]}
           </Text>
           <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-            {this.getMessageTimestampFormat(this.props.data["Created"])}
+            {DateUtils.getMessageTimestampFormat(this.props.data["Created"])}
           </Text>
         </View>);
         break;

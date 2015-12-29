@@ -7,31 +7,27 @@ var {
 } = React;
 
 var PlainListView = require('../PlainListView.js');
-var ScreenMixin = require('./componentMixins/ScreenMixin.js');
-var MenuButtonMixin = require('./componentMixins/MenuButtonMixin.js');
+var BaseScreen = require('./BaseScreen.js');
 
 var ActionButton = require('../ActionButton.js');
 
-var OfferSubmittedScreen = React.createClass({
-  mixins: [ScreenMixin, MenuButtonMixin],
-  displayName: "OfferSubmittedScreen",
-  endPoint: "offer/submitted",
-  getInitialState: function() {
-    return {
-      data: null,
-    };
-  },
-  onPressActionButton: function(){
-    this.props.replaceScreen({uri: 'main'});
-  },
-  renderScreen: function() {
-    this.props.leftNavBarButtonSubject.subscribe(this.toggleSideMenu);
+class OfferSubmittedScreen extends BaseScreen{
+  constructor(props) {
+    super(props);
+    this.endPoint = "offer/submitted";
+    this.onPressActionButton = this.onPressActionButton.bind(this);
+    this.renderScreen = this.renderScreen.bind(this);
+  }
 
+  onPressActionButton(){
+    this.props.replaceScreen({uri: 'main'});
+  }
+
+  renderScreen() {
+    var listView = this.createListView(false);
     return (
       <View style={this.screenCommonStyle.container}>
-        <PlainListView
-          cardObservers={{}}
-          cards={this.state.data["Cards"]}/>
+        {listView}
         <ActionButton
           text={"OKAY"}
           onPress={this.onPressActionButton}
@@ -39,7 +35,7 @@ var OfferSubmittedScreen = React.createClass({
       </View>
     );
   }
-});
+}
 
 
 module.exports = OfferSubmittedScreen;

@@ -2,7 +2,7 @@
 
 var moment = require('moment');
 
-var DateMixin =  {
+var DateUtils =  {
   getMessageTimestampFormat: function(timestamp) {
     var time = moment(timestamp*1000);
     if (time.isSame(moment(), 'd'))
@@ -17,8 +17,8 @@ var DateMixin =  {
   },
   getDateFormat: function(date) {
     var time = moment(date*1000);
-    return time.format("MMM Do YY");
+    return time.format("MMM Do YYYY");
   },
 }
 
-module.exports = DateMixin;
+module.exports = DateUtils;

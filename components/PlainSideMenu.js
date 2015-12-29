@@ -15,6 +15,12 @@ var {
 
 const window = Dimensions.get('window');
 
+var SessionStore = require('../stores/SessionStore.js');
+var SessionActions = require('../actions/SessionActions.js');
+
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("PlainSideMenu");
+
 
 var MenuItem = React.createClass({
   displayName: "MenuItem",
@@ -29,43 +35,62 @@ var MenuItem = React.createClass({
 
 var PlainSideMenu = React.createClass({
   displayName: 'PlainSideMenu',
-  contextTypes: {
-    menuActions: React.PropTypes.object.isRequired,
+
+  getInitialState: function() {
+    return SessionStore.getState();
   },
-  toggleSideMenu: function() {
-    this.context.menuActions.close();
+
+  componentDidMount: function(){
+    SessionStore.listen(this.onChange);
   },
+
+  componentWillUnmount: function(){
+    SessionStore.unlisten(this.onChange);
+  },
+
+  onChange(state) {
+    this.setState(state);
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    if (nextState["loginToken"]) {
+      if (nextState["user"] == -1 && this.state.user!=-1) {
+        P.log("shouldComponentUpdate", "Logout should be called");
+        SessionActions.logOut(this.state.loginToken, this.state.deviceToken);
+      }
+      else if (nextState["user"] == null) {
+        P.log("shouldComponentUpdate", "updateUser called");
+        SessionActions.updateUser(nextState["loginToken"]);
+      }
+    }
+    return true;
+  },
+
   pushMakeOfferScreen: function() {
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri:"makeOffer"});
   },
   pushMyOfferScreen: function(){
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "myOffers"});
   },
   pushLoginScreen: function() {
-    this.toggleSideMenu();
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "login"});
   },
   pressLogout: function() {
-    var toggleSideMenu = this.toggleSideMenu;
-    this.logOut().then((hasLoggedOut)=>{
-      if (hasLoggedOut) {
-        toggleSideMenu();
-        this.props.sideMenuSubject.onNext({type: "logout"});
-      }
-    }).done();
+    this.props.sideMenuSubject.onNext({type: "toggleSideMenu"});
+    SessionActions.logOut(this.state.loginToken, this.state.deviceToken);
   },
-  async logOut(){
+
+  async removeLoginTokenFromAsyncStorage(){
     try {
       await AsyncStorage.removeItem("SESSION");
-      console.log("User Is Logged Out");
+      P.log("removeLoginTokenFromAsyncStorage", "Removed!");
       return true;
     } catch (error) {
-      console.log("Error Logging Out " + error);
+      P.log("Error Logging Out " + error);
       return false;
     }
   },
+
   render: function() {
     var commonMenus = (<View>
         <MenuItem text={"ABOUT US"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz")} /></View>);
@@ -85,14 +110,16 @@ var PlainSideMenu = React.createClass({
       <MenuItem text={"LOGIN"} onPress={this.pushLoginScreen} />
       </View>);
 
+    var isLoggedin = this.state.user ? Object.keys(this.state.user).length > 0 : false;
+
     return (
       <View style={[styles.container, (this.props.isOpen ? null : {opacity: 0})]}>
         <View style={styles.header}>
-          {this.props.user ?
-            (<Text style={styles.nameText}>{this.props.user["Email"]}</Text>) : null}
+          {isLoggedin ?
+            (<Text style={styles.nameText}>{this.state.user["Email"]}</Text>) : null}
         </View>
         <View style={styles.menuContainer}>
-          {this.props.user ? loginUserMenu : nonLoginUserMenu}
+          {isLoggedin ? loginUserMenu : nonLoginUserMenu}
         </View>
         <View style={styles.footer}></View>
 
