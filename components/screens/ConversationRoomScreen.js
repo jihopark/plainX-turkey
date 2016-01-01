@@ -69,6 +69,7 @@ class ConversationRoomScreen extends BaseScreen{
     this.isMount = false;
     P.log("componentWillUnmount", "Remove AppState Listener");
     AppStateIOS.removeEventListener('change', this.handleAppStateChange);
+    SessionActions.updateScreenName("");
   }
 
   handleAppStateChange(appState) {
