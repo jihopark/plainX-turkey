@@ -7,15 +7,13 @@ var {
   StyleSheet,
 } = React;
 
+var NumberUtils = require('./utils/NumberUtils.js');
+
 var CurrencyAmountTextInput = React.createClass({
   displayName: 'CurrencyAmountTextInput',
-  formatNumber: function(n) {
-    var f = parseFloat(n);
-    return f ? (Math.round(f * 100) / 100)+"" : f;
-  },
   render: function() {
     var value = this.props.value ?
-       this.formatNumber(this.props.value) + (this.props.isCalculated ? "*" : "")
+       NumberUtils.formatNumber(this.props.value) + (this.props.isCalculated ? "*" : "")
        : "";
     return (
       <View style={[styles.container, this.props.isCalculated ? null : styles.addUnderline]}>

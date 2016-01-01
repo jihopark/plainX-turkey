@@ -65,9 +65,11 @@ class OfferDetailScreen extends BaseScreen{
           this.setState({actionState: "not_connected"});
       }
       else if (error.status == 400) {
+        var body = JSON.parse(error.body);
+        P.log("handleConnectRequest",this.props.routes.addRoute('conversationRoom?Id='+ body["ConversationId"]));
         AlertUtil.showAlert(AlertUtil.CONNECTED_OFFER,
           null,
-          () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
+          () => this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+ body["ConversationId"])}));
           this.setState({actionState: "connected"});
       }
       else
