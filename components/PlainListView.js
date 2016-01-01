@@ -52,8 +52,10 @@ var PlainListView = React.createClass({
       var offerId = card["Data"]["OfferId"];
       return (offerId || offerId == 0) && this.props.getOffer(offerId);
     }
-    if (CardRouter.isConversationCard(card["Name"])) {
-      //TODO: Implement Conversation Card validation;
+    if (card["Name"] == "UserConversationItem") {
+      //Message & Feedback is not validated
+      var conversationId = card["Data"]["ConversationId"];
+      return (conversationId || conversationId == 0) && this.props.getConversation(conversationId);
     }
     return true;
   },
