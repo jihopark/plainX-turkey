@@ -3,16 +3,32 @@
 var React = require('react-native');
 var {
   AppRegistry,
-  Text,
 } = React;
 
-var API_DOMAIN = 'https://plainexchange.herokuapp.com/api/v1/';
+var AppContainer = require('./components/AppContainer.js');
 
-var body = React.createClass({
-  render: function() {
-    return (
-      <Text>Hello world</Text>
-    );
+var PlainLog = require('./PlainLog.js');
+var P = new PlainLog("AppContainerIOS");
+
+class AppContainerAndroid extends AppContainer {
+  constructor(){
+    super();
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
   }
-});
-AppRegistry.registerComponent('plainX', () => body);
+
+  componentDidMount() {
+    super.componentDidMount();
+    //PushNotificationIOS.addEventListener("register", this.onRegister);
+    //PushNotificationIOS.checkPermissions(this.onCheckPermission);
+
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    //PushNotificationIOS.removeEventListener('notification', this.onNotification);
+    //PushNotificationIOS.removeEventListener("register", this.onRegister);
+  }
+}
+
+AppRegistry.registerComponent('plainX', () => AppContainerAndroid);

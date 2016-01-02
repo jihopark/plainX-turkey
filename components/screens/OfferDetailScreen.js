@@ -11,7 +11,7 @@ var {
 var BaseScreen = require('./BaseScreen.js');
 var RestKit = require('react-native-rest-kit');
 var ActionButton = require('../ActionButton.js');
-var AlertUtil = require('../utils/AlertUtil.js');
+var AlertUtils = require('../utils/AlertUtils.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
 var update = require('react-addons-update');
 var PlainActions = require('../../actions/PlainActions.js');
@@ -59,7 +59,7 @@ class OfferDetailScreen extends BaseScreen{
     if (error) {
       P.log("handleConnectRequest/error", error);
       if (error.status == 401) {
-        AlertUtil.showAlert(AlertUtil.LOGIN_CONNECT_OFFER,
+        AlertUtils.showAlert(AlertUtils.LOGIN_CONNECT_OFFER,
           null,
           () => this.props.pushScreen({uri: this.props.routes.addRoute('login')}));
           this.setState({actionState: "not_connected"});
@@ -67,7 +67,7 @@ class OfferDetailScreen extends BaseScreen{
       else if (error.status == 400) {
         var body = JSON.parse(error.body);
         P.log("handleConnectRequest",this.props.routes.addRoute('conversationRoom?Id='+ body["ConversationId"]));
-        AlertUtil.showAlert(AlertUtil.CONNECTED_OFFER,
+        AlertUtils.showAlert(AlertUtils.CONNECTED_OFFER,
           null,
           () => this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?Id='+ body["ConversationId"])}));
           this.setState({actionState: "connected"});
@@ -84,7 +84,7 @@ class OfferDetailScreen extends BaseScreen{
   }
 
   onPressRemoveOffer() {
-    AlertUtil.showAlert(AlertUtil.REMOVE_OFFER,
+    AlertUtils.showAlert(AlertUtils.REMOVE_OFFER,
       this.onRemoveOffer,
       null);
   }

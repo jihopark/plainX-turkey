@@ -4,9 +4,8 @@ var React = require('react-native');
 var update = require('react-addons-update');
 var LoadingView = require('../LoadingView.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
+var AlertUtils = require('../utils/AlertUtils.js');
 var RestKit = require('react-native-rest-kit');
-var KeyboardEvents = require('react-native-keyboardevents');
-var KeyboardEventEmitter = KeyboardEvents.Emitter;
 
 var PlainListView = require('../PlainListView.js');
 
@@ -21,7 +20,12 @@ var {
   AsyncStorage,
   StyleSheet,
   AlertIOS,
+  Platform,
 } = React;
+
+var KeyboardEvents = (Platform.OS === 'ios') ? require('react-native-keyboardevents') : null;
+var KeyboardEventEmitter = (Platform.OS === 'ios') ? KeyboardEvents.Emitter : null;
+
 
 class BaseScreen extends React.Component {
   constructor() {
@@ -64,14 +68,18 @@ class BaseScreen extends React.Component {
   componentDidMount() {
     this.loadScreen();
     this.props.updateMessageCount();
-    KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-    KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
+    if (Platform.OS === 'ios'){
+      KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
+      KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
+    }
   }
 
   componentWillUnmount() {
     this.props.updateMessageCount();
-    KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-    KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
+    if (Platform.OS === 'ios'){
+      KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
+      KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
+    }
     if (this.state.data){
       P.log("componentWillUnmount", "Remove Cards");
       PlainActions.removeCards(this.state.data["Cards"]);
@@ -162,12 +170,10 @@ class BaseScreen extends React.Component {
         P.log("handleInitialRequest", "Route Depth:"+this.props.routes.getDepth());
         if (this.props.routes.getDepth() > 1) {
           P.log("handleInitialRequest", "Alert Called");
-          AlertIOS.alert(
-            'Error',
-            text,
-            [
-              {text: 'OK', onPress: this.onPressErrorDialog},
-            ]
+          AlertUtils.alert(
+            AlertUtils.SCREEN_ERROR,
+            null,
+            this.onPressErrorDialog,
           );
           return ;
         }

@@ -8,14 +8,15 @@ var {
 var strings = {
   "login_connect_offer": ["Login to connect to this offer", "We want to know you more!"],
   "connected_offer": ["You are already connected to this offer", "", "", "Go to conversation"],
-  "remove_offer": ["Are you sure?", "All offer details and conversations will be deleted. This action cannot be undone.", "Yes", "No"]
-
+  "remove_offer": ["Are you sure?", "All offer details and conversations will be deleted. This action cannot be undone.", "Yes", "No"],
+  "screen_error": ["Something went wrong", "", "", ""],
 };
 
-var AlertUtil = {
+var AlertUtils = {
   LOGIN_CONNECT_OFFER: "login_connect_offer",
   CONNECTED_OFFER: "connected_offer",
   REMOVE_OFFER: "remove_offer",
+  SCREEN_ERROR: "screen_error",
   showAlert: function(type, onPressNegative, onPressPositive){
     AlertIOS.alert(
       strings[type][0],
@@ -27,4 +28,4 @@ var AlertUtil = {
     );
   }
 };
-module.exports = AlertUtil;
+module.exports = AlertUtils;

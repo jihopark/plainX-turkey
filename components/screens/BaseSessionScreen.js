@@ -7,9 +7,6 @@ var {
 } = React;
 
 var BaseScreen = require('./BaseScreen.js');
-var KeyboardEvents = require('react-native-keyboardevents');
-var KeyboardEventEmitter = KeyboardEvents.Emitter;
-
 
 class BaseSessionScreen extends BaseScreen{
   constructor(props) {
