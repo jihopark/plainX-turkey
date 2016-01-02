@@ -6,11 +6,12 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
     "md5": "^2.0.0",
     "moment": "^2.10.6",
     "react": "^0.14.3",
     "react-addons-update": "^0.14.3",
-    "react-native": "^0.13.2",
+    "react-native": "^0.17.0",
     "react-native-invertible-scroll-view": "^0.1.2",
     "react-native-keyboardevents": "^0.4.5",
     "react-native-rest-kit": "0.0.6",

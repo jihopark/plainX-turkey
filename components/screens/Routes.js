@@ -4,13 +4,6 @@ class Routes {
   getRegisteredRoutes() {
     return [
       {
-        name: "generalCards",
-        id: 0,
-        getComponent: () => require("../screens/GeneralCardsScreen.js"),
-        title: "General",
-        enablePagination: true
-      },
-      {
         name: "main",
         id: 1,
         getComponent: () => require("../screens/MainScreen.js"),

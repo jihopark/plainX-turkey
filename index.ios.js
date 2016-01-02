@@ -20,13 +20,11 @@ class AppContainerIOS extends AppContainer {
     this.onCheckPermission = this.onCheckPermission.bind(this);
     this.onNotification = this.onNotification.bind(this);
     this.onRegister = this.onRegister.bind(this);
-    this.onError = this.onError.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
     PushNotificationIOS.addEventListener("register", this.onRegister);
-    PushNotificationIOS.addEventListener('error', this.onError);
     PushNotificationIOS.checkPermissions(this.onCheckPermission);
 
   }
@@ -35,7 +33,6 @@ class AppContainerIOS extends AppContainer {
     super.componentWillUnmount();
     PushNotificationIOS.removeEventListener('notification', this.onNotification);
     PushNotificationIOS.removeEventListener("register", this.onRegister);
-    PushNotificationIOS.removeEventListener('error', this.onError);
   }
 
   onCheckPermission(permission) {
@@ -63,10 +60,6 @@ class AppContainerIOS extends AppContainer {
     P.log("onRegister", deviceToken);
     //  PushNotificationIOS.setApplicationIconBadgeNumber(0);
     this.saveDeviceToken(deviceToken).then(this.sendDeviceToken).done();
-  }
-
-  onError(message, key){
-    P.log("onError", 'An error occurred from PushNotificationIOS with msg ' + message);
   }
 }
 

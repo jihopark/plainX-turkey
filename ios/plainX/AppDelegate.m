@@ -39,11 +39,6 @@ currentInstallation.channels = @[ @"global" ];
 [RCTPushNotificationManager application:application didReceiveRemoteNotification:notification];
 }
 
-- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-  [RCTPushNotificationManager application:application didFailToRegisterForRemoteNotificationsWithError:error];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
