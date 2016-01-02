@@ -26,7 +26,7 @@ var Location = React.createClass({
     );
     return (
       <View style={styles.container}>
-        <Image style={styles.icon} source={require('image!locationicon')} />
+        <Image style={styles.icon} source={require('../../assets/locationicon.png')} />
         <Text style={this.props.cardCommonStyles.offerTitle}>{this.props.data["TitleText"]}</Text>
         {locationViews}
       </View>

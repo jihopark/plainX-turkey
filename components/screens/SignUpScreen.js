@@ -111,9 +111,9 @@ class SignUpScreen extends BaseSessionScreen{
 
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
-        <Image source={require('image!BG2')} style={this.styles.backgroundImage}>
+        <Image source={require('../../assets/BG2.png')} style={this.styles.backgroundImage}>
         <View style={[this.styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('image!logo_lg')} style={this.styles.logo}/>) : null}
+            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={this.styles.logo}/>) : null}
             {this.state.showConfirmation ?
               (<Text style={[this.styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
               :
@@ -128,19 +128,19 @@ class SignUpScreen extends BaseSessionScreen{
               <View style={this.styles.textInputContainer}>
                 <Text style={this.styles.errorMsg}>{this.state.errorMsg || ""}</Text>
                 <PlainTextInput
-                    icon={require("image!emailicon")}
+                    icon={require("../../assets/emailicon.png")}
                     placeholder={"Email"}
                     keyboardType={"email-address"}
                     onChangeText={this.onChangeEmail}
                     value={this.state.email} />
                 <PlainTextInput
-                    icon={require("image!passwordicon")}
+                    icon={require("../../assets/passwordicon.png")}
                     placeholder={"Password"}
                     secureTextEntry={true}
                     onChangeText={this.onChangePassword}
                     value={this.state.password} />
                 <PlainTextInput
-                    icon={require("image!passwordicon")}
+                    icon={require("../../assets/passwordicon.png")}
                     placeholder={"Password Confirmation"}
                     secureTextEntry={true}
                     onChangeText={this.onChangePasswordConfirm}

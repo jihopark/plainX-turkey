@@ -125,9 +125,9 @@ class LoginScreen extends BaseSessionScreen{
     var margin = 30-this.state.keyboardSpace;
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
-        <Image source={require('image!BG2')} style={this.styles.backgroundImage}>
+        <Image source={require('../../assets/BG2.png')} style={this.styles.backgroundImage}>
           <View style={[this.styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('image!logo_lg')} style={this.styles.logo}/>) : null}
+            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={this.styles.logo}/>) : null}
             <TouchableOpacity onPress={this.onPressSignUp}>
               <Text style={this.styles.descriptionText}>
                 {"Don't have an account yet?"} <Text style={{color: '#33cc66'}}>{"Register Here!"}</Text>
@@ -136,13 +136,13 @@ class LoginScreen extends BaseSessionScreen{
             <View style={this.styles.textInputContainer}>
               <Text style={this.styles.errorMsg}>{this.state.errorMsg || ""}</Text>
               <PlainTextInput
-                  icon={require("image!emailicon")}
+                  icon={require("../../assets/emailicon.png")}
                   placeholder={"Email"}
                   keyboardType={"email-address"}
                   onChangeText={this.onChangeEmail}
                   value={this.state.email} />
               <PlainTextInput
-                  icon={require("image!passwordicon")}
+                  icon={require("../../assets/passwordicon.png")}
                   placeholder={"Password"}
                   secureTextEntry={true}
                   onChangeText={this.onChangePassword}

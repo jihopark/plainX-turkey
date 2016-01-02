@@ -28,7 +28,7 @@ var Offer = React.createClass({
               {offer["Sell"]+"\n"+offer["AmountSell"]}</Text>
           </View>
           <View style={styles.centerContainer}>
-            <Image style={styles.center} source={require('image!plane')}/>
+            <Image style={styles.center} source={require('../../assets/plane.png')}/>
           </View>
           <View style={styles.sideContainer}>
             <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>

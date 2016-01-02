@@ -172,7 +172,7 @@ var CurrencyAmountSelect = React.createClass({
             {this.getDynamicRateExplanation(this.props.data["SellRate"])}
           </View>
           <View style={styles.row}>
-            <Image style={styles.centerImage} source={require('image!plane')}/>
+            <Image style={styles.centerImage} source={require('../../assets/plane.png')}/>
             <Text style={this.props.cardCommonStyles.headings}>
               EXCHANGE TO:</Text>
           </View>

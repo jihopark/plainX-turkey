@@ -36,7 +36,7 @@ var UserConversationItem = React.createClass({
       <TouchableOpacity style={styles.container}
         onPress={this.onPressCard}>
         <View style={{flexDirection:'row'}}>
-          <Image source={require('image!usericon_green')} style={styles.userIcon} />
+          <Image source={require('../../assets/usericon_green.png')} style={styles.userIcon} />
           <View>
             {this.getOfferSummaryText(offer)}
             <Text style={[this.props.cardCommonStyles.title, styles.name, (conversation["HasUnread"] ? {fontWeight: 'bold'} : null)]}>

@@ -22,7 +22,7 @@ var TodaysRateOffer = React.createClass({
     var difference = (offerRate - marketRate) / marketRate * 100;
     return (
       <View style={styles.container}>
-        <Image style={styles.icon} source={require('image!dollaricon')} />
+        <Image style={styles.icon} source={require('../../assets/dollaricon.png')} />
         {marketRate ? (
           <View style={styles.textContainer}>
             <Text style={[this.props.cardCommonStyles.offerTitle, styles.center]}>{this.props.data["TodaysRateDescription"]}</Text>

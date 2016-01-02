@@ -18,7 +18,7 @@ var Expiry = React.createClass({
 
     return (
       <View style={styles.container}>
-        <Image style={styles.icon} source={require('image!calendaricon_gray')} />
+        <Image style={styles.icon} source={require('../../assets/calendaricon_gray.png')} />
         <Text style={this.props.cardCommonStyles.offerTitle}>{this.props.data["TitleText"]}</Text>
         <Text style={this.props.cardCommonStyles.offerOptions}>
           {offer["Expires"] == -1 ? "None" : DateUtils.getDateFormat(new Date(offer["Expiry"])) }
