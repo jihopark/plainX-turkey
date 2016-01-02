@@ -45,7 +45,7 @@ var LocationSelect = React.createClass({
           copy[location]["IsSelected"] = !copy[location]["IsSelected"];
           PlainActions.updateCardData(id, "Locations", copy);
         }}>
-          <LocationCheckBox name={location} selected={locations[location]["IsSelected"]}/>
+          <LocationCheckBox key={location} name={location} selected={locations[location]["IsSelected"]}/>
         </TouchableOpacity>
       );
     });

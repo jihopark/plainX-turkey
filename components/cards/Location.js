@@ -19,7 +19,7 @@ var Location = React.createClass({
     var locationViews = Object.keys(locations).map(
       function(location){
         return (locations[location]["IsSelected"] ?
-          (<Text style={offerOptionStyle}>{location}</Text>)
+          (<Text key={location} style={offerOptionStyle}>{location}</Text>)
           : null
         );
       }
