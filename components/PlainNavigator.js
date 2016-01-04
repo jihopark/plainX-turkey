@@ -119,20 +119,22 @@ class PlainNavigator extends React.Component {
         var routes = new Routes(route.uri);
 
         return routes.getCurrentRoute().title ?
-        (<Text style={[styles.navBarText, styles.navBarTitleText]}>{navigator.props.screenName ? navigator.props.screenName : routes.getCurrentRoute().title}</Text>)
-        :
-        (<Image style={styles.navBarTitleImage} source={require('../assets/logo.png')} />);
+          (<Text style={[navBarStyle.navBarText, navBarStyle.navBarTitleText]}>
+              {navigator.props.screenName ? navigator.props.screenName : routes.getCurrentRoute().title}
+          </Text>)
+          :
+          (<Image style={navBarStyle.navBarTitleImage} source={require('../assets/logo.png')} />);2
       },
       LeftButton: (route, navigator, index, navState) => {
         var routes = new Routes(route.uri);
         if (routes.getDepth() == 1) {
           var button = (
-            <Image style={styles.navBarIcon}
+            <Image style={navBarStyle.navBarIcon}
               source={require("../assets/menuicon.png")} /> );
           return (
             <TouchableOpacity
               onPress={() => navigator.props.toggleSideMenu() }
-              style={styles.navBarLeftButton}>
+              style={navBarStyle.navBarLeftButton}>
               {button}
             </TouchableOpacity>);
         }
@@ -140,9 +142,9 @@ class PlainNavigator extends React.Component {
           if (routes.hasBack()) {
             return (
               <TouchableOpacity
-                style={styles.navBarLeftButton}
+                style={navBarStyle.navBarLeftButton}
                 onPress={() => navigator.pop()}>
-                <Image style={styles.navBarIcon}
+                <Image style={navBarStyle.navBarIcon}
                   source={require('../assets/backicon.png')} />
               </TouchableOpacity>);
           }
@@ -157,13 +159,13 @@ class PlainNavigator extends React.Component {
 
         return shouldNotShowMsgIcon ? null :
           (<TouchableOpacity
-            style={styles.navBarRightButton}
+            style={navBarStyle.navBarRightButton}
             onPress={() => navigator.push({uri: routes.addRoute('conversations')})}>
-              <Image style={[styles.navBarIcon, styles.messageIcon]}
+              <Image style={[navBarStyle.navBarIcon, navBarStyle.messageIcon]}
                 source={require("../assets/msgicon.png")} />
               {navigator.props.messageCount > 0 ?
-                (<Animated.View style={[styles.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
-                  <Text style={styles.messageCount}>
+                (<Animated.View style={[navBarStyle.messageCountContainer, {transform: [{scale: navigator.props.messageBounceValue}]}]}>
+                  <Text style={navBarStyle.messageCount}>
                     {navigator.props.messageCount}
                   </Text>
                 </Animated.View>) : null}
@@ -270,7 +272,40 @@ class PlainNavigator extends React.Component {
   }
 }
 
-var styles = StyleSheet.create({
+var navBarAndroid = StyleSheet.create({
+  navBarText: {
+    fontSize: 15,
+  },
+  navBarTitleText: {
+
+  },
+  navBarTitleImage: {
+    width:59,
+    height:25,
+    padding: 5,
+  },
+  navBarIcon: {
+    width:20,
+    height:20,
+    resizeMode: 'stretch',
+  },
+  navBarLeftButton: {
+    marginLeft: 10,
+    padding: 3,
+  },
+  navBarRightButton: {
+    marginRight: 10,
+    padding: 3,
+  },
+  navBarButtonText: {
+    color: '#33cc66',
+  },
+  messageIcon: {
+    width: 25, height: 25,
+  },
+});
+
+var navBarIOS = StyleSheet.create({
   navBar: {
     backgroundColor: 'white',
   },
@@ -307,16 +342,26 @@ var styles = StyleSheet.create({
   navBarButtonText: {
     color: '#33cc66',
   },
-  scene: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#EAEAEA', //should change to background image later
-  },
   messageIcon: {
     position:'absolute',
     top:-2,
     left: -20,
     width: 30, height: 30
+  },
+});
+
+
+const isIOS = Platform.OS == 'ios';
+var navBarStyle = isIOS ? navBarIOS : navBarAndroid;
+
+var styles = StyleSheet.create({
+  navBar: {
+    backgroundColor: 'white',
+  },
+  scene: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: '#EAEAEA', //should change to background image later
   },
   messageCountContainer: {
     backgroundColor:'#33cc66',
