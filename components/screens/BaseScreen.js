@@ -80,7 +80,7 @@ class BaseScreen extends React.Component {
       KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
       KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
     }
-    if (this.state.data){
+    if (this.state.data && this.state.data["Cards"]){
       P.log("componentWillUnmount", "Remove Cards");
       PlainActions.removeCards(this.state.data["Cards"]);
     }
