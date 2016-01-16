@@ -19,11 +19,14 @@ var Message = React.createClass({
       case 'message':
         var isSelf = this.props.data["IsSelf"];
         message = (<View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-          <Text style={[styles.messageText,
-              (isSelf ?
-                styles.selfText : styles.otherText)]}>
-            {this.props.data["Text"]}
-          </Text>
+	    <View style={[
+		styles.messageContainer,
+		(isSelf ? styles.selfText : styles.otherText)]
+	    }>
+            <Text style={styles.messageText}>
+               {this.props.data["Text"]}
+            </Text>
+	  </View>
           <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
             {DateUtils.getMessageTimestampFormat(this.props.data["Created"])}
           </Text>
@@ -31,9 +34,11 @@ var Message = React.createClass({
         break;
       case 'note':
         message = (<View style={{flexDirection:'column', margin: 10}}>
-          <Text style={[styles.messageText, styles.noteText]}>
-            {this.props.data["Text"]}
-          </Text>
+          <View style={styles.noteContainer}>
+	    <Text style={[styles.messageText, styles.noteText]}>
+              {this.props.data["Text"]}
+            </Text>
+	  </View>
           <Text style={[styles.dateText, styles.noteSubText]}>
             {"Only shown to you"}
           </Text>
@@ -75,9 +80,7 @@ var styles = StyleSheet.create({
   otherText: {
     backgroundColor:'#2a6033',
   },
-  messageText: {
-    color: 'white',
-    fontSize: 16,
+  messageContainer: {
     paddingTop: 10, paddingBottom: 10,
     paddingLeft: 15, paddingRight: 15,
     borderRadius: 20,
@@ -85,11 +88,23 @@ var styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
+  messageText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  noteContainer: {
+    paddingTop: 10, paddingBottom: 10,
+    paddingLeft: 15, paddingRight: 15,
+    overflow: 'hidden',
+    marginLeft: 5,
+    marginRight: 5,
+    borderColor: '#33cc66',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
   noteText: {
     textAlign:'center',
     color: '#33cc66',
-    borderColor: '#33cc66',
-    borderWidth: 1,
   },
   noteSubText: {
     marginTop: 5, marginBottom: 5,
