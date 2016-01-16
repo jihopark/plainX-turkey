@@ -12,7 +12,7 @@ var {
 
 var CurrencySelectText = require('../CurrencySelectText.js');
 var CardButton = require('../CardButton.js');
-var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+var CurrencyPicker = require('../CurrencyPicker.js');
 var PlainActions = require('../../actions/PlainActions.js');
 
 var CurrencySelect = React.createClass({

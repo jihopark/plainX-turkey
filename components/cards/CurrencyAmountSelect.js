@@ -17,7 +17,7 @@ var {
   Platform,
 } = React;
 
-var CurrencyPicker = (Platform.OS === 'ios') ? require('../CurrencyPicker.ios.js') : require('../CurrencyPicker.android.js');
+var CurrencyPicker = require('../CurrencyPicker.js');
 
 
 function roundUpNumber(number) {

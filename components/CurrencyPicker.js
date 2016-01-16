@@ -8,29 +8,40 @@ var {
   Text,
   StyleSheet,
   Image,
+  Platform,
 } = React;
 
-var PickerItemIOS = PickerIOS.Item;
+
+var PlainLog = require('../PlainLog.js');
+var P = new PlainLog("CurrencyPicker");
+
+import PickerAndroid from 'react-native-picker-android';
+
+let Picker = Platform.OS === 'ios' ? PickerIOS : PickerAndroid;
+let PickerItem = Picker.Item;
 
 var CurrencyPicker = React.createClass({
   render: function() {
+
+    P.log("render",Picker == null);
+
     return (
       <View style={styles.container}>
         <View style={styles.pickerContainer}>
-          <PickerIOS
+          <Picker
             style={{width: 320}}
             onValueChange={(value) => this.props.onPickerValueChange(value)}
             selectedValue={this.props.currentCurrency}>
               {
                 this.props.currencyList.map(function(currency){
                   return (
-                    <PickerItemIOS
+                    <PickerItem
                       key={currency["Code"]}
                       value={currency["Code"]}
                       label={currency["Code"] + " - " + currency["Country"]} />)
               }
             )}
-            </PickerIOS>
+            </Picker>
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
