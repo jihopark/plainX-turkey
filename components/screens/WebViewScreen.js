@@ -36,7 +36,7 @@ class WebViewScreen extends BaseScreen{
 
   renderScreen() {
     var code = ParameterUtils.getStringToParams(this.props.params)["code"];
-    var url = "http://www.plainexchange.xyz/" + code;
+    var url = "http://ihome.ust.hk/~lhoang/plainexchangeteaser/" + code;
 
     P.log("renderScreen","rendering webview " + url);
 
