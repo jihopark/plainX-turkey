@@ -27,9 +27,10 @@ function removeArrayFromMap(array, map){
 class PlainDataStore {
   constructor() {
     this.offers = {};
-    this.cards = {};
+    this.cards = {
+      "-999":{"UUID": "-999", "Name": "Error"}
+    };
     this.conversations = {};
-
     this.bindActions(PlainActions);
   }
 

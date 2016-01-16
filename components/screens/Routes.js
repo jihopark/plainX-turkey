@@ -79,6 +79,13 @@ class Routes {
         title: "My Offers",
         enablePagination: false,
       },
+      {
+        name: "webView",
+        id: 12,
+        getComponent: () => require("../screens/WebViewScreen.js"),
+        title: ".",
+        enablePagination: false,
+      },
     ];
   }
 
