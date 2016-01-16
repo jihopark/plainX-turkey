@@ -12,6 +12,8 @@ var RestKit = require('react-native-rest-kit');
 var SessionStore = require('../stores/SessionStore.js');
 var SessionActions = require('../actions/SessionActions.js');
 
+var TutorialPager = require('./TutorialPager.js');
+
 var PlainLog = require('../PlainLog.js');
 var P = new PlainLog("AppContainer");
 
@@ -19,6 +21,7 @@ class AppContainer extends React.Component{
   constructor(){
     super();
     this.state = SessionStore.getState();
+    this.state.showTutorial= false;
     this.componentDidMount = this.componentDidMount.bind(this);
     this.onChange = this.onChange.bind(this);
     this.loadLoginTokenIfAny = this.loadLoginTokenIfAny.bind(this);
@@ -28,6 +31,9 @@ class AppContainer extends React.Component{
     this.updateMessageCount = this.updateMessageCount.bind(this);
     this.handleMessageCount = this.handleMessageCount.bind(this);
     this.render = this.render.bind(this);
+    this.checkIfFirstExec = this.checkIfFirstExec.bind(this);
+    this.closeTutorial = this.closeTutorial.bind(this);
+    this.goToSignUp = this.goToSignUp.bind(this);
   }
 
   componentDidMount() {
@@ -41,11 +47,32 @@ class AppContainer extends React.Component{
     this.loadDeviceTokenIfAny().then(
       (value) => SessionActions.updateDeviceToken(value)
     ).done();
+    this.checkIfFirstExec().then((isFirstExec) => {
+      if (isFirstExec) {
+        this.setState({showTutorial: true});
+      }
+    }).done();
   }
 
   componentWillUnmount() {
     SessionStore.unlisten(this.onChange);
   }
+
+  async checkIfFirstExec(){
+    try {
+      var keys = await AsyncStorage.getAllKeys();
+      if (keys.indexOf("FIRST_LOGIN") == -1) {
+        await AsyncStorage.setItem("FIRST_LOGIN", "false");
+        return true;
+      }
+      else
+        return false;
+    } catch (error) {
+      P.log("checkIfFirstExec", "Error Retreving checkIfFirstLogin");
+      return false;
+    }
+  }
+
 
   onChange(state) {
     this.setState(state);
@@ -132,23 +159,38 @@ class AppContainer extends React.Component{
     }
   }
 
+  closeTutorial(){
+    this.setState({showTutorial: false});
+  }
+
+  goToSignUp() {
+    this.setState({showTutorial: false, uri: "main/login/signup"});
+    SessionActions.updateUri("main/login/signup");
+  }
+
   render() {
-    return (this.state.loginToken != null
-        && this.state.deviceToken !=null) ?
-      (
-        <PlainNavigator
-          API_DOMAIN={API_DOMAIN}
-          loginToken={this.state.loginToken}
-          deviceToken={this.state.deviceToken}
-          user={this.state.user}
-          messageCount={this.state.messageCount}
-          updateMessageCount={this.updateMessageCount}
-          screenName={this.state.screenName}
-          uri={this.state.uri}
-          />
-      )
-      :
-      null;
+    if (this.state.showTutorial) {
+      return (<TutorialPager
+                goToSignUp={this.goToSignUp}
+                close={this.closeTutorial}/>);
+    }
+    else {
+      return this.state.loginToken != null && this.state.deviceToken !=null ?
+        (
+          <PlainNavigator
+            API_DOMAIN={API_DOMAIN}
+            loginToken={this.state.loginToken}
+            deviceToken={this.state.deviceToken}
+            user={this.state.user}
+            messageCount={this.state.messageCount}
+            updateMessageCount={this.updateMessageCount}
+            screenName={this.state.screenName}
+            uri={this.state.uri}
+            />
+        )
+        :
+        null;
+    }
   }
 }
 

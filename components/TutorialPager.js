@@ -9,7 +9,19 @@ var {
   Text,
   Image,
   TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Platform,
 } = React;
+
+const IMAGES = [
+  require('../assets/tutorial-1.png'),
+  require('../assets/tutorial-2.png'),
+  require('../assets/tutorial-3.png'),
+  require('../assets/tutorial-4.png'),
+  require('../assets/tutorial-5.png'),
+  require('../assets/tutorial-6.png')
+];
 
 var TutorialPager = React.createClass({
   displayName: "TutorialPager",
@@ -18,33 +30,81 @@ var TutorialPager = React.createClass({
       pageHasChanged: (p1, p2) => p1 !== p2,
     });
     return {
-      dataSource: dataSource.cloneWithPages(this.props.urls),
+      pageNumber: 0,
+      dataSource: dataSource.cloneWithPages(IMAGES),
     };
   },
   renderPage: function(data: Object, pageID: number | string,) {
-    console.log(data);
     return (
       <Image
-        style={{flex:1}}
+        style={{flex:1, width: undefined, height: undefined}}
         resizeMode={'stretch'}
-        source={{uri: data}}/>
+        source={data}/>
     );
   },
+  onChangePage: function(page){
+    this.setState({pageNumber: page});
+  },
+  onNext: function() {
+    this.refs.viewPager.goToPage(this.state.pageNumber+1);
+  },
   render: function() {
+    var rightButton;
+    switch(this.state.pageNumber) {
+      case 0:
+        rightButton = (<TouchableOpacity onPress={this.props.close} style={styles.right}>
+          <Text style={styles.rightText}>Skip</Text>
+          </TouchableOpacity>);
+        break;
+      case IMAGES.length-1:
+        rightButton = (<TouchableOpacity onPress={this.props.close} style={styles.right}>
+          <Text style={[styles.rightText, {fontWeight: 'bold'}]}>START</Text>
+          </TouchableOpacity>);
+        break;
+      default:
+        rightButton = (<TouchableOpacity onPress={this.onNext} style={styles.right}>
+          <Text style={styles.rightText}>Next</Text>
+          </TouchableOpacity>);
+    }
+
     return (
-      <View style={{flex:1, flexDirection: 'column'}}>
-        <View style={{backgroundColor: 'white',}}>
-          <TouchableOpacity onPress={this.props.closeTutorial}>
-            <Image
-              source={require('../assets/cross.png')}
-              style={{alignSelf:'flex-end', width:20, height:20, marginRight: 10, marginTop: 10, marginBottom: 5}}/>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
         <ViewPager
+          ref="viewPager"
           dataSource={this.state.dataSource}
-          renderPage={this.renderPage}/>
+          renderPage={this.renderPage}
+          onChangePage={this.onChangePage}/>
+        <TouchableOpacity onPress={this.props.goToSignUp} style={styles.left}>
+          <Text style={styles.leftText}>{"New?\nSign Up"}</Text>
+          </TouchableOpacity>
+        {rightButton}
       </View>
     );
+  }
+});
+
+
+var styles = StyleSheet.create({
+  container:{
+    flex:1,
+  },
+  left:{
+    position: 'absolute',
+    top: Dimensions.get('window').height*(Platform.OS == 'ios' ? 0.93 : 0.89),
+    left:10,
+    backgroundColor:'transparent',
+  },
+  leftText:{
+    color: 'white',
+  },
+  right:{
+    position: 'absolute',
+    top: Dimensions.get('window').height*(Platform.OS == 'ios' ? 0.95 : 0.91),
+    left:Dimensions.get('window').width*0.85,
+    backgroundColor:'transparent',
+  },
+  rightText:{
+    color: 'white',
   }
 });
 
