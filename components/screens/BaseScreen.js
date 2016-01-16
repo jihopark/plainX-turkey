@@ -153,7 +153,10 @@ class BaseScreen extends React.Component {
       } : { method: 'get' };
 
       RestKit.send(url, request, page <= 1 ? this.handleInitialRequest : this.handleAddMoreRequest);
-
+    }
+    else{
+      P.log("fetchData", "Set State");
+      this.setState({data: 1}); //no need to set data
     }
   }
 

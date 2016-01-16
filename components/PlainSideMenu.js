@@ -75,6 +75,15 @@ var PlainSideMenu = React.createClass({
   pushLoginScreen: function() {
     this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "login"});
   },
+  pushFAQScreen: function() {
+    this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "webView?code=faq"});
+  },
+  pushAboutScreen: function() {
+    this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "webView?code="});
+  },
+  pushTermsScreen: function() {
+    this.props.sideMenuSubject.onNext({type: "pushScreen", uri: "webView?code=terms"});
+  },
   pressLogout: function() {
     this.props.sideMenuSubject.onNext({type: "toggleSideMenu"});
     SessionActions.logOut(this.state.loginToken, this.state.deviceToken);
@@ -93,10 +102,10 @@ var PlainSideMenu = React.createClass({
 
   render: function() {
     var commonMenus = (<View>
-        <MenuItem text={"ABOUT US"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz")} /></View>);
-
-    //<MenuItem text={"FAQ"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/faq")} />
-    //<MenuItem text={"TERMS & CONDITIONS"} onPress={() => LinkingIOS.openURL("http://plainexchange.xyz/terms")} />
+        <MenuItem text={"ABOUT US"} onPress={this.pushAboutScreen} />
+        <MenuItem text={"FAQ"} onPress={this.pushFAQScreen} />
+        <MenuItem text={"TERMS & CONDITIONS"} onPress={this.pushTermsScreen} />
+      </View>);
 
     var loginUserMenu = (
       <View style={{flexDirection: 'column', flex:1}}>
