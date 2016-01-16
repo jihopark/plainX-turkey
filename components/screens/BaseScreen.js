@@ -166,11 +166,11 @@ class BaseScreen extends React.Component {
 
   handleInitialRequest(error, json){
     this.props.setNetworkActivityIndicator(false);
+
     if (error) {
-      P.log("handleInitialRequest", "Error occured");
-      if (error.status == 500 || error.status == 400 || error.status == 404) {
-        var text = JSON.parse(error.body)["Error"];
-        P.log("handleInitialRequest", "Route Depth:"+this.props.routes.getDepth());
+      var statusCode = error.status;
+      if (statusCode >= 500 || statusCode == 400 || statusCode == 404) {
+
         if (this.props.routes.getDepth() > 1) {
           P.log("handleInitialRequest", "Alert Called");
           AlertUtils.alert(
@@ -180,8 +180,9 @@ class BaseScreen extends React.Component {
           );
           return ;
         }
+        var errorCard = {"UUID": "-999", "Name": "Error"};
         this.setState({data: {"Page":0, "HasNext": false,
-                         "Cards": [{"UUID": "1", "Name": "Error", "Merged": "", "Data": {"Text": text}}]}});
+                         "Cards": [errorCard]}});
       }
       else if (error.status == 401){
         if (this.props.loginToken)
