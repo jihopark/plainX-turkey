@@ -10,7 +10,8 @@ var {
   Text,
   TouchableOpacity,
   AsyncStorage,
-  LinkingIOS,
+  Image,
+  Platform,
 } = React;
 
 const window = Dimensions.get('window');
@@ -122,7 +123,7 @@ var PlainSideMenu = React.createClass({
     var isLoggedin = this.state.user ? Object.keys(this.state.user).length > 0 : false;
 
     return (
-      <View style={[styles.container, (this.props.isOpen ? null : {opacity: 0})]}>
+      <Image source={require('../assets/menubg.png')} resizeMode={'stretch'} style={[styles.container, (this.props.isOpen ? null : {opacity: 0})]}>
         <View style={styles.header}>
           {isLoggedin ?
             (<Text style={styles.nameText}>{this.state.user["Email"]}</Text>) : null}
@@ -132,7 +133,7 @@ var PlainSideMenu = React.createClass({
         </View>
         <View style={styles.footer}></View>
 
-      </View>
+      </Image>
     );
   }
 });
@@ -161,7 +162,7 @@ var styles = StyleSheet.create({
     width: window.width,
     height: window.height,
     flexDirection: 'column',
-    paddingTop: 20,
+    marginTop: Platform.OS == 'ios' ? 20 : 0,
   },
   header: {
     flex: 1,
@@ -174,7 +175,7 @@ var styles = StyleSheet.create({
   },
   footer: {
     flex: 3,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
 });
 
