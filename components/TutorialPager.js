@@ -15,12 +15,12 @@ var {
 } = React;
 
 const IMAGES = [
-  require('../assets/tutorial-1.png'),
-  require('../assets/tutorial-2.png'),
-  require('../assets/tutorial-3.png'),
-  require('../assets/tutorial-4.png'),
-  require('../assets/tutorial-5.png'),
-  require('../assets/tutorial-6.png')
+  require('../assets/WT1bg.png'),
+  require('../assets/WT2bg.png'),
+  require('../assets/WT3bg.png'),
+  require('../assets/WT4bg.png'),
+  require('../assets/WT5bg.png'),
+  require('../assets/WT1bg.png')
 ];
 
 var TutorialPager = React.createClass({
