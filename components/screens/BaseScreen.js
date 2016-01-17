@@ -74,7 +74,7 @@ class BaseScreen extends React.Component {
       KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
       KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
     }
-    P.log("componentDidMount", MixpanelTracker.getDeviceInfo());
+    MixpanelTracker.trackScreenEvent(this.trackName, ParameterUtils.getStringToParams(this.props.params));
   }
 
   componentWillUnmount() {

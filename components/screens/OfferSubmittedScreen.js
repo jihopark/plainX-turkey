@@ -17,6 +17,8 @@ class OfferSubmittedScreen extends BaseScreen{
     this.endPoint = "offer/submitted";
     this.onPressActionButton = this.onPressActionButton.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "OfferSubmitted";
+    
   }
 
   onPressActionButton(){

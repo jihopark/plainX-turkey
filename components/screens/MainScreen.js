@@ -26,12 +26,13 @@ class MainScreen extends BaseScreen{
     this.endPoint = "main";
     this.pushConversationsScreen = this.pushConversationsScreen.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "Main";
   }
 
   pushConversationsScreen(event) {
     this.props.pushScreen({uri: this.props.routes.addRoute('conversations')});
   }
-  
+
   renderScreen() {
     var listView = this.createListView();
 

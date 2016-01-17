@@ -30,6 +30,7 @@ class OfferConfirmationScreen extends BaseScreen{
     this.submitOffer = this.submitOffer.bind(this);
     this.handleRequest = this.handleRequest.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "OfferConfirmation";
   }
 
   submitOffer(){

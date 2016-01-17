@@ -32,6 +32,7 @@ class OfferDetailScreen extends BaseScreen{
     this.onRemoveOffer = this.onRemoveOffer.bind(this);
     this.handleRemoveRequest = this.handleRemoveRequest.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "OfferDetail";
   }
 
   onConnectOffer() {

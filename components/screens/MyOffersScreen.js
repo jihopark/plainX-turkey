@@ -15,6 +15,7 @@ class MyOffersScreen extends BaseScreen{
     super(props);
     this.endPoint = "user/offers";
     this.onPressMakeOffer = this.onPressMakeOffer.bind(this);
+    this.trackName = "MyOffers"
   }
 
   onPressMakeOffer() {

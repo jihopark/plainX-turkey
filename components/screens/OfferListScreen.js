@@ -20,6 +20,7 @@ class OfferListScreen extends BaseScreen{
     this.endPoint = "offer/list";
     this.state.showActionButton = true;
     this.onPressActionButton = this.onPressActionButton.bind(this);
+    this.trackName = "OfferList";
   }
 
   onPressActionButton() {

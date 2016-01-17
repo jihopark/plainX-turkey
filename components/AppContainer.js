@@ -14,6 +14,8 @@ var SessionActions = require('../actions/SessionActions.js');
 
 var TutorialPager = require('./TutorialPager.js');
 
+var MixpanelTracker = require('../MixpanelTracker.js');
+
 var PlainLog = require('../PlainLog.js');
 var P = new PlainLog("AppContainer");
 
@@ -49,6 +51,7 @@ class AppContainer extends React.Component{
     ).done();
     this.checkIfFirstExec().then((isFirstExec) => {
       if (isFirstExec) {
+        MixpanelTracker.setProfile("");
         this.setState({showTutorial: true});
       }
     }).done();

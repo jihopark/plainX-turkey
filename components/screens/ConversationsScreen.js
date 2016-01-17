@@ -21,6 +21,7 @@ class ConversationsScreen extends BaseScreen{
     super(props);
     this.endPoint = "user/conversations";
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "Conversations";
   }
 
   renderScreen() {

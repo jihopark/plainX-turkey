@@ -24,6 +24,8 @@ var ActionButton = require('../ActionButton.js');
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("LoginScreen");
 
+var MixpanelTracker = require('../../MixpanelTracker.js');
+
 
 class LoginScreen extends BaseSessionScreen{
   constructor(props) {
@@ -41,6 +43,7 @@ class LoginScreen extends BaseSessionScreen{
     this.saveDeviceTokenToServer = this.saveDeviceTokenToServer.bind(this);
     this.onPressSignUp = this.onPressSignUp.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "Login"
   }
 
   onLogin(){
@@ -83,7 +86,27 @@ class LoginScreen extends BaseSessionScreen{
       SessionActions.updateLoginToken(json["Session"]);
       P.log("handleRequest",json["Session"]);
       this.saveLoginToken(json["Session"]).then(this.saveDeviceTokenToServer);
+      this.updateEmailOnMixpanel(json["Session"]);
     }
+  }
+
+  updateEmailOnMixpanel(token) {
+    var request = {
+      method: 'get',
+      headers:{ 'X-Session': token }
+    };
+    var url = this.props.api_domain + "user/me";
+    RestKit.send(url, request, function(error, json) {
+      if (error) {
+        P.log("updateEmailOnMixpanel", error);
+        return ;
+      }
+      if (json) {
+        P.log("updateEmailOnMixpanel", json["Email"]);
+        if (json["Email"])
+          MixpanelTracker.setProfile(json["Email"]);
+      }
+    });
   }
 
   async saveLoginToken(token) {

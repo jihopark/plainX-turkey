@@ -40,6 +40,7 @@ class SignUpScreen extends BaseSessionScreen{
     this.handleRequest = this.handleRequest.bind(this);
     this.popScreen = this.popScreen.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "SignUp";
   }
 
   componentDidMount(){

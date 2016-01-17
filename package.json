@@ -8,6 +8,7 @@
   "dependencies": {
     "alt": "^0.18.1",
     "babel-polyfill": "^6.3.14",
+    "buffer": "^4.3.0",
     "fbjs": "^0.6.1",
     "md5": "^2.0.0",
     "moment": "^2.10.6",

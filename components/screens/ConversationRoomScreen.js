@@ -55,6 +55,7 @@ class ConversationRoomScreen extends BaseScreen{
     this.feedbackCardOnNext = this.feedbackCardOnNext.bind(this);
     this.handleFeedbackRequest = this.handleFeedbackRequest.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "ConversationRoom"
   }
 
   componentDidMount() {

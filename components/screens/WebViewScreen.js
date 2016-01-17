@@ -22,6 +22,7 @@ class WebViewScreen extends BaseScreen{
   constructor(props){
     super(props);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "WebView";
   }
 
   componentDidMount() {

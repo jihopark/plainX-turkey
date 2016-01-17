@@ -25,6 +25,7 @@ class MakeOfferScreen extends BaseScreen{
     this.getRequestParams = this.getRequestParams.bind(this);
     this.onPressNextButton = this.onPressNextButton.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.trackName = "MakeOffer"
   }
 
   getRequestParams() {
