@@ -15,6 +15,7 @@ var PlainTextInput = React.createClass({
       <View style={styles.textContainer}>
         <Image source={this.props.icon} style={styles.icon}/>
         <TextInput style={styles.text}
+          autoCapitalize={'none'}
           secureTextEntry={this.props.secureTextEntry || false}
           placeholder={this.props.placeholder}
           keyboardType={this.props.keyboardType}
