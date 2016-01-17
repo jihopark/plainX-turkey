@@ -15,6 +15,8 @@ var PlainActions = require('../../actions/PlainActions');
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("BaseScreen");
 
+var MixpanelTracker = require('../../MixpanelTracker.js');
+
 var {
   View,
   AsyncStorage,
@@ -72,6 +74,7 @@ class BaseScreen extends React.Component {
       KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
       KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
     }
+    P.log("componentDidMount", MixpanelTracker.getDeviceInfo());
   }
 
   componentWillUnmount() {

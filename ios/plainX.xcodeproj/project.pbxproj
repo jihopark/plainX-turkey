@@ -20,6 +20,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		7F3AE1D91C4B8BB1007C186E /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3AE1D61C4B857A007C186E /* libRNDeviceInfo.a */; };
 		7F96BD991C1C256B00CFE791 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F96BD971C1C256B00CFE791 /* Fabric.framework */; };
 		7F96BD9A1C1C256B00CFE791 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F96BD981C1C256B00CFE791 /* Crashlytics.framework */; };
 		7FA7131F1BE73FDF00D23353 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA7131D1BE73F8B00D23353 /* libRCTPushNotification.a */; };
@@ -109,6 +110,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTLinking;
 		};
+		7F3AE1D51C4B857A007C186E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7F3AE1C61C4B8579007C186E /* RNDeviceInfo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RNDeviceInfo;
+		};
 		7FA7131C1BE73F8B00D23353 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7FA713181BE73F8B00D23353 /* RCTPushNotification.xcodeproj */;
@@ -152,6 +160,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = plainX/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7F3AE1C61C4B8579007C186E /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		7F96BD971C1C256B00CFE791 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		7F96BD981C1C256B00CFE791 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		7FA713181BE73F8B00D23353 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
@@ -182,6 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F3AE1D91C4B8BB1007C186E /* libRNDeviceInfo.a in Frameworks */,
 				7FA7132D1BE8827600D23353 /* AudioToolbox.framework in Frameworks */,
 				7FA7132E1BE8827600D23353 /* CFNetwork.framework in Frameworks */,
 				7FD785C01C106344005AEB44 /* libRNKeyboardEvents.a in Frameworks */,
@@ -315,6 +325,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		7F3AE1C71C4B8579007C186E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7F3AE1D61C4B857A007C186E /* libRNDeviceInfo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7FA713191BE73F8B00D23353 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,6 +352,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				7F3AE1C61C4B8579007C186E /* RNDeviceInfo.xcodeproj */,
 				7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */,
 				7FA713181BE73F8B00D23353 /* RCTPushNotification.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -513,6 +532,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = 7F3AE1C71C4B8579007C186E /* Products */;
+					ProjectRef = 7F3AE1C61C4B8579007C186E /* RNDeviceInfo.xcodeproj */;
+				},
+				{
 					ProductGroup = 7FD785BB1C1062A5005AEB44 /* Products */;
 					ProjectRef = 7FD785BA1C1062A5005AEB44 /* RNKeyboardEvents.xcodeproj */;
 				},
@@ -587,6 +610,13 @@
 			fileType = archive.ar;
 			path = libRCTLinking.a;
 			remoteRef = 78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7F3AE1D61C4B857A007C186E /* libRNDeviceInfo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNDeviceInfo.a;
+			remoteRef = 7F3AE1D51C4B857A007C186E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7FA7131D1BE73F8B00D23353 /* libRCTPushNotification.a */ = {
