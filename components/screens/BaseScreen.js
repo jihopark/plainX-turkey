@@ -87,7 +87,7 @@ class BaseScreen extends React.Component {
     }
     if (this.state.data && this.state.data["Cards"]){
       P.log("componentWillUnmount", "Remove Cards");
-      PlainActions.removeCards(this.state.data["Cards"]);
+      PlainActions.removeCards.defer(this.state.data["Cards"]);
     }
   }
 

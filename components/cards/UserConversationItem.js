@@ -42,7 +42,7 @@ var UserConversationItem = React.createClass({
             <Text style={[this.props.cardCommonStyles.title, styles.name, (conversation["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
               {conversation["Users"][0] ? conversation["Users"][0]["Email"] : ""}
             </Text>
-            <Text style={[this.props.cardCommonStyles.description, styles.lastMessage, (this.props.data["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
+            <Text style={[this.props.cardCommonStyles.description, styles.lastMessage, (conversation["HasUnread"] ? {fontWeight: 'bold'} : null)]}>
               {conversation["LastMessage"] ? conversation["LastMessage"]["Text"] : ""}
             </Text>
           </View>
