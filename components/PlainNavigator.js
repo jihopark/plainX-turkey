@@ -303,6 +303,22 @@ var navBarAndroid = StyleSheet.create({
   messageIcon: {
     width: 25, height: 25,
   },
+  messageCountContainer: {
+    backgroundColor:'#33cc66',
+    width:20, height: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    position:'absolute',
+    top:-2,
+    left: -33,
+  },
+  messageCount: {
+    color: 'white',
+    textAlign: 'center',
+    alignSelf: 'center',
+  }
 });
 
 var navBarIOS = StyleSheet.create({
@@ -348,21 +364,6 @@ var navBarIOS = StyleSheet.create({
     left: -20,
     width: 30, height: 30
   },
-});
-
-
-const isIOS = Platform.OS == 'ios';
-var navBarStyle = isIOS ? navBarIOS : navBarAndroid;
-
-var styles = StyleSheet.create({
-  navBar: {
-    backgroundColor: 'white',
-  },
-  scene: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#EAEAEA', //should change to background image later
-  },
   messageCountContainer: {
     backgroundColor:'#33cc66',
     width:20, height: 20,
@@ -379,6 +380,21 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     alignSelf: 'center',
   }
+});
+
+
+const isIOS = Platform.OS == 'ios';
+var navBarStyle = isIOS ? navBarIOS : navBarAndroid;
+
+var styles = StyleSheet.create({
+  navBar: {
+    backgroundColor: 'white',
+  },
+  scene: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: '#EAEAEA', //should change to background image later
+  },
 });
 
 module.exports = PlainNavigator;

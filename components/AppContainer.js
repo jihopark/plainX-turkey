@@ -111,10 +111,8 @@ class AppContainer extends React.Component{
   }
 
   sendDeviceToken(deviceToken) {
-    P.log("sendDeviceToken", "Saved DeviceToken " + token);
-    SessionActions.updateDeviceToken(token);
-
-    //TODO: Need to test with real device
+    P.log("sendDeviceToken", "Saved DeviceToken " + deviceToken);
+    SessionActions.updateDeviceToken(deviceToken);
 
     var request = {
       method: 'post',
@@ -128,8 +126,7 @@ class AppContainer extends React.Component{
     var url = API_DOMAIN + "user/token";
     RestKit.send(url, request, (error, json)=>
       {
-        P.log("sendDeviceToken",error);
-        P.log("sendDeviceToken", json);
+        P.log("sendDeviceToken", "Success");
       });
   }
 
