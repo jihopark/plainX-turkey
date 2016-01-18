@@ -17,54 +17,39 @@ var Feedback = React.createClass({
     return {
       firstResponse: null,
       secondResponse: null,
-      showThanks: false,
     };
   },
-  handleEvent: function(event) {
-    switch(event.name){
-      case "FirstResponse":
-        if (this.props.data["Options"][event.value] == null) {
-          this.setState({firstResponse: event.value, showThanks: true});
-          return {"option": event.value};
-        }
-        this.setState({firstResponse: event.value});
-        return null;
-        break;
-      case "SecondResponse":
-        this.setState({showThanks: true, secondResponse: event.value});
-        return {"option": this.state.firstResponse, "detail": event.value};
-        break;
-    }
+  onMapFirstOptions: function(value){
+    var _onPress = () => {
+      this.setState({firstResponse: value})
+      if (this.props.data["Options"][this.state.firstResponse] == null)
+        this.finishFeedback(this.state.firstResponse, null);
+    };
+    return (<TouchableOpacity onPress={_onPress}>
+      <Text key={value} style={styles.answerText}>{value}</Text>
+    </TouchableOpacity>);
+  },
+  onMapSecondOptions: function(value){
+    var _onPress = () => {
+      this.setState({secondResponse: value, showThanks: true});
+      this.finishFeedback(this.state.firstResponse, value);
+    };
+    return (<TouchableOpacity onPress={_onPress}>
+      <Text key={value} style={styles.answerText}>{value}</Text>
+    </TouchableOpacity>)
+  },
+  finishFeedback: function(firstResponse, secondResponse) {
+    this.props.handleClick(this.props.name, {"option": firstResponse, "detail": secondResponse});
   },
   render: function() {
-    var cardSubject = new Rx.Subject();
-    if (this.props.observer) {
-      cardSubject.subscribe(this.props.observer);
-    }
-
     var firstOptions = Object.keys(this.props.data["Options"]);
-    var responseSubject = new Rx.Subject();
+    var firstOptionsView = firstOptions.map(this.onMapFirstOptions);
 
-    responseSubject.map(this.handleEvent).filter((value, idx, obs)=> value!=null)
-      .subscribe(cardSubject);
-
-    var firstOptionsView = firstOptions.map(function(value){
-      return (<TouchableOpacity onPress={function(){
-        responseSubject.onNext({name: "FirstResponse", value: value});
-      }}>
-      <Text style={styles.answerText}>{value}</Text>
-      </TouchableOpacity>)
-    });
     var secondOptionsView = [];
+
     if (this.state.firstResponse) {
       if (this.props.data["Options"][this.state.firstResponse]){
-        secondOptionsView = this.props.data["Options"][this.state.firstResponse].map(function(value){
-          return (<TouchableOpacity onPress={function(){
-            responseSubject.onNext({name: "SecondResponse", value: value});
-          }}>
-          <Text style={styles.answerText}>{value}</Text>
-          </TouchableOpacity>)
-        });
+        secondOptionsView = this.props.data["Options"][this.state.firstResponse].map(this.onMapSecondOptions);
       }
     }
 
@@ -81,7 +66,7 @@ var Feedback = React.createClass({
             {secondOptionsView.map(view => view)}
           </View>
             : null}
-        {this.state.showThanks ?
+        {this.state.firstResponse && (this.state.secondResponse || secondOptionsView.length == 0) ?
           (<View style={styles.questionContainer}>
             <Text style={styles.thanksText}>Thank you for your response!</Text>
             </View>)

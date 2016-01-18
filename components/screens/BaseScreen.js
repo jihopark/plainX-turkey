@@ -55,6 +55,8 @@ class BaseScreen extends React.Component {
     this.onPressErrorDialog = this.onPressErrorDialog.bind(this);
     this.handleInitialRequest = this.handleInitialRequest.bind(this);
     this.handleAddMoreRequest = this.handleAddMoreRequest.bind(this);
+    this.sendFeedBack = this.sendFeedBack.bind(this);
+    this.handleFeedbackRequest = this.handleFeedbackRequest.bind(this);
 
     this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
     this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
@@ -90,18 +92,30 @@ class BaseScreen extends React.Component {
   }
 
   createListView(){
-    createListView(false);
+    return createListView(false);
   }
 
   createListView(pagination){
-    return (<PlainListView
-      getCard={this.props.getCard}
-      getOffer={this.props.getOffer}
-      getConversation={this.props.getConversation}
-      handleClick={this.handleClick}
-      user={this.props.user}
-      onEndReached={pagination ? this.loadMore : null}
-      cards={this.state.data["Cards"]}/>);
+    return createListView(pagination, false)
+  }
+
+  createListView(pagination, isConversation) {
+    var props = {
+      getCard: this.props.getCard,
+      getOffer: this.props.getOffer,
+      getConversation: this.props.getConversation,
+      handleClick: this.handleClick,
+      user: this.props.user,
+      onEndReached: (pagination ? this.loadMore : null),
+      cards: this.state.data["Cards"],
+    }
+
+    if (isConversation){
+      props.hasBackgroundColor = true;
+      props.invertList = true;
+    }
+
+    return (<PlainListView {...props} />);
   }
 
   handleClick(cardName, data){
@@ -116,8 +130,38 @@ class BaseScreen extends React.Component {
       case "UserConversationItem":
         this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+ParameterUtils.getParamsToString({"Id": data["ConversationId"]}))});
         break;
+      case "Feedback":
+        this.sendFeedBack(data);
+        break;
 
     }
+  }
+
+  sendFeedBack(data){
+    const url = this.props.api_domain + "conversation/feedback?Id="+this.getConversationId();
+    P.log("sendFeedBack", url);
+    P.log("sendFeedBack", data);
+
+    var request = {
+      method: 'post',
+      headers: {
+        'X-Session': this.props.loginToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    this.props.setNetworkActivityIndicator(true);
+    RestKit.send(url, request, this.handleFeedbackRequest);
+  }
+
+  handleFeedbackRequest(error, json) {
+    this.props.setNetworkActivityIndicator(false);
+    if (error) {
+      P.log("handleFeedbackRequest/error", error);
+      return ;
+    }
+    P.log("handleFeedbackRequest/success", json);
   }
 
   loadScreen() {

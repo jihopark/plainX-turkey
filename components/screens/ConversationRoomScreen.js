@@ -52,8 +52,6 @@ class ConversationRoomScreen extends BaseScreen{
     this.handleSendMsgRequest = this.handleSendMsgRequest.bind(this);
     this.onChangeMsgInput = this.onChangeMsgInput.bind(this);
     this.onPressHeader = this.onPressHeader.bind(this);
-    this.feedbackCardOnNext = this.feedbackCardOnNext.bind(this);
-    this.handleFeedbackRequest = this.handleFeedbackRequest.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
     this.trackName = "ConversationRoom"
   }
@@ -241,46 +239,8 @@ class ConversationRoomScreen extends BaseScreen{
     this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString(params))});
   }
 
-  feedbackCardOnNext(event) {
-    P.log("feedbackCardOnNext", event);
-    const url = this.props.api_domain + "conversation/feedback?Id="+this.getConversationId();
-    P.log("feedbackCardOnNext", url);
-    var request = {
-      method: 'post',
-      headers: {
-        'X-Session': this.props.loginToken,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    };
-    this.props.setNetworkActivityIndicator(true);
-    RestKit.send(url, request, this.handleFeedbackRequest);
-  }
-
-  handleFeedbackRequest(error, json) {
-    this.props.setNetworkActivityIndicator(false);
-    if (error) {
-      P.log("handleFeedbackRequest/error", error);
-      return ;
-    }
-    P.log("handleFeedbackRequest/success", json);
-  }
-
   renderScreen() {
-    var cardObservers = { };
-    cardObservers["Feedback"] = this.feedbackCardOnNext;
-
-    var listView = (<PlainListView
-      hasBackgroundColor={true}
-      invertList={true}
-      getCard={this.props.getCard}
-      getOffer={this.props.getOffer}
-      getConversation={this.props.getConversation}
-      cardObservers={cardObservers}
-      cards={this.state.data["Cards"]}
-      onEndReached={this.loadMore}
-      />);
+    var listView = this.createListView(true, true);
 
     var offer = this.props.getOffer(this.state.data ? this.state.data["Meta"]["OfferId"] : null);
 
