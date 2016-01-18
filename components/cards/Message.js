@@ -46,9 +46,10 @@ var Message = React.createClass({
         break;
       case 'note':
         message = (<View style={{flexDirection:'column', margin: 10}}>
-          <Text style={[styles.messageText, styles.noteText]}>
+          <ParsedText style={[styles.messageText, styles.noteText]}
+            parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
             {this.props.data["Text"]}
-          </Text>
+          </ParsedText>
           <Text style={[styles.dateText, styles.noteSubText]}>
             {"Only shown to you"}
           </Text>
