@@ -22,8 +22,8 @@ var AlertUtils = {
       strings[type][0],
       strings[type][1],
       [
-      //  {text: (strings[type][2] || 'Cancel'), onPress: (onPressNegative || () => null)},
-      //  {text: (strings[type][3] || 'OK'), onPress: (onPressPositive || () => null)},
+        {text: (strings[type][2] || 'Cancel'), onPress: onPressNegative || (() => null) },
+        {text: (strings[type][3] || 'OK'), onPress: onPressPositive || (() => null)},
       ]
     );
   }

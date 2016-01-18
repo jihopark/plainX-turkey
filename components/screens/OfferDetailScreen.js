@@ -118,9 +118,9 @@ class OfferDetailScreen extends BaseScreen{
       return ;
     }
     if (json) {
-      P.log("handleRemoveRequest/success", json);
-      PlainActions.removeOffer(this.state.data["Offers"][0]["Id"]);
+      var id = ParameterUtils.getStringToParams(this.props.params)["Id"];
       this.props.popScreen();
+      PlainActions.removeOffer(id);
     }
   }
 
