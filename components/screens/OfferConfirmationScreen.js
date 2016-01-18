@@ -15,18 +15,11 @@ var RestKit = require('react-native-rest-kit');
 var PlainLog = require('../../PlainLog.js');
 var P = new PlainLog("OfferConfirmationScreen");
 
-
-var actionButtonStates = { "default": "FINISH",
-                        "loading": "Loading",
-                        "done": "DONE!",
-                        "error": "SOMETHING WENT WRONG"};
-
-
 class OfferConfirmationScreen extends BaseScreen{
   constructor(props){
     super(props);
     this.endPoint = 'offer/confirm';
-    this.state.buttonState = "default";
+    this.state.buttonState = "finish";
     this.submitOffer = this.submitOffer.bind(this);
     this.handleRequest = this.handleRequest.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
@@ -71,7 +64,7 @@ class OfferConfirmationScreen extends BaseScreen{
       <View style={this.screenCommonStyle.container}>
         {listView}
         <ActionButton
-          text={actionButtonStates[this.state.buttonState]}
+          actionState={this.state.buttonState}
           onPress={this.submitOffer}
           enabled={true} />
       </View>

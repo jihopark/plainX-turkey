@@ -14,7 +14,9 @@ var actionButtonStates = {"connected": "CONNECTED!",
                         "loading": "Loading",
                         "not_connected": "CONNECT TO THIS OFFER",
                         "self": "REMOVE OFFER",
-                        "error": "SOMETHING WENT WRONG"};
+                        "error": "SOMETHING WENT WRONG",
+                        "finish": "FINISH",
+                        "done": "DONE"};
 
 var ActionButton = React.createClass({
   displayName: 'ActionButton',
