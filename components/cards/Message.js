@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-var Rx = require('rx')
+import ParsedText from 'react-native-parsed-text';
 
 var DateUtils = require('../utils/DateUtils.js');
 
@@ -9,21 +9,36 @@ var {
   Text,
   View,
   StyleSheet,
+  LinkingIOS,
+  IntentAndroid,
+  Platform,
 } = React;
 
 var Message = React.createClass({
   displayName: "MessageCard",
+  handleUrlPress: function(url) {
+    if (Platform.OS == 'ios')
+      LinkingIOS.openURL(url);
+    else{
+      IntentAndroid.canOpenURL(url, (supported) => {
+        if (supported) {
+          IntentAndroid.openURL(url);
+        }
+      });
+    }
+  },
   render: function() {
     var message;
     switch (this.props.data["Type"]) {
       case 'message':
         var isSelf = this.props.data["IsSelf"];
         message = (<View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-          <Text style={[styles.messageText,
+          <ParsedText style={[styles.messageText,
               (isSelf ?
-                styles.selfText : styles.otherText)]}>
+                styles.selfText : styles.otherText)]}
+                parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
             {this.props.data["Text"]}
-          </Text>
+          </ParsedText>
           <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
             {DateUtils.getMessageTimestampFormat(this.props.data["Created"])}
           </Text>
@@ -105,6 +120,10 @@ var styles = StyleSheet.create({
     width: 50,
     height: 50,
     alignSelf: 'center'
+  },
+  url: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
 
