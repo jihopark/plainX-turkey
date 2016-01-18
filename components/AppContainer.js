@@ -3,6 +3,7 @@
 var React = require('react-native');
 var {
   AsyncStorage,
+  PushNotificationIOS,
 } = React;
 
 var PlainNavigator = require('./PlainNavigator.js');
