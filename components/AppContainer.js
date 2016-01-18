@@ -126,7 +126,11 @@ class AppContainer extends React.Component{
     var url = API_DOMAIN + "user/token";
     RestKit.send(url, request, (error, json)=>
       {
-        P.log("sendDeviceToken", "Success");
+        if (error){
+          P.log("sendDeviceToken/error", error);
+          return ;
+        }
+        P.log("sendDeviceToken/success", json);
       });
   }
 

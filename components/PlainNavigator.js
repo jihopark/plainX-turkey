@@ -318,7 +318,7 @@ var navBarAndroid = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     alignSelf: 'center',
-  }
+  },
 });
 
 var navBarIOS = StyleSheet.create({
@@ -379,9 +379,8 @@ var navBarIOS = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     alignSelf: 'center',
-  }
+  },
 });
-
 
 const isIOS = Platform.OS == 'ios';
 var navBarStyle = isIOS ? navBarIOS : navBarAndroid;

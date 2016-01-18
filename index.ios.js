@@ -11,6 +11,7 @@ var AppContainer = require('./components/AppContainer.js');
 
 var PlainLog = require('./PlainLog.js');
 var P = new PlainLog("AppContainerIOS");
+var SessionActions = require('./actions/SessionActions.js');
 
 class AppContainerIOS extends AppContainer {
   constructor(){

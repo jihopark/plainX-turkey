@@ -64,7 +64,7 @@ class LoginScreen extends BaseSessionScreen{
         hashedpw: md5(pwd),
       })
     };
-    P.log("onLogin","Here");
+    P.log("onLogin", url);
     RestKit.send(url, request, this.handleRequest);
   }
 
@@ -96,6 +96,7 @@ class LoginScreen extends BaseSessionScreen{
       headers:{ 'X-Session': token }
     };
     var url = this.props.api_domain + "user/me";
+    P.log("updateEmailOnMixpanel", url);
     RestKit.send(url, request, function(error, json) {
       if (error) {
         P.log("updateEmailOnMixpanel", error);
