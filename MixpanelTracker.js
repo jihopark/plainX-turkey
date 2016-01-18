@@ -4,13 +4,12 @@ var DeviceInfo = require('react-native-device-info');
 
 const TRACK_URL = "http://api.mixpanel.com/track/?data=";
 const PROFILE_URL = "http://api.mixpanel.com/engage/?data=";
-const TOKEN_DEV = "b96294c2f2d4ba22307fc1396251b62a";
-const TOKEN_PRO = "c350b022d1918a7139a9b08a682aecc3";
 
 var PlainLog = require('./PlainLog.js');
 var P = new PlainLog("MixpanelTracker");
 
 var Buffer = require('buffer').Buffer
+var TOKEN = require('./constants/BuildConstants').MIXPANEL_TOKEN;
 
 var RestKit = require('react-native-rest-kit');
 
@@ -20,7 +19,7 @@ var MixpanelTracker = (function () {
     function getBaseData() {
         if (!baseData) {
           baseData = {
-            "token": TOKEN_DEV,
+            "token": TOKEN,
             "distinct_id": DeviceInfo.getUniqueID(),
             "model": DeviceInfo.getModel(),
             "system_version": DeviceInfo.getSystemVersion(),
