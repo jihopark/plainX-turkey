@@ -130,7 +130,7 @@ class SignUpScreen extends BaseSessionScreen{
                 <Text style={this.styles.errorMsg}>{this.state.errorMsg || ""}</Text>
                 <PlainTextInput
                     icon={require("../../assets/emailicon.png")}
-                    placeholder={"Email"}
+                    placeholder={"Email (your hk uni email)"}
                     keyboardType={"email-address"}
                     onChangeText={this.onChangeEmail}
                     value={this.state.email} />

@@ -26,6 +26,16 @@ var AlertUtils = {
         {text: (strings[type][3] || 'OK'), onPress: onPressPositive || (() => null)},
       ]
     );
+  },
+  showCustomAlert: function(title, subtitle, negative, positive, onPressNegative, onPressPositive){
+    AlertIOS.alert(
+      title,
+      subtitle,
+      [
+        {text: (negative || 'Cancel'), onPress: onPressNegative || (() => null) },
+        {text: (positive || 'OK'), onPress: onPressPositive || (() => null)},
+      ]
+    );
   }
 };
 module.exports = AlertUtils;
