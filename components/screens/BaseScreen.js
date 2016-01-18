@@ -219,12 +219,9 @@ class BaseScreen extends React.Component {
       if (statusCode >= 500 || statusCode == 400 || statusCode == 404) {
 
         if (this.props.routes.getDepth() > 1) {
-          P.log("handleInitialRequest", "Alert Called");
-          AlertUtils.alert(
-            AlertUtils.SCREEN_ERROR,
-            null,
-            this.onPressErrorDialog,
-          );
+          var message = JSON.parse(error.body)["Error"];
+          P.log("handleInitialRequest", message);
+          AlertUtils.showCustomAlert( message, "", "" ,"", this.onPressErrorDialog, this.onPressErrorDialog);
           return ;
         }
         var errorCard = {"UUID": "-999", "Name": "Error"};
