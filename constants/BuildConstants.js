@@ -3,7 +3,7 @@
 const DEVELOPMENT = "DEV";
 const PRODUCTION = "PROD";
 
-const BUILD = DEVELOPMENT;
+const BUILD = PRODUCTION;
 
 var BuildConstants = {
   API_DOMAIN: BUILD == DEVELOPMENT ?
