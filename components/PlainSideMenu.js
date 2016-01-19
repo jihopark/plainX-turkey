@@ -120,7 +120,7 @@ var PlainSideMenu = React.createClass({
       <MenuItem text={"LOGIN"} onPress={this.pushLoginScreen} />
       </View>);
 
-    var isLoggedin = this.state.user ? Object.keys(this.state.user).length > 0 : false;
+    var isLoggedin = this.state.user !== null && typeof this.state.user === 'object' ? Object.keys(this.state.user).length > 0 : false;
 
     return (
       <Image source={require('../assets/menubg.png')} resizeMode={'stretch'} style={[styles.container, (this.props.isOpen ? null : {opacity: 0})]}>
