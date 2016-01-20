@@ -37,6 +37,7 @@ class AppContainer extends React.Component{
     this.checkIfFirstExec = this.checkIfFirstExec.bind(this);
     this.closeTutorial = this.closeTutorial.bind(this);
     this.goToSignUp = this.goToSignUp.bind(this);
+    this.onRegister = this.onRegister.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +61,11 @@ class AppContainer extends React.Component{
 
   componentWillUnmount() {
     SessionStore.unlisten(this.onChange);
+  }
+
+  onRegister(deviceToken) {
+    P.log("onRegister", deviceToken);
+    this.saveDeviceToken(deviceToken).then(this.sendDeviceToken).done();
   }
 
   async checkIfFirstExec(){
