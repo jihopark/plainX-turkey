@@ -8,7 +8,7 @@ var {
 var AppContainer = require('./components/AppContainer.js');
 
 var PlainLog = require('./PlainLog.js');
-var P = new PlainLog("AppContainerIOS");
+var P = new PlainLog("AppContainerAndroid");
 
 class AppContainerAndroid extends AppContainer {
   constructor(){
@@ -21,7 +21,6 @@ class AppContainerAndroid extends AppContainer {
     super.componentDidMount();
     //PushNotificationIOS.addEventListener("register", this.onRegister);
     //PushNotificationIOS.checkPermissions(this.onCheckPermission);
-
   }
 
   componentWillUnmount() {

@@ -15,6 +15,7 @@
     "react": "^0.14.3",
     "react-addons-update": "^0.14.3",
     "react-native": "jihopark/react-native#plainX",
+    "react-native-activity-android": "^0.17.3",
     "react-native-device-info": "jihopark/react-native-device-info#plainX",
     "react-native-invertible-scroll-view": "^0.1.2",
     "react-native-keyboardevents": "^0.4.5",

@@ -13,6 +13,7 @@ var {
   TouchableOpacity,
   AppStateIOS,
   ActivityIndicatorIOS,
+  Platform,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -23,6 +24,7 @@ var RestKit = require('react-native-rest-kit');
 var update = require('react-addons-update');
 var PlainActions = require('../../actions/PlainActions.js');
 var SessionActions = require('../../actions/SessionActions.js');
+var ActivityAndroid = require('react-native-activity-android');
 
 var MAX_WAITING_TIME = 60000;// in ms
 
@@ -34,7 +36,7 @@ class ConversationRoomScreen extends BaseScreen{
       data: null,
       keyboardSpace: 0,
       shouldPoll: false,
-      appState: AppStateIOS.currentState,
+      appState: 'active', //AppStateIOS.currentState,
       msgInput: "",
       sending: false,
     };
@@ -43,6 +45,8 @@ class ConversationRoomScreen extends BaseScreen{
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+    this.handleActivityPause = this.handleActivityPause.bind(this);
+    this.handleActivityResume = this.handleActivityResume.bind(this);
     this.getConversationId = this.getConversationId.bind(this);
     this.getPollResults = this.getPollResults.bind(this);
     this.poll = this.poll.bind(this);
@@ -60,15 +64,37 @@ class ConversationRoomScreen extends BaseScreen{
     super.componentDidMount();
     this.isMount = true;
     P.log("componentDidMount", "Add AppState Listener");
-    AppStateIOS.addEventListener('change', this.handleAppStateChange);
+
+    if (Platform.OS == 'ios')
+      AppStateIOS.addEventListener('change', this.handleAppStateChange);
+    else{
+      ActivityAndroid.addEventListener('activityPause', this.handleActivityPause);
+      ActivityAndroid.addEventListener('activityResume', this.handleActivityResume);
+    }
   }
 
   componentWillUnmount() {
     super.componentDidMount();
     this.isMount = false;
     P.log("componentWillUnmount", "Remove AppState Listener");
-    AppStateIOS.removeEventListener('change', this.handleAppStateChange);
     SessionActions.updateScreenName("");
+
+    if (Platform.OS == 'ios')
+      AppStateIOS.removeEventListener('change', this.handleAppStateChange);
+    else{
+      ActivityAndroid.removeEventListener('activityPause', this.handleActivityPause);
+      ActivityAndroid.removeEventListener('activityResume', this.handleActivityResume);
+    }
+  }
+
+  handleActivityPause(){
+    P.log("handleActivityPause", "inactive");
+    this.handleAppStateChange('pause');
+  }
+
+  handleActivityResume(){
+    P.log("handleActivityResume", "active");
+    this.handleAppStateChange('active');
   }
 
   handleAppStateChange(appState) {
