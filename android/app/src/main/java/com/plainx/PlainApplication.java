@@ -40,29 +40,41 @@ public class PlainApplication extends Application {
 
     public static class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
        @Override
-       public void onActivityCreated(Activity activity, Bundle savedInstanceState) { }
+       public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+         Log.v("PushLog","onActivityCreated");
+       }
 
        @Override
-       public void onActivityStarted(Activity activity) { }
+       public void onActivityStarted(Activity activity) {
+         Log.v("PushLog","onActivityStarted");
+       }
 
        @Override
        public void onActivityResumed(Activity activity) {
+         Log.v("PushLog","onActivityResumed");
          isActive = true;
        }
 
        @Override
        public void onActivityPaused(Activity activity) {
+         Log.v("PushLog","onActivityPaused");
          isActive = false;
        }
 
        @Override
-       public void onActivitySaveInstanceState(Activity activity, Bundle outState) { }
-
-       @Override
-       public void onActivityStopped(Activity activity) {
+       public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+         Log.v("PushLog","onActivitySaveInstanceState");
        }
 
        @Override
-       public void onActivityDestroyed(Activity activity) { }
+       public void onActivityStopped(Activity activity) {
+         Log.v("PushLog","onActivityStopped");
+
+       }
+
+       @Override
+       public void onActivityDestroyed(Activity activity) {
+         Log.v("PushLog","onActivityDestroyed");
+       }
     }
 }

@@ -3,6 +3,7 @@
 var React = require('react-native');
 var {
   AppRegistry,
+  DeviceEventEmitter,
 } = React;
 
 var AppContainer = require('./components/AppContainer.js');
@@ -25,17 +26,20 @@ class AppContainerAndroid extends AppContainer {
   componentDidMount() {
     super.componentDidMount();
     ParsePush.addEventListener(ParsePush.REGISTER, this.onRegister);
-    ParsePush.addEventListener(ParsePush.NOTIFICATION, this.onNotification);
+    DeviceEventEmitter.addListener(ParsePush.NOTIFICATION, this.onNotification);
+    P.log("componentDidMount", "MOUNTS");
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
     ParsePush.removeEventListener(ParsePush.REGISTER);
-    ParsePush.removeEventListener(ParsePush.NOTIFICATION);
+    DeviceEventEmitter.removeAllListeners(ParsePush.NOTIFICATION);
+    P.log("componentWillUnmount", "UNMOUNTS");
   }
 
-  onNotification(isApplicationActive, event){
-    var data = JSON.parse(event);
+  onNotification(event){
+    var isApplicationActive = event["isActive"];
+    var data = JSON.parse(event["data"]);
 
     P.log("onNotification", isApplicationActive);
     P.log("onNotification", data);
