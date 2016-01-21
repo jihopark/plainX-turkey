@@ -20,7 +20,7 @@ const IMAGES = [
   require('../assets/WT3bg.png'),
   require('../assets/WT4bg.png'),
   require('../assets/WT5bg.png'),
-  require('../assets/WT1bg.png')
+  require('../assets/WT6bg.png')
 ];
 
 var TutorialPager = React.createClass({
