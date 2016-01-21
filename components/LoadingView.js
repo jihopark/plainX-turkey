@@ -8,15 +8,19 @@ var {
   Platform,
 } = React;
 
+var ProgressBar = require('ProgressBarAndroid');
+
+
 var LoadingView = React.createClass({
   displayName: 'LoadingView',
   render: function() {
     return (
       <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        {Platform.OS === 'ios' ?
+        { Platform.OS === 'ios' ?
         <ActivityIndicatorIOS size='small' color="#33cc66" />
         :
-        (<Text>Loading...</Text>)}
+        <ProgressBar styleAttr="Small" color="#33cc66" />
+        }
 
       </View>
     );
