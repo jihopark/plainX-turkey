@@ -305,19 +305,19 @@ var navBarAndroid = StyleSheet.create({
   },
   messageCountContainer: {
     backgroundColor:'#33cc66',
-    width:20, height: 20,
+    width:15, height: 15,
     borderRadius: 10,
-    overflow: 'hidden',
     justifyContent: 'center',
     flexDirection: 'row',
     position:'absolute',
-    top:-2,
-    left: -33,
+    top:0,
+    left:0,
   },
   messageCount: {
     color: 'white',
     textAlign: 'center',
     alignSelf: 'center',
+    fontSize: 10,
   },
 });
 
