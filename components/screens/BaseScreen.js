@@ -21,7 +21,6 @@ var {
   View,
   AsyncStorage,
   StyleSheet,
-  AlertIOS,
   Platform,
 } = React;
 
@@ -221,7 +220,7 @@ class BaseScreen extends React.Component {
         if (this.props.routes.getDepth() > 1) {
           var message = JSON.parse(error.body)["Error"];
           P.log("handleInitialRequest", message);
-          AlertUtils.showCustomAlert( message, "", "" ,"", this.onPressErrorDialog, this.onPressErrorDialog);
+          AlertUtils.showCustomAlert("", message, "" ,"", this.onPressErrorDialog, this.onPressErrorDialog);
           return ;
         }
         var errorCard = {"UUID": "-999", "Name": "Error"};

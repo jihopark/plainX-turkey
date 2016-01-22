@@ -2,14 +2,14 @@
 
 var React = require('react-native');
 var {
-  AlertIOS,
+  Alert,
 } = React;
 
 var strings = {
   "login_connect_offer": ["Login to connect to this offer", "We want to know you more!"],
-  "connected_offer": ["You are already connected to this offer", "", "", "Go to conversation"],
+  "connected_offer": ["", "You are already connected to this offer", "", "Go to conversation"],
   "remove_offer": ["Are you sure?", "All offer details and conversations will be deleted. This action cannot be undone.", "Yes", "No"],
-  "screen_error": ["Something went wrong", "", "", ""],
+  "screen_error": ["", "Something went wrong", "", ""],
 };
 
 var AlertUtils = {
@@ -18,7 +18,7 @@ var AlertUtils = {
   REMOVE_OFFER: "remove_offer",
   SCREEN_ERROR: "screen_error",
   showAlert: function(type, onPressNegative, onPressPositive){
-    AlertIOS.alert(
+    Alert.alert(
       strings[type][0],
       strings[type][1],
       [
@@ -28,7 +28,7 @@ var AlertUtils = {
     );
   },
   showCustomAlert: function(title, subtitle, negative, positive, onPressNegative, onPressPositive){
-    AlertIOS.alert(
+    Alert.alert(
       title,
       subtitle,
       [
