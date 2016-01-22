@@ -298,6 +298,7 @@ class ConversationRoomScreen extends BaseScreen{
         {listView}
         <View style={[styles.sendContainer, {marginBottom: this.state.keyboardSpace}]} >
           <TextInput
+            underlineColorAndroid={'transparent'}
             placeholder={"Type here"}
             style={styles.msgInput}
             onChangeText={this.onChangeMsgInput}

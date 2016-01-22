@@ -29,7 +29,7 @@ var CurrencyAmountTextInput = React.createClass({
           keyboardType={"numeric"}
           clearTextOnFocus={true}
           returnKeyType={'done'}
-          underlineColorAndroid={'rgba(0,0,0,0)'}
+          underlineColorAndroid={'transparent'}
           textAlignVertical={'top'}
         />
       </View>
