@@ -14,11 +14,16 @@ var CurrencyAmount = React.createClass({
   displayName: "CurrencyAmountCard",
   render: function() {
     var offer = this.props.getOffer(this.props.data["OfferId"]);
+    var isOwner = this.props.user ? this.props.user["Id"] == offer["SellerId"] : false;
+
+    var youGive = "You Give", youReceive = "You Receive";
     return offer ?
       (
       <View style={styles.container}>
         <View style={styles.sideContainer}>
-          <Text style={[styles.explanation, {textAlign:'right'}]}>You Give</Text>
+          <Text style={[styles.explanation, {textAlign:'right'}]}>
+            {isOwner ? youReceive : youGive}
+          </Text>
           <Text style={[this.props.cardCommonStyles.currency, styles.leftCurrency]}>
             {offer["Buy"]+"\n"+NumberUtils.formatNumber(offer["AmountBuy"])}</Text>
         </View>
@@ -27,7 +32,9 @@ var CurrencyAmount = React.createClass({
           <Image style={styles.center} source={require('../../assets/plane.png')}/>
         </View>
         <View style={styles.sideContainer}>
-          <Text style={[styles.explanation]}>You Receive</Text>
+          <Text style={[styles.explanation]}>
+            {isOwner ? youGive : youReceive}
+          </Text>
           <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>
             {offer["Sell"]+"\n"+NumberUtils.formatNumber(offer["AmountSell"])}</Text>
         </View>
