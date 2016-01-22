@@ -12,6 +12,7 @@ var {
   StyleSheet,
   Image,
   Animated,
+  BackAndroid,
 } = React;
 
 var Routes = require('./screens/Routes.js');
@@ -53,6 +54,7 @@ class PlainNavigator extends React.Component {
     this.renderScene = this.renderScene.bind(this);
     this.getNavBarRouter = this.getNavBarRouter.bind(this);
     this.sideMenuSubject = new Rx.Subject();
+    this.handleBackAndroid = this.handleBackAndroid.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -66,6 +68,8 @@ class PlainNavigator extends React.Component {
 
   componentDidMount() {
     PlainDataStore.listen(this.onChangeState);
+    if (Platform.OS == 'android')
+      BackAndroid.addEventListener('hardwareBackPress', this.handleBackAndroid);
   }
 
   componentDidUpdate() {
@@ -75,6 +79,20 @@ class PlainNavigator extends React.Component {
 
   componentWillUnmount() {
     PlainDataStore.unlisten(this.onChangeState);
+    if (Platform.OS == 'android')
+      BackAndroid.removeEventListener('hardwareBackPress', this.handleBackAndroid);
+  }
+
+  handleBackAndroid(){
+    if (this.refs.navigator.getCurrentRoutes().length > 1)
+      this.refs.navigator.pop();
+    else if (this.state.isSideMenuOpen) {
+      this.toggleSideMenu();
+    }
+    else {
+      return false; //turn the app off if on the main screen
+    }
+    return true;
   }
 
   onChangeState(state) {
@@ -253,6 +271,7 @@ class PlainNavigator extends React.Component {
               isOpen={this.state.isSideMenuOpen}
               sideMenuSubject={this.sideMenuSubject} />}>
         <Navigator
+          ref="navigator"
           screenName={this.props.screenName}
           toggleSideMenu={this.toggleSideMenu}
           sideMenuSubject={this.sideMenuSubject}
