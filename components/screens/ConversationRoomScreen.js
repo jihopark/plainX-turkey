@@ -27,6 +27,9 @@ var SessionActions = require('../../actions/SessionActions.js');
 var ActivityAndroid = require('react-native-activity-android');
 var ProgressBar = require('ProgressBarAndroid');
 
+var LoadingView = require('../LoadingView.js');
+
+
 var MAX_WAITING_TIME = 60000;// in ms
 
 class ConversationRoomScreen extends BaseScreen{
@@ -282,9 +285,9 @@ class ConversationRoomScreen extends BaseScreen{
       </TouchableOpacity>) : null);
 
     var sendButton = this.state.sending ?
-    (Platform.OS == 'ios' ?
-      <ActivityIndicatorIOS size='small' color="#33cc66" /> :
-      <ProgressBar styleAttr='Small' color="#33cc66" />)
+      <View style={{alignSelf:'center'}}>
+        <LoadingView />
+      </View>
     :
       (<TouchableOpacity onPress={this.onSend}>
         <Text style={styles.sendButton} >Send</Text>
