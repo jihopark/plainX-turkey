@@ -24,6 +24,7 @@
     "react-native-picker-android": "^0.3.8",
     "react-native-rest-kit": "0.0.6",
     "react-native-side-menu": "^0.17.0",
+    "react-native-timer-mixin": "^0.11.0",
     "react-native-viewpager": "jihopark/react-native-viewpager#plainX",
     "react-transform-hmr": "^1.0.1",
     "rx": "^4.0.7",
