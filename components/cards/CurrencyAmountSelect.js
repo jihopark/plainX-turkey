@@ -72,6 +72,8 @@ var CurrencyAmountSelect = React.createClass({
     PlainActions.updateCardData(this.props.id, "Buy", this.state.selectedBuyCurrency);
   },
   onFocusTextInput: function() {
+    if (Platform.OS != 'ios')
+      this.clearAllValues();
     this.dismissPicker();
   },
   onChangeTextSell: function(num){
