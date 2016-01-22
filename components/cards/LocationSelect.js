@@ -40,7 +40,7 @@ var LocationSelect = React.createClass({
 
     var selections = Object.keys(this.props.data["Locations"]).map(function(location){
       return (
-        <TouchableOpacity onPress={function(){
+        <TouchableOpacity key={location} onPress={function(){
           var copy = JSON.parse(JSON.stringify(locations));
           copy[location]["IsSelected"] = !copy[location]["IsSelected"];
           PlainActions.updateCardData(id, "Locations", copy);
