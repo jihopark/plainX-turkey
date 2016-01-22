@@ -80,4 +80,5 @@ dependencies {
     compile "com.facebook.react:react-native:0.17.+"
     compile project(':RNDeviceInfo')
     compile project(':ActivityAndroid')
+    compile project(':reactdate')
 }
