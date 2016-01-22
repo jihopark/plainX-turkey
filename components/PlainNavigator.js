@@ -411,7 +411,7 @@ var styles = StyleSheet.create({
   },
   scene: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: (Platform.OS =='ios' ? 20 : 12),
     backgroundColor: '#EAEAEA', //should change to background image later
   },
 });
