@@ -63,6 +63,16 @@ class AppContainer extends React.Component{
     SessionStore.unlisten(this.onChange);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState["uri"]!=this.state.uri){
+      P.log("shouldComponentUpdate", nextState["uri"]);
+      P.log("shouldComponentUpdate", "FORCEUPDATE!");
+      this.forceUpdate();
+      return false;
+    }
+    return true;
+  }
+
   onRegister(deviceToken) {
     P.log("onRegister", deviceToken);
     this.saveDeviceToken(deviceToken).then(this.sendDeviceToken).done();

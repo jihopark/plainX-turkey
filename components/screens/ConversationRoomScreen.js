@@ -39,8 +39,6 @@ class ConversationRoomScreen extends BaseScreen{
     this.state = {
       data: null,
       keyboardSpace: 0,
-      shouldPoll: false,
-      appState: 'active', //AppStateIOS.currentState,
       msgInput: "",
       sending: false,
     };
@@ -62,6 +60,10 @@ class ConversationRoomScreen extends BaseScreen{
     this.onPressHeader = this.onPressHeader.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
     this.trackName = "ConversationRoom"
+
+    this.shouldPoll = false;
+    this.appState= 'active';
+    this.initialLoadDone = false;
   }
 
   componentDidMount() {
@@ -78,7 +80,7 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   componentWillUnmount() {
-    super.componentDidMount();
+    super.componentWillUnmount();
     this.isMount = false;
     P.log("componentWillUnmount", "Remove AppState Listener");
     SessionActions.updateScreenName("");
@@ -93,7 +95,7 @@ class ConversationRoomScreen extends BaseScreen{
 
   handleActivityPause(){
     P.log("handleActivityPause", "inactive");
-    this.handleAppStateChange('pause');
+    this.handleAppStateChange('inactive');
   }
 
   handleActivityResume(){
@@ -102,27 +104,44 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   handleAppStateChange(appState) {
+    if (appState == this.appState)
+      return ;
     if (appState != 'active') {
-      if (this.isMount) this.setState({shouldPoll: false, appState: appState});
+      if (this.isMount){
+        this.shouldPoll = false;
+        this.appState = appState;
+      }
     }
     else {
-      if (this.isMount) this.setState({data: null, shouldPoll: true, appState: appState});
+      P.log("handleAppStateChange", "handle App State");
+      if (this.isMount){
+        this.shouldPoll = true;
+        this.appState = appState;
+        this.setState({data:null});
+      }
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!nextState["data"]) {
+    if (nextState["data"]!=null){
+      this.initialLoadDone = true;
+      P.log("shouldComponentUpdate", "Initial Load Done!!");
+    }
+
+    if (!nextState["data"] && this.initialLoadDone) {
+      this.initialLoadDone = false;
       this.loadScreen();
       P.log("shouldComponentUpdate", "Start Polling again");
       this.poll();
       return true;
     }
-    if (nextState["data"] && nextState["shouldPoll"] == false && nextState["appState"] == 'active') {
-      if (this.isMount) this.setState({shouldPoll: true});
+    if (nextState["data"] && this.shouldPoll == false && this.appState == 'active') {
+      if (this.isMount){
+        this.shouldPoll = true;
+      }
       P.log("shouldComponentUpdate", "Start Polling");
       this.loadScreenNameFromConversation();
       this.poll();
-      return false;
     }
     return true;
   }
@@ -201,7 +220,7 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   onMessage(data) {// on success
-    if (data && data["Cards"].length > 0 && this.state.shouldPoll) {
+    if (data && data["Cards"].length > 0 && this.shouldPoll) {
       P.log("onMessage", data);
       var stateData = this.state.data;
 
@@ -220,7 +239,7 @@ class ConversationRoomScreen extends BaseScreen{
       }
       if (this.isMount) this.setState({data: this.state.data});
     }
-    if (this.state.shouldPoll && this.isMount)
+    if (this.shouldPoll && this.isMount)
       this.poll();
   }
 
