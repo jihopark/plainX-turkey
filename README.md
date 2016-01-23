@@ -12,3 +12,10 @@
 3. Run `react-native bundle --platform ios --dev false --entry-file index.ios.js --bundle-output iOS/main.jsbundle`
 4. Change `Build Target` to `Generic iOS Device` and `Product < Archive`
 5. Submit! (probably after many many release candidates. shit always happens on the submission day)
+
+# Deploying plainX-turkey on Android
+https://facebook.github.io/react-native/docs/signed-apk-android.html#content
+1. Merge code to `production` branch
+2. Check release keystore.
+3. `cd android && ./gradlew assembleRelease`
+4. Find APK at `android/app/build/outputs/apk/app-release.apk`
