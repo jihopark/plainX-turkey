@@ -21,19 +21,28 @@
         android:theme="@style/AppTheme"
         android:name="PlainApplication">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:exported="true"
+            android:launchMode="singleInstance">
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
 
         <!-- For Parse -->
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+        <receiver android:name="com.plainx.RNParsePushBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

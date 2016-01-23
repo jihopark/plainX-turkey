@@ -20,7 +20,6 @@ class AppContainerIOS extends AppContainer {
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.onCheckPermission = this.onCheckPermission.bind(this);
     this.onNotification = this.onNotification.bind(this);
-    this.onRegister = this.onRegister.bind(this);
   }
 
   componentDidMount() {
@@ -55,12 +54,6 @@ class AppContainerIOS extends AppContainer {
     else{
       this.updateMessageCount();
     }
-  }
-
-  onRegister(deviceToken) {
-    P.log("onRegister", deviceToken);
-    //  PushNotificationIOS.setApplicationIconBadgeNumber(0);
-    this.saveDeviceToken(deviceToken).then(this.sendDeviceToken).done();
   }
 }
 

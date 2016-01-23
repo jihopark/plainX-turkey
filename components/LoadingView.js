@@ -8,16 +8,28 @@ var {
   Platform,
 } = React;
 
+var ProgressBar = require('ProgressBarAndroid');
+
+
 var LoadingView = React.createClass({
   displayName: 'LoadingView',
+  getDefaultProps: function(){
+    return {
+      size: "small",
+      color: "#33cc66"
+    };
+  },
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  },
   render: function() {
     return (
       <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-        {Platform.OS === 'ios' ?
-        <ActivityIndicatorIOS size='small' color="#33cc66" />
+        { Platform.OS === 'ios' ?
+        <ActivityIndicatorIOS size={this.props.size} color={this.props.color} />
         :
-        (<Text>Loading...</Text>)}
-
+        <ProgressBar styleAttr={this.capitalizeFirstLetter(this.props.size)} color={this.props.color} />
+        }
       </View>
     );
   }

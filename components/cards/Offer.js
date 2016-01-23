@@ -26,14 +26,14 @@ var Offer = React.createClass({
         <View style={styles.container}>
           <View style={styles.sideContainer}>
             <Text style={[this.props.cardCommonStyles.currency, styles.leftCurrency]}>
-              {offer["Sell"]+"\n"+NumberUtils.formatNumber(offer["AmountSell"])}</Text>
+              {offer["Buy"]+"\n"+NumberUtils.formatNumber(offer["AmountBuy"])}</Text>
           </View>
           <View style={styles.centerContainer}>
             <Image style={styles.center} source={require('../../assets/plane.png')}/>
           </View>
           <View style={styles.sideContainer}>
             <Text style={[this.props.cardCommonStyles.currency, styles.rightCurrency]}>
-              {offer["Buy"]+"\n"+NumberUtils.formatNumber(offer["AmountBuy"])}</Text>
+              {offer["Sell"]+"\n"+NumberUtils.formatNumber(offer["AmountSell"])}</Text>
           </View>
         </View>
       </TouchableOpacity>

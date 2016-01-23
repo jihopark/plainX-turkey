@@ -6,7 +6,7 @@ var LoadingView = require('../LoadingView.js');
 var ParameterUtils = require('../utils/ParameterUtils.js');
 var AlertUtils = require('../utils/AlertUtils.js');
 var RestKit = require('react-native-rest-kit');
-
+var TimerMixin = require('react-native-timer-mixin')
 var PlainListView = require('../PlainListView.js');
 
 var SessionActions = require('../../actions/SessionActions');
@@ -21,8 +21,8 @@ var {
   View,
   AsyncStorage,
   StyleSheet,
-  AlertIOS,
   Platform,
+  InteractionManager,
 } = React;
 
 var KeyboardEvents = (Platform.OS === 'ios') ? require('react-native-keyboardevents') : null;
@@ -40,6 +40,7 @@ class BaseScreen extends React.Component {
     });
     this.state = {
       data: null,
+      transitionDone: false,
     };
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
@@ -77,6 +78,9 @@ class BaseScreen extends React.Component {
       KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
     }
     MixpanelTracker.trackScreenEvent(this.trackName, ParameterUtils.getStringToParams(this.props.params));
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({transitionDone: true});
+    });
   }
 
   componentWillUnmount() {
@@ -120,21 +124,22 @@ class BaseScreen extends React.Component {
 
   handleClick(cardName, data){
     P.log("handleClick", cardName);
-    switch(cardName){
-      case "Offer":
-        this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString({"Id": data["OfferId"]}))});
-        break;
-      case "CurrencySelect":
-        this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+ParameterUtils.getParamsToString(data))});
-        break;
-      case "UserConversationItem":
-        this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+ParameterUtils.getParamsToString({"Id": data["ConversationId"]}))});
-        break;
-      case "Feedback":
-        this.sendFeedBack(data);
-        break;
-
-    }
+    TimerMixin.requestAnimationFrame(() => {
+      switch(cardName){
+        case "Offer":
+          this.props.pushScreen({uri: this.props.routes.addRoute('offerDetail?'+ParameterUtils.getParamsToString({"Id": data["OfferId"]}))});
+          break;
+        case "CurrencySelect":
+          this.props.pushScreen({uri: this.props.routes.addRoute('offerlist?'+ParameterUtils.getParamsToString(data))});
+          break;
+        case "UserConversationItem":
+          this.props.pushScreen({uri: this.props.routes.addRoute('conversationRoom?'+ParameterUtils.getParamsToString({"Id": data["ConversationId"]}))});
+          break;
+        case "Feedback":
+          this.sendFeedBack(data);
+          break;
+      }
+    });
   }
 
   sendFeedBack(data){
@@ -171,7 +176,7 @@ class BaseScreen extends React.Component {
   }
 
   render() {
-    if (this.state.data) {
+    if (this.state.data && this.state.transitionDone) {
       return this.renderScreen();
     }
     else {
@@ -221,7 +226,7 @@ class BaseScreen extends React.Component {
         if (this.props.routes.getDepth() > 1) {
           var message = JSON.parse(error.body)["Error"];
           P.log("handleInitialRequest", message);
-          AlertUtils.showCustomAlert( message, "", "" ,"", this.onPressErrorDialog, this.onPressErrorDialog);
+          AlertUtils.showCustomAlert("", message, "" ,"", this.onPressErrorDialog, this.onPressErrorDialog);
           return ;
         }
         var errorCard = {"UUID": "-999", "Name": "Error"};

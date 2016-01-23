@@ -11,9 +11,11 @@ var {
   DatePickerIOS,
   StyleSheet,
   TouchableOpacity,
+  NativeModules,
 } = React;
 
 var Divider = require('../Divider.js');
+var moment = require('moment');
 
 var DateFormat = React.createClass({
   displayName: "DateFormat",
@@ -84,37 +86,52 @@ var ExpirySelect = React.createClass({
     };
   },
   showDatePicker: function() {
-    this.setState({isDatePickerShown: true});
+    if (Platform.OS == 'ios')
+      this.setState({isDatePickerShown: true});
+    else {
+      var ms = this.props.data["Expiry"]*1000;
+      NativeModules.DateAndroid.showDatepickerWithInitialDateInMilliseconds(
+        ms.toString(),
+        function() {}, //error callback
+        this.onDateChangeAndroid //success callback
+      );
+    }
   },
   closeDatePicker: function() {
     this.setState({isDatePickerShown: false});
+  },
+  onDateChangeAndroid: function(year, month, day){
+    var selectedDate = new Date(year, month, day);
+    this.onDateChange(selectedDate);
+  },
+  onDateChange: function(selectedDate){
+    if (selectedDate >= new Date()) { //No past dates
+      PlainActions.updateCardData(this.props.id, "Expiry", selectedDate.getTime()/1000);
+    }
   },
   render: function() {
     var id = this.props.id;
     var date = new Date(this.props.data["Expiry"]*1000);
 
-    var datePicker = Platform.OS === 'ios' ?
-     (
+    var datePicker = (
       <View style={{alignItems:'center', flexDirection:'column'}}>
-        <DatePickerIOS
-            style={{backgroundColor: 'transparent'}}
-            date={date}
-            mode="date"
-            onDateChange={function(selectedDate){
-              if (selectedDate >= new Date()) { //No past dates
-                PlainActions.updateCardData(id, "Expiry", selectedDate.getTime()/1000);
-              }
-            }}
-          />
+        { Platform.OS === 'ios' ?
+          (<DatePickerIOS
+              style={{backgroundColor: 'transparent'}}
+              date={date}
+              mode="date"
+              onDateChange={this.onDateChange}
+            />)
+            :
+            null
+        }
         <TouchableOpacity style={{alignSelf: 'flex-end', flexDirection: 'row', marginRight: 10,}} onPress={this.closeDatePicker}>
           <Image source={require('../../assets/checkmark.png')}
                   style={styles.doneButtonIcon}/>
           <Text style={styles.doneButtonText}>Close</Text>
         </TouchableOpacity>
       </View>
-    ) :
-    null; //TODO: for android
-
+    );
     return (
       <View>
         <Text style={[this.props.cardCommonStyles.titles, {marginBottom: 5}]}>

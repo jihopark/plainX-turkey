@@ -25,7 +25,7 @@ var Feedback = React.createClass({
       if (this.props.data["Options"][this.state.firstResponse] == null)
         this.finishFeedback(this.state.firstResponse, null);
     };
-    return (<TouchableOpacity onPress={_onPress}>
+    return (<TouchableOpacity key={value} onPress={_onPress}>
       <Text key={value} style={styles.answerText}>{value}</Text>
     </TouchableOpacity>);
   },
@@ -34,7 +34,7 @@ var Feedback = React.createClass({
       this.setState({secondResponse: value, showThanks: true});
       this.finishFeedback(this.state.firstResponse, value);
     };
-    return (<TouchableOpacity onPress={_onPress}>
+    return (<TouchableOpacity key={value} onPress={_onPress}>
       <Text key={value} style={styles.answerText}>{value}</Text>
     </TouchableOpacity>)
   },

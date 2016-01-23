@@ -5,10 +5,10 @@ var {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Platform,
-  ActivityIndicatorIOS,
+  View,
 } = React;
 
+var LoadingView = require('./LoadingView.js');
 
 var actionButtonStates = {"connected": "CONNECTED!",
                         "loading": "Loading",
@@ -22,10 +22,15 @@ var ActionButton = React.createClass({
   displayName: 'ActionButton',
   render: function() {
     var bgColor = this.props.backgroundColor || '#33cc66';
+
     return (
       <TouchableOpacity style={[styles.container, {backgroundColor: bgColor}]} onPress={this.props.enabled ? this.props.onPress : null}>
-        {this.props.actionState == "loading" && Platform.OS == 'ios' ?
-          (<ActivityIndicatorIOS size='small' color='white' />)
+        {this.props.actionState == "loading" ?
+          (<View style={{flexDirection:'row', alignItems:'center'}}>
+            <Text style={[styles.actionButton, {color:'transparent'}]}>D</Text>
+            <LoadingView size='small' color='white' />
+            <Text style={[styles.actionButton, {color:'transparent'}]}>D</Text>
+          </View>)
           :
           (<Text style={styles.actionButton}>{this.props.text || actionButtonStates[this.props.actionState]}</Text>)
         }

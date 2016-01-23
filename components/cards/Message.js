@@ -32,27 +32,32 @@ var Message = React.createClass({
     switch (this.props.data["Type"]) {
       case 'message':
         var isSelf = this.props.data["IsSelf"];
-        message = (<View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-          <ParsedText style={[styles.messageText,
-              (isSelf ?
-                styles.selfText : styles.otherText)]}
-                parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
-            {this.props.data["Text"]}
-          </ParsedText>
-          <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
-            {DateUtils.getMessageTimestampFormat(this.props.data["Created"])}
-          </Text>
-        </View>);
+        message = (
+          <View style={[{flexDirection:'column'}, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
+      	    <View style={[
+          		styles.messageContainer, (isSelf ? styles.selfText : styles.otherText)]}>
+              <ParsedText style={styles.messageText}
+              parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
+                 {this.props.data["Text"]}
+              </ParsedText>
+        	  </View>
+            <Text style={[styles.dateText, (isSelf ? styles.rightContainer : styles.leftContainer)]}>
+              {DateUtils.getMessageTimestampFormat(this.props.data["Created"])}
+            </Text>
+          </View>);
         break;
       case 'note':
-        message = (<View style={{flexDirection:'column', margin: 10}}>
-          <ParsedText style={[styles.messageText, styles.noteText]}
-            parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
-            {this.props.data["Text"]}
-          </ParsedText>
-          <Text style={[styles.dateText, styles.noteSubText]}>
-            {"Only shown to you"}
-          </Text>
+        message = (
+          <View style={{flexDirection:'column', margin: 10}}>
+            <View style={styles.noteContainer}>
+        	    <ParsedText style={[styles.messageText, styles.noteText]}
+                parse={[{type: 'url', style: styles.url, onPress: this.handleUrlPress }]}>
+                {this.props.data["Text"]}
+              </ParsedText>
+        	  </View>
+            <Text style={[styles.dateText, styles.noteSubText]}>
+              {"Only shown to you"}
+            </Text>
         </View>);
         break;
     }
@@ -91,9 +96,7 @@ var styles = StyleSheet.create({
   otherText: {
     backgroundColor:'#2a6033',
   },
-  messageText: {
-    color: 'white',
-    fontSize: 16,
+  messageContainer: {
     paddingTop: 10, paddingBottom: 10,
     paddingLeft: 15, paddingRight: 15,
     borderRadius: 20,
@@ -101,11 +104,23 @@ var styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
+  messageText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  noteContainer: {
+    paddingTop: 10, paddingBottom: 10,
+    paddingLeft: 15, paddingRight: 15,
+    overflow: 'hidden',
+    marginLeft: 5,
+    marginRight: 5,
+    borderColor: '#33cc66',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
   noteText: {
     textAlign:'center',
     color: '#33cc66',
-    borderColor: '#33cc66',
-    borderWidth: 1,
   },
   noteSubText: {
     marginTop: 5, marginBottom: 5,

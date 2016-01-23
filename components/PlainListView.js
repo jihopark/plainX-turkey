@@ -198,7 +198,6 @@ var cardCommonStyles = StyleSheet.create({
   },
   inputAmountText:{
     fontSize: 60/2,
-    textAlign: 'center',
     color: '#33cc66',
     //font: 'SF UI Text Regular'
   },

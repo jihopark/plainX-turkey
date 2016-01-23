@@ -13,6 +13,7 @@ var {
   TouchableOpacity,
   AppStateIOS,
   ActivityIndicatorIOS,
+  Platform,
 } = React;
 
 var PlainListView = require('../PlainListView.js');
@@ -23,6 +24,11 @@ var RestKit = require('react-native-rest-kit');
 var update = require('react-addons-update');
 var PlainActions = require('../../actions/PlainActions.js');
 var SessionActions = require('../../actions/SessionActions.js');
+var ActivityAndroid = require('react-native-activity-android');
+var ProgressBar = require('ProgressBarAndroid');
+
+var LoadingView = require('../LoadingView.js');
+
 
 var MAX_WAITING_TIME = 60000;// in ms
 
@@ -33,8 +39,6 @@ class ConversationRoomScreen extends BaseScreen{
     this.state = {
       data: null,
       keyboardSpace: 0,
-      shouldPoll: false,
-      appState: AppStateIOS.currentState,
       msgInput: "",
       sending: false,
     };
@@ -43,6 +47,8 @@ class ConversationRoomScreen extends BaseScreen{
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.shouldComponentUpdate = this.shouldComponentUpdate.bind(this);
+    this.handleActivityPause = this.handleActivityPause.bind(this);
+    this.handleActivityResume = this.handleActivityResume.bind(this);
     this.getConversationId = this.getConversationId.bind(this);
     this.getPollResults = this.getPollResults.bind(this);
     this.poll = this.poll.bind(this);
@@ -54,45 +60,88 @@ class ConversationRoomScreen extends BaseScreen{
     this.onPressHeader = this.onPressHeader.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
     this.trackName = "ConversationRoom"
+
+    this.shouldPoll = false;
+    this.appState= 'active';
+    this.initialLoadDone = false;
   }
 
   componentDidMount() {
     super.componentDidMount();
     this.isMount = true;
     P.log("componentDidMount", "Add AppState Listener");
-    AppStateIOS.addEventListener('change', this.handleAppStateChange);
+
+    if (Platform.OS == 'ios')
+      AppStateIOS.addEventListener('change', this.handleAppStateChange);
+    else{
+      ActivityAndroid.addEventListener('activityPause', this.handleActivityPause);
+      ActivityAndroid.addEventListener('activityResume', this.handleActivityResume);
+    }
   }
 
   componentWillUnmount() {
-    super.componentDidMount();
+    super.componentWillUnmount();
     this.isMount = false;
     P.log("componentWillUnmount", "Remove AppState Listener");
-    AppStateIOS.removeEventListener('change', this.handleAppStateChange);
     SessionActions.updateScreenName("");
+
+    if (Platform.OS == 'ios')
+      AppStateIOS.removeEventListener('change', this.handleAppStateChange);
+    else{
+      ActivityAndroid.removeEventListener('activityPause', this.handleActivityPause);
+      ActivityAndroid.removeEventListener('activityResume', this.handleActivityResume);
+    }
+  }
+
+  handleActivityPause(){
+    P.log("handleActivityPause", "inactive");
+    this.handleAppStateChange('inactive');
+  }
+
+  handleActivityResume(){
+    P.log("handleActivityResume", "active");
+    this.handleAppStateChange('active');
   }
 
   handleAppStateChange(appState) {
+    if (appState == this.appState)
+      return ;
     if (appState != 'active') {
-      if (this.isMount) this.setState({shouldPoll: false, appState: appState});
+      if (this.isMount){
+        this.shouldPoll = false;
+        this.appState = appState;
+      }
     }
     else {
-      if (this.isMount) this.setState({data: null, shouldPoll: true, appState: appState});
+      P.log("handleAppStateChange", "handle App State");
+      if (this.isMount){
+        this.shouldPoll = true;
+        this.appState = appState;
+        this.setState({data:null});
+      }
     }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!nextState["data"]) {
+    if (nextState["data"]!=null){
+      this.initialLoadDone = true;
+      P.log("shouldComponentUpdate", "Initial Load Done!!");
+    }
+
+    if (!nextState["data"] && this.initialLoadDone) {
+      this.initialLoadDone = false;
       this.loadScreen();
       P.log("shouldComponentUpdate", "Start Polling again");
       this.poll();
       return true;
     }
-    if (nextState["data"] && nextState["shouldPoll"] == false && nextState["appState"] == 'active') {
-      if (this.isMount) this.setState({shouldPoll: true});
+    if (nextState["data"] && this.shouldPoll == false && this.appState == 'active') {
+      if (this.isMount){
+        this.shouldPoll = true;
+      }
       P.log("shouldComponentUpdate", "Start Polling");
       this.loadScreenNameFromConversation();
       this.poll();
-      return false;
     }
     return true;
   }
@@ -171,7 +220,7 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   onMessage(data) {// on success
-    if (data && data["Cards"].length > 0 && this.state.shouldPoll) {
+    if (data && data["Cards"].length > 0 && this.shouldPoll) {
       P.log("onMessage", data);
       var stateData = this.state.data;
 
@@ -190,7 +239,7 @@ class ConversationRoomScreen extends BaseScreen{
       }
       if (this.isMount) this.setState({data: this.state.data});
     }
-    if (this.state.shouldPoll && this.isMount)
+    if (this.shouldPoll && this.isMount)
       this.poll();
   }
 
@@ -255,7 +304,9 @@ class ConversationRoomScreen extends BaseScreen{
       </TouchableOpacity>) : null);
 
     var sendButton = this.state.sending ?
-    (<ActivityIndicatorIOS size='small' color="#33cc66" />)
+      <View style={{alignSelf:'center'}}>
+        <LoadingView />
+      </View>
     :
       (<TouchableOpacity onPress={this.onSend}>
         <Text style={styles.sendButton} >Send</Text>
@@ -266,6 +317,7 @@ class ConversationRoomScreen extends BaseScreen{
         {listView}
         <View style={[styles.sendContainer, {marginBottom: this.state.keyboardSpace}]} >
           <TextInput
+            underlineColorAndroid={'transparent'}
             placeholder={"Type here"}
             style={styles.msgInput}
             onChangeText={this.onChangeMsgInput}

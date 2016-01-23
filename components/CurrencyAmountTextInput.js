@@ -5,6 +5,7 @@ var {
   View,
   TextInput,
   StyleSheet,
+  Platform,
 } = React;
 
 var NumberUtils = require('./utils/NumberUtils.js');
@@ -19,13 +20,17 @@ var CurrencyAmountTextInput = React.createClass({
       <View style={[styles.container, this.props.isCalculated ? null : styles.addUnderline]}>
         <TextInput
           style={[styles.currencyAmountTextInput, this.props.textStyle,
-                (this.props.value.length > 5 ? {fontSize: 20} : {})]}
+                (this.props.value.length > 5 ? {fontSize: 20} : {}),
+                (Platform.OS == 'ios' ? {textAlign: 'center'} : {fontSize: 20})]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
           value={value}
+          textAlign={'center'}
           keyboardType={"numeric"}
           clearTextOnFocus={true}
           returnKeyType={'done'}
+          underlineColorAndroid={'transparent'}
+          textAlignVertical={'top'}
         />
       </View>
     );
@@ -49,7 +54,7 @@ var styles = StyleSheet.create({
   },
   currencyAmountTextInput: {
     width: 140,
-    height: 30,
+    height: Platform.OS == 'ios' ?  30 : undefined,
     alignSelf: 'center',
   },
 });
