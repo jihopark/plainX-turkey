@@ -40,6 +40,7 @@ class SignUpScreen extends BaseSessionScreen{
     this.handleRequest = this.handleRequest.bind(this);
     this.popScreen = this.popScreen.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
+    this.onPressTerms = this.onPressTerms.bind(this);
     this.trackName = "SignUp";
   }
 
@@ -107,6 +108,10 @@ class SignUpScreen extends BaseSessionScreen{
     this.props.popScreen();
   }
 
+  onPressTerms(){
+    this.props.pushScreen({uri: this.props.routes.addRoute('webView?code=terms')});
+  }
+
   renderScreen() {
     var margin = 30-this.state.keyboardSpace;
 
@@ -148,7 +153,7 @@ class SignUpScreen extends BaseSessionScreen{
                     value={this.state.passwordConfirm} />
               </View>
 
-              <TouchableOpacity onPress={() => (Platform.OS == 'ios' ? LinkingIOS.openURL("http://plainexchange.xyz/terms") : null)}>
+              <TouchableOpacity onPress={this.onPressTerms}>
                 <Text style={[this.styles.descriptionText, this.styles.extraText]}>
                   {"By signing up, you are agreeing to\n "}
                   <Text style={{color: '#33cc66'}}>our terms and conditions</Text>
