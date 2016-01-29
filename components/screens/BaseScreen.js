@@ -23,11 +23,8 @@ var {
   StyleSheet,
   Platform,
   InteractionManager,
+  DeviceEventEmitter,
 } = React;
-
-var KeyboardEvents = (Platform.OS === 'ios') ? require('react-native-keyboardevents') : null;
-var KeyboardEventEmitter = (Platform.OS === 'ios') ? KeyboardEvents.Emitter : null;
-
 
 class BaseScreen extends React.Component {
   constructor() {
@@ -73,10 +70,11 @@ class BaseScreen extends React.Component {
   componentDidMount() {
     this.loadScreen();
     this.props.updateMessageCount();
-    if (Platform.OS === 'ios'){
-      KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-      KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
-    }
+    DeviceEventEmitter.addListener('keyboardWillShow', this.updateKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardWillHide', this.resetKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardDidShow', this.updateKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardDidHide', this.resetKeyboardSpace);
+
     MixpanelTracker.trackScreenEvent(this.trackName, ParameterUtils.getStringToParams(this.props.params));
     InteractionManager.runAfterInteractions(() => {
       this.setState({transitionDone: true});
@@ -85,10 +83,10 @@ class BaseScreen extends React.Component {
 
   componentWillUnmount() {
     this.props.updateMessageCount();
-    if (Platform.OS === 'ios'){
-      KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-      KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
-    }
+    DeviceEventEmitter.removeAllListeners('keyboardWillShow');
+    DeviceEventEmitter.removeAllListeners('keyboardWillHide');
+    DeviceEventEmitter.removeAllListeners('keyboardDidShow');
+    DeviceEventEmitter.removeAllListeners('keyboardDidHide');
     if (this.state.data && this.state.data["Cards"]){
       P.log("componentWillUnmount", "Remove Cards");
       PlainActions.removeCards.defer(this.state.data["Cards"]);
@@ -283,9 +281,8 @@ class BaseScreen extends React.Component {
   }
 
   //KeyboardEvent
-  updateKeyboardSpace(frames) {
-    if (frames.end)
-      this.setState({keyboardSpace: frames.end.height});
+  updateKeyboardSpace() {
+    this.setState({keyboardSpace: 1});
   }
 
   resetKeyboardSpace() {
