@@ -13,7 +13,7 @@ class Routes {
         name: "offerlist",
         id: 2,
         getComponent: () => require("../screens/OfferListScreen.js"),
-        title: "See all offers",
+        title: "Search Results",
         enablePagination: true
       },
       {
