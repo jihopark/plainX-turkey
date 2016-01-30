@@ -38,6 +38,7 @@ class BaseScreen extends React.Component {
     this.state = {
       data: null,
       transitionDone: false,
+      isRefreshing: false,
     };
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
@@ -58,6 +59,8 @@ class BaseScreen extends React.Component {
 
     this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
     this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
+
+    this.refreshScreen = this.refreshScreen.bind(this);
   }
 
   loadMore() {
@@ -101,8 +104,16 @@ class BaseScreen extends React.Component {
     return createListView(pagination, false)
   }
 
+  refreshScreen(){
+    this.setState({data:null, isRefreshing: true});
+    this.loadScreen();
+  }
+
   createListView(pagination, isConversation) {
     var props = {
+      refreshScreen: this.refreshScreen,
+      isRefreshing: this.state.isRefreshing,
+      isRefreshingEnabled: this.endPoint != undefined,
       getCard: this.props.getCard,
       getOffer: this.props.getOffer,
       getConversation: this.props.getConversation,
@@ -241,7 +252,7 @@ class BaseScreen extends React.Component {
     if (json){
       P.log("handleInitialRequest", "200");
       this.pushScreenDataToStore(json);
-      this.setState({data: json});
+      this.setState({data: json, isRefreshing: false});
     }
   }
 

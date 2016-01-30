@@ -15,6 +15,8 @@ var {
   View,
   PixelRatio,
   Image,
+  Platform,
+  PullToRefreshViewAndroid,
 } = React;
 
 var PlainListView = React.createClass({
@@ -86,6 +88,10 @@ var PlainListView = React.createClass({
       </View>
     ): null;
   },
+  onRefreshListView: function(){
+    P.log("onRefreshListView", "Refresh Screen");
+    this.props.refreshScreen();
+  },
   render: function() {
     var listView;
 
@@ -111,7 +117,19 @@ var PlainListView = React.createClass({
 
     return (
       <View style={styles.listContainer}>
-        {listView}
+
+        {Platform.OS == 'ios' ? listView :
+        (
+          <PullToRefreshViewAndroid
+            style={{flex:1}}
+            enabled={this.props.isRefreshingEnabled}
+            refreshing={this.props.isRefreshing}
+            onRefresh={this.onRefreshListView}
+            >
+            {listView}
+          </PullToRefreshViewAndroid>
+        )
+        }
       </View>
     );
   }
