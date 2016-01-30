@@ -15,6 +15,9 @@ import ca.jaysoo.activityandroid.ActivityAndroidPackage;
 import com.plainx.RNParsePush;
 import me.nucleartux.date.ReactDatePackage;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 public class MainActivity extends Activity implements DefaultHardwareBackBtnHandler {
 
     private ReactInstanceManager mReactInstanceManager;
@@ -24,6 +27,9 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mReactRootView = new ReactRootView(this);
+
+        Fabric.with(this, new Crashlytics());
+
 
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getApplication())

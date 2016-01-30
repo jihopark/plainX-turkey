@@ -113,18 +113,18 @@ class SignUpScreen extends BaseSessionScreen{
   }
 
   renderScreen() {
-    var margin = 30-this.state.keyboardSpace;
+    var margin = 30;
 
     return (
       <ScrollView contentContainerStyle={[this.screenCommonStyle.container, {flexDirection: 'column', alignItems: 'center'}]}>
         <Image source={require('../../assets/BG2.png')} style={this.styles.backgroundImage}>
         <View style={[this.styles.container, (margin > 0 ? {paddingTop: margin} : {paddingTop: 0})]}>
-            {margin > 0 ? (<Image source={require('../../assets/logo_lg.png')} style={this.styles.logo}/>) : null}
+            {this.state.keyboardSpace == 0 ? (<Image source={require('../../assets/logo_lg.png')} style={this.styles.logo}/>) : null}
             {this.state.showConfirmation ?
               (<Text style={[this.styles.descriptionText, {fontSize: 18}]}>{"Thank you for registering!\nPlease check your email for\nactivation instructions."}</Text>)
               :
             (<View style={{flex:1, alignItems: 'center', flexDirection: 'column'}}>
-              {margin > 0 ?
+              {this.state.keyboardSpace == 0 ?
               (<TouchableOpacity onPress={this.props.popScreen}>
                 <Text style={this.styles.descriptionText}>
                   {"Already have an account?"} <Text style={{color: '#33cc66'}}>{"Login Here!"}</Text>

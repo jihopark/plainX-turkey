@@ -23,11 +23,8 @@ var {
   StyleSheet,
   Platform,
   InteractionManager,
+  DeviceEventEmitter,
 } = React;
-
-var KeyboardEvents = (Platform.OS === 'ios') ? require('react-native-keyboardevents') : null;
-var KeyboardEventEmitter = (Platform.OS === 'ios') ? KeyboardEvents.Emitter : null;
-
 
 class BaseScreen extends React.Component {
   constructor() {
@@ -41,6 +38,7 @@ class BaseScreen extends React.Component {
     this.state = {
       data: null,
       transitionDone: false,
+      isRefreshing: false,
     };
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
@@ -61,6 +59,8 @@ class BaseScreen extends React.Component {
 
     this.updateKeyboardSpace = this.updateKeyboardSpace.bind(this);
     this.resetKeyboardSpace = this.resetKeyboardSpace.bind(this);
+
+    this.refreshScreen = this.refreshScreen.bind(this);
   }
 
   loadMore() {
@@ -73,10 +73,11 @@ class BaseScreen extends React.Component {
   componentDidMount() {
     this.loadScreen();
     this.props.updateMessageCount();
-    if (Platform.OS === 'ios'){
-      KeyboardEventEmitter.on(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-      KeyboardEventEmitter.on(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
-    }
+    DeviceEventEmitter.addListener('keyboardWillShow', this.updateKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardWillHide', this.resetKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardDidShow', this.updateKeyboardSpace);
+    DeviceEventEmitter.addListener('keyboardDidHide', this.resetKeyboardSpace);
+
     MixpanelTracker.trackScreenEvent(this.trackName, ParameterUtils.getStringToParams(this.props.params));
     InteractionManager.runAfterInteractions(() => {
       this.setState({transitionDone: true});
@@ -85,10 +86,10 @@ class BaseScreen extends React.Component {
 
   componentWillUnmount() {
     this.props.updateMessageCount();
-    if (Platform.OS === 'ios'){
-      KeyboardEventEmitter.off(KeyboardEvents.KeyboardDidShowEvent, this.updateKeyboardSpace);
-      KeyboardEventEmitter.off(KeyboardEvents.KeyboardWillHideEvent, this.resetKeyboardSpace);
-    }
+    DeviceEventEmitter.removeAllListeners('keyboardWillShow');
+    DeviceEventEmitter.removeAllListeners('keyboardWillHide');
+    DeviceEventEmitter.removeAllListeners('keyboardDidShow');
+    DeviceEventEmitter.removeAllListeners('keyboardDidHide');
     if (this.state.data && this.state.data["Cards"]){
       P.log("componentWillUnmount", "Remove Cards");
       PlainActions.removeCards.defer(this.state.data["Cards"]);
@@ -103,8 +104,16 @@ class BaseScreen extends React.Component {
     return createListView(pagination, false)
   }
 
+  refreshScreen(){
+    this.setState({data:null, isRefreshing: true});
+    this.loadScreen();
+  }
+
   createListView(pagination, isConversation) {
     var props = {
+      refreshScreen: this.refreshScreen,
+      isRefreshing: this.state.isRefreshing,
+      isRefreshingEnabled: this.endPoint != undefined,
       getCard: this.props.getCard,
       getOffer: this.props.getOffer,
       getConversation: this.props.getConversation,
@@ -243,7 +252,7 @@ class BaseScreen extends React.Component {
     if (json){
       P.log("handleInitialRequest", "200");
       this.pushScreenDataToStore(json);
-      this.setState({data: json});
+      this.setState({data: json, isRefreshing: false});
     }
   }
 
@@ -283,9 +292,8 @@ class BaseScreen extends React.Component {
   }
 
   //KeyboardEvent
-  updateKeyboardSpace(frames) {
-    if (frames.end)
-      this.setState({keyboardSpace: frames.end.height});
+  updateKeyboardSpace() {
+    this.setState({keyboardSpace: 1});
   }
 
   resetKeyboardSpace() {
