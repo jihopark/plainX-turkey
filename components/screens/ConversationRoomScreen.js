@@ -289,7 +289,7 @@ class ConversationRoomScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var listView = this.createListView(true, true);
+    var listView = this.createListViewPaginationConversation(true, true);
 
     var offer = this.props.getOffer(this.state.data ? this.state.data["Meta"]["OfferId"] : null);
 

@@ -126,7 +126,7 @@ class OfferDetailScreen extends BaseScreen{
 
 
   renderScreen() {
-    var listView = this.createListView(true);
+    var listView = this.createListViewPagination(true);
     var offer = this.props.getOffer(this.state.data["Offers"][0]["Id"]);
 
 

@@ -23,18 +23,17 @@
 // Required for the register event.
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-[RCTPushNotificationManager application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
-// Store the deviceToken in the current installation and save it to Parse.
-PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-[currentInstallation setDeviceTokenFromData:deviceToken];
-currentInstallation.channels = @[ @"global" ];
-[currentInstallation saveInBackground];
-
+  [RCTPushNotificationManager didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+   // Store the deviceToken in the current installation and save it to Parse.
+  PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+  [currentInstallation setDeviceTokenFromData:deviceToken];
+  currentInstallation.channels = @[ @"global" ];
+  [currentInstallation saveInBackground];
 }
 // Required for the notification event.
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification
 {
-[RCTPushNotificationManager application:application didReceiveRemoteNotification:notification];
+  [RCTPushNotificationManager didReceiveRemoteNotification:notification];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

@@ -18,7 +18,7 @@ class OfferSubmittedScreen extends BaseScreen{
     this.onPressActionButton = this.onPressActionButton.bind(this);
     this.renderScreen = this.renderScreen.bind(this);
     this.trackName = "OfferSubmitted";
-    
+
   }
 
   onPressActionButton(){
@@ -26,7 +26,7 @@ class OfferSubmittedScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var listView = this.createListView(false);
+    var listView = this.createListView();
     return (
       <View style={this.screenCommonStyle.container}>
         {listView}
