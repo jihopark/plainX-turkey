@@ -16,7 +16,8 @@ var {
   PixelRatio,
   Image,
   Platform,
-  PullToRefreshViewAndroid,
+  RefreshControl,
+  ScrollView,
 } = React;
 
 var PlainListView = React.createClass({
@@ -82,6 +83,7 @@ var PlainListView = React.createClass({
           getOffer={this.props.getOffer}
           getConversation={this.props.getConversation}
           user={this.props.user}
+          scrollListDown={this.scrollListDown}
           />
         {card["Merged"] == "Top" || card["Merged"] == "Mid" ?
           <Divider margin={styles.mergedCardDivider} /> : null}
@@ -92,9 +94,13 @@ var PlainListView = React.createClass({
     P.log("onRefreshListView", "Refresh Screen");
     this.props.refreshScreen();
   },
+  scrollListDown: function(){
+    P.log("scrollListDown",this.refs.listView==undefined);
+    P.log("scrollListDown",this.refs.listView.getScrollResponder()==undefined);
+    this.refs.listView.getScrollResponder().scrollTo(300);
+  },
   render: function() {
     var listView;
-
     if (this.props.invertList) {
        var InvertibleScrollView = require('react-native-invertible-scroll-view');
 
@@ -108,28 +114,24 @@ var PlainListView = React.createClass({
     }
     else {
       listView = (<ListView
+        ref="listView"
         style={this.props.hasBackgroundColor ? styles.background: null}
         dataSource={new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.props.cards)}
         renderRow={this.renderCards}
         onEndReached={this.props.onEndReached}
+        refreshControl={Platform.OS == 'ios' ? (<RefreshControl
+          refreshing={this.props.isRefreshing}
+          onRefresh={this.onRefreshListView}
+          tintColor="#33cc66"
+          title="Pull to refresh"
+          colors={['#33cc66']}
+        />) : null}
       />);
     }
 
     return (
       <View style={styles.listContainer}>
-
-        {Platform.OS == 'ios' ? listView :
-        (
-          <PullToRefreshViewAndroid
-            style={{flex:1}}
-            enabled={this.props.isRefreshingEnabled}
-            refreshing={this.props.isRefreshing}
-            onRefresh={this.onRefreshListView}
-            >
-            {listView}
-          </PullToRefreshViewAndroid>
-        )
-        }
+        {listView}
       </View>
     );
   }
