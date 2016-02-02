@@ -21,7 +21,7 @@ var CurrencyAmountTextInput = React.createClass({
         <TextInput
           style={[styles.currencyAmountTextInput, this.props.textStyle,
                 (this.props.value.length > 5 ? {fontSize: 20} : {}),
-                (Platform.OS == 'ios' ? {textAlign: 'center'} : {fontSize: 20})]}
+                (Platform.OS == 'ios' ? {} : {fontSize: 20})]}
           onChangeText={this.props.onChangeText}
           onFocus={this.props.onFocus}
           value={value}
@@ -54,8 +54,9 @@ var styles = StyleSheet.create({
   },
   currencyAmountTextInput: {
     width: 140,
-    height: Platform.OS == 'ios' ?  30 : undefined,
+    height: Platform.OS == 'ios' ?  30 : 40,
     alignSelf: 'center',
+    textAlign: 'center',
   },
 });
 
