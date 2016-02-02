@@ -43,6 +43,9 @@ class BaseScreen extends React.Component {
 
     this.pushScreenDataToStore = this.pushScreenDataToStore.bind(this);
     this.createListView = this.createListView.bind(this);
+    this.createListViewPagination = this.createListViewPagination.bind(this);
+    this.createListViewPaginationConversation = this.createListViewPaginationConversation.bind(this);
+
     this.handleClick = this.handleClick.bind(this);
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -97,11 +100,11 @@ class BaseScreen extends React.Component {
   }
 
   createListView(){
-    return createListView(false);
+    return this.createListViewPagination(false);
   }
 
-  createListView(pagination){
-    return createListView(pagination, false)
+  createListViewPagination(pagination){
+    return this.createListViewPaginationConversation(pagination, false)
   }
 
   refreshScreen(){
@@ -109,7 +112,7 @@ class BaseScreen extends React.Component {
     this.loadScreen();
   }
 
-  createListView(pagination, isConversation) {
+  createListViewPaginationConversation(pagination, isConversation) {
     var props = {
       refreshScreen: this.refreshScreen,
       isRefreshing: this.state.isRefreshing,
@@ -122,7 +125,6 @@ class BaseScreen extends React.Component {
       onEndReached: (pagination ? this.loadMore : null),
       cards: this.state.data["Cards"],
     }
-
     if (isConversation){
       props.hasBackgroundColor = true;
       props.invertList = true;

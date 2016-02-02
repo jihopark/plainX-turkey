@@ -371,17 +371,15 @@ var navBarIOS = StyleSheet.create({
   },
   navBarRightButton: {
     marginRight: 10,
-    marginTop: 12,
+    marginTop: 5,
     padding: 3,
+
   },
   navBarButtonText: {
     color: '#33cc66',
   },
   messageIcon: {
-    position:'absolute',
-    top:-2,
-    left: -20,
-    width: 30, height: 30
+    width: 30, height: 30,
   },
   messageCountContainer: {
     backgroundColor:'#33cc66',
@@ -391,8 +389,8 @@ var navBarIOS = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     position:'absolute',
-    top:-2,
-    left: -33,
+    top: 0,
+    left: 0,
   },
   messageCount: {
     color: 'white',

@@ -28,7 +28,7 @@ class OfferListScreen extends BaseScreen{
   }
 
   renderScreen() {
-    var listView = this.createListView(true);
+    var listView = this.createListViewPagination(true);
 
     var makeOfferButton = (<ActionButton
                             text={"MAKE OFFER"}
